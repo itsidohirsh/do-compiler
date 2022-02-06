@@ -6,6 +6,8 @@
 
 // Number of states in the lexer's Finite State Machine
 // The bounds are according to the smallest and largest character ascii value in the language
+// #define LOWER_BOUND 0
+// #define HIGHER_BOUND 128
 #define LOWER_BOUND ' '
 #define HIGHER_BOUND '~'
 #define NUM_CHARACTERS (HIGHER_BOUND - LOWER_BOUND)
@@ -16,20 +18,89 @@
 // Final State Name
 typedef enum FS_Name
 {
-    FS_Eot, // End of token
+    // End of token
+    FS_Eot,
+    // Whitespace
     FS_Whitespace,
+    // Identifier
     FS_Identifier,
+    // Number / Integer Literal
     FS_Number,
+    // Character literal - the _ stands for '
+    FS__,
+    FS__C,
+    FS__C_,
+    // "int" & "if"
+    FS_I,
+    FS_iN,
+    FS_inT,
+    FS_iF,
+    // "char"
+    FS_C,
+    FS_cH,
+    FS_chA,
+    FS_chaR,
+    // "prog"
     FS_P,
     FS_pR,
     FS_prO,
     FS_proG,
-    FS_I,
-    FS_iF,
+    // "else"
     FS_E,
     FS_eL,
     FS_elS,
     FS_elsE,
+    // "while"
+    FS_W,
+    FS_wH,
+    FS_whI,
+    FS_whiL,
+    FS_whilE,
+    // "set"
+    FS_S,
+    FS_sE,
+    FS_seT,
+    // "done"
+    FS_D,
+    FS_dO,
+    FS_doN,
+    FS_donE,
+    // = & ==
+    FS_Assignment,
+    FS_Equal,
+    //_ ! & !=
+    FS_Not,
+    FS_Not_Equal,
+    // > & >=
+    FS_Bigger,
+    FS_Bigger_Equal,
+    // < & <=
+    FS_Smaller,
+    FS_Smaller_Equal,
+    // ||
+    FS_or,
+    FS_OR,
+    // &&
+    FS_and,
+    FS_AND,
+    // +
+    FS_Plus,
+    // -
+    FS_Minus,
+    // *
+    FS_Multiply,
+    // /
+    FS_Divide,
+    // %
+    FS_Modulu,
+    // (
+    FS_Open_Paren,
+    // )
+    FS_Close_Paren,
+    // :
+    FS_Colon,
+    // ;
+    FS_Semi_Colon,
 } FS_Name;
 
 

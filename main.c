@@ -6,11 +6,11 @@
 
 int main()
 {
-    char code[] = "13 + 24-6723-";
+    char code[] = "w++ int n = 15;i++; z/15+4='?' if\n(while(hello)) else 123lol";
     Lexer* lexer = lexer_init(code);
     Token* token = NULL;
 
-    // lexer_fsm_print(lexer->fsm);
+    lexer_fsm_print(lexer->fsm);
 
     while ((token = lexer_next_token(lexer))->type != Token_Eof)
     {
