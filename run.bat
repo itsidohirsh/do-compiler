@@ -6,4 +6,7 @@ if exist src/*.c (
     gcc main.c -o main
 )
 
-main.exe
+if exist main.exe (
+    main.exe
+    del main.exe
+)
