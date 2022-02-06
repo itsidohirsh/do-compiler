@@ -11,6 +11,7 @@ int main()
     Token* token = NULL;
 
     lexer_fsm_print(lexer->fsm);
+    // lexer_fsm_print_dot(lexer->fsm);
 
     // while ((token = lexer_next_token(lexer))->type != Token_Eof)
     // {

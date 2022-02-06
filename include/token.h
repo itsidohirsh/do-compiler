@@ -5,11 +5,12 @@
 // Enum of all the token types
 typedef enum Token_Type
 {
-    Token_Error,
+    Token_Error = 0,
     Token_Identifier,
+    Token_Number,
     Token_Prog,
-    Token_Assignment,
-    Token_Equal,
+    Token_If,
+    Token_Else,
     Token_Eof,
 } Token_Type;
 
