@@ -6,9 +6,11 @@
 typedef enum Token_Type
 {
     Token_Error,
-    Token_Eof,
     Token_Identifier,
     Token_Prog,
+    Token_Assignment,
+    Token_Equal,
+    Token_Eof,
 } Token_Type;
 
 // Token struct

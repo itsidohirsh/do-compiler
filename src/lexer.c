@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "../include/lexer.h"
@@ -33,36 +34,4 @@ void lexer_advance(Lexer* lexer)
         lexer->i++;
         lexer->c = lexer->src[lexer->i];
     }
-}
-
-Token* lexer_next_token(Lexer* lexer)
-{
-    // i = index of the current character in the source code
-    int i = lexer_fsm_get_index(lexer->c);
-    // value = the substring from the source code that is the current token value
-    char* value = (char*) calloc(32, sizeof(char));
-    // size of the value 
-    int size = 0;
-
-    // While not EOS
-    while (lexer->c != '\0')
-    {
-        // Update current token's value
-        value[size++] = lexer->c;
-
-        // If there is no edge between curren character and next character OR the current state is a final state, return current token
-        if (lexer->fsm->edges[i][lexer_fsm_get_index(lexer->src[lexer->i + 1])].weight == 0 || lexer->fsm->states[i].is_final_state)
-            return token_init(value, lexer->fsm->states[lexer_fsm_get_index(lexer->c)].token_type);
-
-        // Go to next state
-        i = lexer_fsm_get_index(lexer->fsm->edges[i][lexer_fsm_get_index(lexer->src[lexer->i + 1])].weight);
-        lexer_advance(lexer);
-    }
-
-    // If we are the the end of the source code but there is a value to the current token, return the token
-    if (size != 0)
-        return token_init(value, lexer->fsm->states[lexer_fsm_get_index(lexer->src[lexer->i - 1])].token_type);
-
-    // Return EOF token
-    return token_init(0, Token_Eof);
 }
