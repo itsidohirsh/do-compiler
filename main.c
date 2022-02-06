@@ -6,24 +6,23 @@
 
 int main()
 {
-    char code[] = "prog prog wow";
+    char code[] = "13 + 24-6723-";
     Lexer* lexer = lexer_init(code);
     Token* token = NULL;
 
-    lexer_fsm_print(lexer->fsm);
-    // lexer_fsm_print_dot(lexer->fsm);
+    // lexer_fsm_print(lexer->fsm);
 
-    // while ((token = lexer_next_token(lexer))->type != Token_Eof)
-    // {
-    //     if (token->type == Token_Error)
-    //         printf("[Lexer]: Unexpected character `%c`\n", lexer->c);
-    //     else
-    //         printf("<Value: `%s`, Type: %d>\n", token->value, token->type);
+    while ((token = lexer_next_token(lexer))->type != Token_Eof)
+    {
+        if (token->type == Token_Error)
+            printf("[Lexer]: Unexpected character `%c`\n", lexer->c);
+        else
+            printf("<Value: `%s`, Type: %d>\n", token->value, token->type);
 
-    //     free(token->value);
-    //     free(token);
-    //     lexer_advance(lexer);
-    // }
+        free(token->value);
+        free(token);
+        lexer_advance(lexer);
+    }
 
     lexer_destroy(lexer);
 

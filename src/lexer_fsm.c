@@ -8,73 +8,77 @@ void lexer_fsm_init(Lexer_FSM* fsm)
 {
     fsm->num_states = 0;
 
+    /*** Space ***/
+    lexer_fsm_add_state(fsm, FS_Whitespace, ' ', Token_Whitespace, false);
+    lexer_fsm_add_edge(fsm, FS_Whitespace, lexer_fsm_get_char_index(' '), FS_Whitespace);
+
     /*** Identifier ***/
-    lexer_fsm_add_state(fsm, IDENTIFIER, 'I', Token_Identifier, true);
-    lexer_fsm_alnum_to_identifier(fsm, IDENTIFIER, 0);
+    lexer_fsm_add_state(fsm, FS_Identifier, ' ', Token_Identifier, true);
+    lexer_fsm_alnum_to_identifier(fsm, FS_Identifier, 0);
 
     /*** Number ***/
-    lexer_fsm_add_state(fsm, NUMBER, '#', Token_Number, true);
+    lexer_fsm_add_state(fsm, FS_Number, ' ', Token_Number, true);
     int i;
     for (i = 0; i < NUM_CHARACTERS; i++)
         if (isdigit(i + LOWER_BOUND))
-            lexer_fsm_add_edge(fsm, NUMBER, i, NUMBER);
+            lexer_fsm_add_edge(fsm, FS_Number, i, FS_Number);
 
     /*** "prog" ***/
     // states
-    lexer_fsm_add_state(fsm, P, 'p', Token_Error, false);
-    lexer_fsm_add_state(fsm, PR, 'r', Token_Error, false);
-    lexer_fsm_add_state(fsm, PRO, 'o', Token_Error, false);
-    lexer_fsm_add_state(fsm, PROG, 'g', Token_Prog, true);
+    lexer_fsm_add_state(fsm, FS_P, 'p', Token_Error, false);
+    lexer_fsm_add_state(fsm, FS_pR, 'r', Token_Error, false);
+    lexer_fsm_add_state(fsm, FS_prO, 'o', Token_Error, false);
+    lexer_fsm_add_state(fsm, FS_proG, 'g', Token_Prog, true);
 
     // edges
-    lexer_fsm_add_edge(fsm, P, lexer_fsm_get_char_index('r'), PR);
-    lexer_fsm_alnum_to_identifier(fsm, P, 'r');
+    lexer_fsm_add_edge(fsm, FS_P, lexer_fsm_get_char_index('r'), FS_pR);
+    lexer_fsm_alnum_to_identifier(fsm, FS_P, 'r');
 
-    lexer_fsm_add_edge(fsm, PR, lexer_fsm_get_char_index('o'), PRO);
-    lexer_fsm_alnum_to_identifier(fsm, PR, 'o');
+    lexer_fsm_add_edge(fsm, FS_pR, lexer_fsm_get_char_index('o'), FS_prO);
+    lexer_fsm_alnum_to_identifier(fsm, FS_pR, 'o');
 
-    lexer_fsm_add_edge(fsm, PRO, lexer_fsm_get_char_index('g'), PROG);
-    lexer_fsm_alnum_to_identifier(fsm, PRO, 'g');
+    lexer_fsm_add_edge(fsm, FS_prO, lexer_fsm_get_char_index('g'), FS_proG);
+    lexer_fsm_alnum_to_identifier(fsm, FS_prO, 'g');
 
-    lexer_fsm_alnum_to_identifier(fsm, PROG, 0);
+    lexer_fsm_alnum_to_identifier(fsm, FS_proG, 0);
 
     /*** "if" ***/
     // states
-    lexer_fsm_add_state(fsm, I, 'i', Token_Error, false);
-    lexer_fsm_add_state(fsm, IF, 'f', Token_If, true);
+    lexer_fsm_add_state(fsm, FS_I, 'i', Token_Error, false);
+    lexer_fsm_add_state(fsm, FS_iF, 'f', Token_If, true);
 
     // edges
-    lexer_fsm_add_edge(fsm, I, lexer_fsm_get_char_index('f'), IF);
-    lexer_fsm_alnum_to_identifier(fsm, I, 'f');
+    lexer_fsm_add_edge(fsm, FS_I, lexer_fsm_get_char_index('f'), FS_iF);
+    lexer_fsm_alnum_to_identifier(fsm, FS_I, 'f');
 
-    lexer_fsm_alnum_to_identifier(fsm, IF, 0);
+    lexer_fsm_alnum_to_identifier(fsm, FS_iF, 0);
 
     /*** "else" ***/
     // states
-    lexer_fsm_add_state(fsm, E, 'e', Token_Error, false);
-    lexer_fsm_add_state(fsm, EL, 'l', Token_Error, false);
-    lexer_fsm_add_state(fsm, ELS, 's', Token_Error, false);
-    lexer_fsm_add_state(fsm, ELSE, 'e', Token_Else, true);
+    lexer_fsm_add_state(fsm, FS_E, 'e', Token_Error, false);
+    lexer_fsm_add_state(fsm, FS_eL, 'l', Token_Error, false);
+    lexer_fsm_add_state(fsm, FS_elS, 's', Token_Error, false);
+    lexer_fsm_add_state(fsm, FS_elsE, 'e', Token_Else, true);
 
     // edges
-    lexer_fsm_add_edge(fsm, E, lexer_fsm_get_char_index('l'), EL);
-    lexer_fsm_alnum_to_identifier(fsm, E, 'l');
+    lexer_fsm_add_edge(fsm, FS_E, lexer_fsm_get_char_index('l'), FS_eL);
+    lexer_fsm_alnum_to_identifier(fsm, FS_E, 'l');
 
-    lexer_fsm_add_edge(fsm, EL, lexer_fsm_get_char_index('s'), ELS);
-    lexer_fsm_alnum_to_identifier(fsm, EL, 's');
+    lexer_fsm_add_edge(fsm, FS_eL, lexer_fsm_get_char_index('s'), FS_elS);
+    lexer_fsm_alnum_to_identifier(fsm, FS_eL, 's');
 
-    lexer_fsm_add_edge(fsm, ELS, lexer_fsm_get_char_index('e'), ELSE);
-    lexer_fsm_alnum_to_identifier(fsm, ELS, 'e');
+    lexer_fsm_add_edge(fsm, FS_elS, lexer_fsm_get_char_index('e'), FS_elsE);
+    lexer_fsm_alnum_to_identifier(fsm, FS_elS, 'e');
 
-    lexer_fsm_alnum_to_identifier(fsm, ELSE, 0);
+    lexer_fsm_alnum_to_identifier(fsm, FS_elsE, 0);
 }
 
-void lexer_fsm_alnum_to_identifier(Lexer_FSM* fsm, State_Name state, char except)
+void lexer_fsm_alnum_to_identifier(Lexer_FSM* fsm, FS_Name state, char except)
 {
     int i;
     for (i = 0; i < NUM_CHARACTERS; i++)
         if (isalnum(i + LOWER_BOUND) && (i + LOWER_BOUND) != except)
-            lexer_fsm_add_edge(fsm, state, i, IDENTIFIER);
+            lexer_fsm_add_edge(fsm, state, i, FS_Identifier);
 }
 
 void lexer_fsm_add_state(Lexer_FSM* fsm, int index, char value, Token_Type token_type, bool is_final_state)
@@ -99,20 +103,31 @@ int lexer_fsm_get_state_index(char value)
 {
     switch (value)
     {
+        // If whitespace
+    case ' ':
+    case '\n':
+    case '\t':
+        return FS_Whitespace;
+
+        // If p - start of "prog"
     case 'p':
-        return P;
+        return FS_P;
 
+        // If i - start of "if"
     case 'i':
-        return I;
+        return FS_I;
 
+        // If e - start of "else"
     case 'e':
-        return E;
+        return FS_E;
 
     default:
+        // If letter - start of Identifier
         if (isalpha(value))
-            return IDENTIFIER;
+            return FS_Identifier;
+        // If digit - start of number
         if (isdigit(value))
-            return NUMBER;
+            return FS_Number;
     }
 }
 
@@ -160,20 +175,4 @@ void lexer_fsm_print(Lexer_FSM* fsm)
         printf("\n");
     }
     printf("\n");
-}
-
-void lexer_fsm_print_dot(Lexer_FSM* fsm)
-{
-    printf("\ndigraph {\n");
-    int i, j;
-    for (i = 0; i < NUM_STATES; i++)
-        for (j = 0; j < NUM_CHARACTERS; j++)
-        {
-            if (fsm->edges[i][j].weight != 0)
-            {
-                if (fsm->edges[i][j].weight != IDENTIFIER)
-                    printf("    %c -> %c\n", fsm->states[i].value, fsm->states[fsm->edges[i][j].weight].value);
-            }
-        }
-    printf("}\n");
 }
