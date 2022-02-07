@@ -10,4 +10,5 @@ if exist src/*.c (
 
 if exist main.exe (
     main.exe
+    del main.exe
 )

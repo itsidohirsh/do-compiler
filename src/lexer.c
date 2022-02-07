@@ -47,8 +47,6 @@ Token* lexer_next_token(Lexer* lexer)
     // Get the starting state according to the current character from the source code
     int state = lexer_fsm_get_state_index(lexer->fsm, lexer->c);
 
-    Token* token = NULL;
-
     // The value of the token that will be returned
     char* value = (char*) calloc(32, sizeof(char));
     int size = 0;
