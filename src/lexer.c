@@ -36,10 +36,18 @@ void lexer_advance(Lexer* lexer)
     }
 }
 
+Token* lexer_advance_with(Lexer* lexer, Token* token)
+{
+    lexer_advance(lexer);
+    return token;
+}
+
 Token* lexer_next_token(Lexer* lexer)
 {
     // Get the starting state according to the current character from the source code
-    int state = lexer_fsm_get_state_index(lexer->c);
+    int state = lexer_fsm_get_state_index(lexer->fsm, lexer->c);
+
+    Token* token = NULL;
 
     // The value of the token that will be returned
     char* value = (char*) calloc(32, sizeof(char));
@@ -52,8 +60,8 @@ Token* lexer_next_token(Lexer* lexer)
         value[size++] = lexer->c;
 
         // If there is no state to acvance to according to the current state and input character, return a new token with the value
-        if (lexer->fsm->edges[state][lexer_fsm_get_char_index(lexer->src[lexer->i + 1])].weight == FS_Eot)
-            return token_init(value, lexer->fsm->states[state].token_type);
+        if (lexer->fsm->edges[state][lexer_fsm_get_char_index(lexer->src[lexer->i + 1])].weight == 0)
+            return lexer_advance_with(lexer, token_init(value, lexer->fsm->states[state].token_type));
 
         // Advance to the next state
         state = lexer->fsm->edges[state][lexer_fsm_get_char_index(lexer->src[lexer->i + 1])].weight;
@@ -62,7 +70,7 @@ Token* lexer_next_token(Lexer* lexer)
 
     // If we are at the end of the src code but there is value in value, return a new token with that value
     if (size > 0)
-        return token_init(value, lexer->fsm->states[state].token_type);
+        return lexer_advance_with(lexer, token_init(value, lexer->fsm->states[state].token_type));
 
     // When we've reached to the end of the src code, return End Of File token
     return token_init(0, Token_Eof);

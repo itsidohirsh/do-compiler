@@ -29,5 +29,8 @@ void lexer_destroy(Lexer* lexer);
 // Advances the lexer 1 character on the source code
 void lexer_advance(Lexer* lexer);
 
+// Advances the lexer and returns inputed token
+Token* lexer_advance_with(Lexer* lexer, Token* token);
+
 // Returns the next token from the source code
 Token* lexer_next_token(Lexer* lexer);
