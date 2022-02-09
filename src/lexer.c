@@ -9,10 +9,9 @@ Lexer* lexer_init(char* src)
     // Create lexer
     Lexer* lexer = (Lexer*) calloc(1, sizeof(Lexer));
     lexer->src = src;
-    lexer->src_len = strlen(src);
     lexer->i = 0;
     lexer->c = lexer->src[lexer->i];
-    // Create lexer FSM
+    // Create lexer's FSM
     lexer->fsm = (Lexer_FSM*) calloc(1, sizeof(Lexer_FSM));
     lexer_fsm_init(lexer->fsm);
 
@@ -21,19 +20,14 @@ Lexer* lexer_init(char* src)
 
 void lexer_destroy(Lexer* lexer)
 {
-    // Free lexer's FSM
     free(lexer->fsm);
-    // Free the lexer
     free(lexer);
 }
 
 void lexer_advance(Lexer* lexer)
 {
-    if (lexer->i < lexer->src_len && lexer->c != '\0')
-    {
-        lexer->i++;
-        lexer->c = lexer->src[lexer->i];
-    }
+    lexer->i++;
+    lexer->c = lexer->src[lexer->i];
 }
 
 Token* lexer_advance_with(Lexer* lexer, Token* token)
@@ -57,12 +51,12 @@ Token* lexer_next_token(Lexer* lexer)
         // Update value
         value[size++] = lexer->c;
 
-        // If there is no state to acvance to according to the current state and input character, return a new token with the value
-        if (lexer->fsm->edges[state][lexer_fsm_get_char_index(lexer->src[lexer->i + 1])].weight == 0)
+        // If there is no state to advance to according to the current state and input character, return a new token with the value
+        if (lexer->fsm->edges[state][lexer_fsm_get_char_index(lexer->src[lexer->i + 1])].state_number == 0)
             return lexer_advance_with(lexer, token_init(value, lexer->fsm->states[state].token_type));
 
         // Advance to the next state
-        state = lexer->fsm->edges[state][lexer_fsm_get_char_index(lexer->src[lexer->i + 1])].weight;
+        state = lexer->fsm->edges[state][lexer_fsm_get_char_index(lexer->src[lexer->i + 1])].state_number;
         lexer_advance(lexer);
     }
 

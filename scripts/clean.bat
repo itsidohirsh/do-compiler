@@ -1,6 +1,6 @@
 @echo off
 
-cd C:\Ido_Hirsh\Projects\Do
+cd ..
 
 if exist main.exe (
     del main.exe

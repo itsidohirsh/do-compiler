@@ -9,11 +9,10 @@
 // Struct of the lexer
 typedef struct Lexer
 {
-    char* src;
-    size_t src_len;
-    char c;
-    size_t i;
-    Lexer_FSM* fsm;
+    char* src;      // The src code
+    char c;         // Current character in the src code
+    size_t i;       // Current offsest from the starting of the source code
+    Lexer_FSM* fsm; // The lexer's FSM
 } Lexer;
 
 
@@ -26,7 +25,7 @@ Lexer* lexer_init(char* src);
 // Frees everything we've allocated in the lexer_init() function
 void lexer_destroy(Lexer* lexer);
 
-// Advances the lexer 1 character on the source code
+// Advances the lexer 1 character forward in the source code
 void lexer_advance(Lexer* lexer);
 
 // Advances the lexer and returns inputed token

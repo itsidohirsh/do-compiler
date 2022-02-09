@@ -25,12 +25,12 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index('_'), s);
     int i;
     for (i = 0; i < NUM_OF_CHARACTERS; i++)
-        if (isalpha(i + LOWER_BOUND))
+        if (isalpha(i))
             lexer_fsm_add_state_index(fsm, i, s);
     // -- states
     lexer_fsm_add_state(fsm, s, Token_Identifier);
     // -- edges
-    lexer_fsm_alnum_to_identifier(fsm, s, 0);
+    lexer_fsm_set_alnum_identifier(fsm, s, 0);
 
     // - Number literal -> 3
     s = 3;
@@ -48,7 +48,7 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_state(fsm, s, Token_Number);
     // -- edges
     for (i = 0; i < NUM_OF_CHARACTERS; i++)
-        if (isdigit(i + LOWER_BOUND))
+        if (isdigit(i))
             lexer_fsm_add_edge(fsm, s, i, s);
 
     // - Character literal -> 4, 5, 6
@@ -75,13 +75,13 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     // --- edges
     // ---- "int"
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('n'), s + 2);
-    lexer_fsm_alnum_to_identifier(fsm, s, 'n');
+    lexer_fsm_set_alnum_identifier(fsm, s, 'n');
     lexer_fsm_add_edge(fsm, s + 2, lexer_fsm_get_char_index('t'), s + 3);
-    lexer_fsm_alnum_to_identifier(fsm, s + 2, 't');
-    lexer_fsm_alnum_to_identifier(fsm, s + 3, 0);
+    lexer_fsm_set_alnum_identifier(fsm, s + 2, 't');
+    lexer_fsm_set_alnum_identifier(fsm, s + 3, 0);
     // ---- "if"
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('f'), s + 1);
-    lexer_fsm_alnum_to_identifier(fsm, s + 1, 0);
+    lexer_fsm_set_alnum_identifier(fsm, s + 1, 0);
 
     // -- "char" -> 11, 12, 13, 14
     s = 11;
@@ -93,12 +93,12 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_state(fsm, s + 3, Token_Char); // char
     // --- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('h'), s + 1);
-    lexer_fsm_alnum_to_identifier(fsm, s, 'h');
+    lexer_fsm_set_alnum_identifier(fsm, s, 'h');
     lexer_fsm_add_edge(fsm, s + 1, lexer_fsm_get_char_index('a'), s + 2);
-    lexer_fsm_alnum_to_identifier(fsm, s + 1, 'a');
+    lexer_fsm_set_alnum_identifier(fsm, s + 1, 'a');
     lexer_fsm_add_edge(fsm, s + 2, lexer_fsm_get_char_index('r'), s + 3);
-    lexer_fsm_alnum_to_identifier(fsm, s + 2, 'r');
-    lexer_fsm_alnum_to_identifier(fsm, s + 3, 0);
+    lexer_fsm_set_alnum_identifier(fsm, s + 2, 'r');
+    lexer_fsm_set_alnum_identifier(fsm, s + 3, 0);
 
     // -- "prog" -> 15, 16, 17, 18
     s = 15;
@@ -110,12 +110,12 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_state(fsm, s + 3, Token_Prog); // prog
     // --- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('r'), s + 1);
-    lexer_fsm_alnum_to_identifier(fsm, s, 'r');
+    lexer_fsm_set_alnum_identifier(fsm, s, 'r');
     lexer_fsm_add_edge(fsm, s + 1, lexer_fsm_get_char_index('o'), s + 2);
-    lexer_fsm_alnum_to_identifier(fsm, s + 1, 'o');
+    lexer_fsm_set_alnum_identifier(fsm, s + 1, 'o');
     lexer_fsm_add_edge(fsm, s + 2, lexer_fsm_get_char_index('g'), s + 3);
-    lexer_fsm_alnum_to_identifier(fsm, s + 2, 'g');
-    lexer_fsm_alnum_to_identifier(fsm, s + 3, 0);
+    lexer_fsm_set_alnum_identifier(fsm, s + 2, 'g');
+    lexer_fsm_set_alnum_identifier(fsm, s + 3, 0);
 
     // -- "else" -> 19, 20, 21, 22
     s = 19;
@@ -127,12 +127,12 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_state(fsm, s + 3, Token_Else); // else
     // --- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('l'), s + 1);
-    lexer_fsm_alnum_to_identifier(fsm, s, 'l');
+    lexer_fsm_set_alnum_identifier(fsm, s, 'l');
     lexer_fsm_add_edge(fsm, s + 1, lexer_fsm_get_char_index('s'), s + 2);
-    lexer_fsm_alnum_to_identifier(fsm, s + 1, 's');
+    lexer_fsm_set_alnum_identifier(fsm, s + 1, 's');
     lexer_fsm_add_edge(fsm, s + 2, lexer_fsm_get_char_index('e'), s + 3);
-    lexer_fsm_alnum_to_identifier(fsm, s + 2, 'e');
-    lexer_fsm_alnum_to_identifier(fsm, s + 3, 0);
+    lexer_fsm_set_alnum_identifier(fsm, s + 2, 'e');
+    lexer_fsm_set_alnum_identifier(fsm, s + 3, 0);
 
     // -- "while" -> 23, 24, 25, 26, 27
     s = 23;
@@ -145,14 +145,14 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_state(fsm, s + 4, Token_While); // while
     // --- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('h'), s + 1);
-    lexer_fsm_alnum_to_identifier(fsm, s, 'h');
+    lexer_fsm_set_alnum_identifier(fsm, s, 'h');
     lexer_fsm_add_edge(fsm, s + 1, lexer_fsm_get_char_index('i'), s + 2);
-    lexer_fsm_alnum_to_identifier(fsm, s + 1, 'i');
+    lexer_fsm_set_alnum_identifier(fsm, s + 1, 'i');
     lexer_fsm_add_edge(fsm, s + 2, lexer_fsm_get_char_index('l'), s + 3);
-    lexer_fsm_alnum_to_identifier(fsm, s + 2, 'l');
+    lexer_fsm_set_alnum_identifier(fsm, s + 2, 'l');
     lexer_fsm_add_edge(fsm, s + 3, lexer_fsm_get_char_index('e'), s + 4);
-    lexer_fsm_alnum_to_identifier(fsm, s + 4, 'e');
-    lexer_fsm_alnum_to_identifier(fsm, s + 5, 0);
+    lexer_fsm_set_alnum_identifier(fsm, s + 4, 'e');
+    lexer_fsm_set_alnum_identifier(fsm, s + 5, 0);
 
     // -- "set" -> 28, 29, 30
     s = 28;
@@ -163,10 +163,10 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_state(fsm, s + 2, Token_Set); // set
     // --- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('e'), s + 1);
-    lexer_fsm_alnum_to_identifier(fsm, s, 'e');
+    lexer_fsm_set_alnum_identifier(fsm, s, 'e');
     lexer_fsm_add_edge(fsm, s + 1, lexer_fsm_get_char_index('t'), s + 2);
-    lexer_fsm_alnum_to_identifier(fsm, s + 1, 't');
-    lexer_fsm_alnum_to_identifier(fsm, s + 2, 0);
+    lexer_fsm_set_alnum_identifier(fsm, s + 1, 't');
+    lexer_fsm_set_alnum_identifier(fsm, s + 2, 0);
 
     // -- "done" -> 31, 32, 33, 34
     s = 31;
@@ -178,12 +178,12 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_state(fsm, s + 3, Token_Done); // done
     // --- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('o'), s + 1);
-    lexer_fsm_alnum_to_identifier(fsm, s, 'o');
+    lexer_fsm_set_alnum_identifier(fsm, s, 'o');
     lexer_fsm_add_edge(fsm, s + 1, lexer_fsm_get_char_index('n'), s + 2);
-    lexer_fsm_alnum_to_identifier(fsm, s + 1, 'n');
+    lexer_fsm_set_alnum_identifier(fsm, s + 1, 'n');
     lexer_fsm_add_edge(fsm, s + 2, lexer_fsm_get_char_index('e'), s + 3);
-    lexer_fsm_alnum_to_identifier(fsm, s + 2, 'e');
-    lexer_fsm_alnum_to_identifier(fsm, s + 3, 0);
+    lexer_fsm_set_alnum_identifier(fsm, s + 2, 'e');
+    lexer_fsm_set_alnum_identifier(fsm, s + 3, 0);
 
     // - Double State Symbols
     // -- = & ==
@@ -262,11 +262,11 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_state(fsm, s++, Token_Semi_Colon); // ;
 }
 
-void lexer_fsm_alnum_to_identifier(Lexer_FSM* fsm, int state_index, char except)
+void lexer_fsm_set_alnum_identifier(Lexer_FSM* fsm, int state_index, char except)
 {
     int i;
     for (i = 0; i < NUM_OF_CHARACTERS; i++)
-        if (isalnum(i + LOWER_BOUND) && (i + LOWER_BOUND) != except)
+        if (isalnum(i) && i != except)
             lexer_fsm_add_edge(fsm, state_index, i, lexer_fsm_get_state_index(fsm, '_'));
 }
 
@@ -274,7 +274,7 @@ int lexer_fsm_get_char_index(char value)
 {
     // If the character is out of range return the first index in the array, 0
     // Else reutrn it's proper index
-    return (value - LOWER_BOUND >= 0) ? (value - LOWER_BOUND) : 0;
+    return (value >= 0) ? value : 0;
 }
 
 int lexer_fsm_get_state_index(Lexer_FSM* fsm, char value)
@@ -292,35 +292,33 @@ void lexer_fsm_add_state(Lexer_FSM* fsm, int state_number, Token_Type token_type
     fsm->states[state_number].token_type = token_type;
 }
 
-void lexer_fsm_add_edge(Lexer_FSM* fsm, int from, int to, char weight)
+void lexer_fsm_add_edge(Lexer_FSM* fsm, int from, int to, char state_number)
 {
-    fsm->edges[from][to].weight = weight;
+    fsm->edges[from][to].state_number = state_number;
 }
 
 bool lexer_fsm_is_adjacent(Lexer_FSM* fsm, int from, int to)
 {
-    return fsm->edges[from][to].weight > 0;
+    return fsm->edges[from][to].state_number > 0;
 }
 
 void lexer_fsm_print(Lexer_FSM* fsm)
 {
     int i, j;
 
-    int num_of_characters = NUM_OF_CHARACTERS;
-
     // Edges
     printf("      ");
-    for (i = 0; i < num_of_characters + 0; i++)
+    for (i = 0; i < NUM_OF_CHARACTERS + 0; i++)
     {
-        if (i + LOWER_BOUND >= ' ')
-            printf("%c", i + LOWER_BOUND);
+        if (i >= ' ')
+            printf("%c", i);
         else
             printf("%d", i % 10);
     }
     printf("\n");
 
     printf("      ");
-    for (i = 0; i < num_of_characters; i++)
+    for (i = 0; i < NUM_OF_CHARACTERS; i++)
     {
         printf("%c", '_');
     }
@@ -330,10 +328,10 @@ void lexer_fsm_print(Lexer_FSM* fsm)
     {
         printf("%2d. | ", i);
 
-        for (j = 0; j < num_of_characters; j++)
+        for (j = 0; j < NUM_OF_CHARACTERS; j++)
         {
-            if (fsm->edges[i][j].weight != 0)
-                printf("%d", fsm->edges[i][j].weight);
+            if (fsm->edges[i][j].state_number != 0)
+                printf("%d", fsm->edges[i][j].state_number);
             else
                 printf("%c", '.');
         }

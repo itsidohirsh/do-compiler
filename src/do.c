@@ -21,7 +21,7 @@ void do_compile(char* src)
             free(type);
         }
         else
-            printf("[Lexer]: Unexpected character `%c`\n", lexer->c);
+            printf("[Lexer]: Unexpected characters `%s`\n", token->value);
 
         free(token->value);
         free(token);
