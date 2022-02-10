@@ -5,7 +5,7 @@
 
 int main()
 {
-    char code[] = "\t\t progif 1[]#23'$';int if:()) ch$archar\n char set'\0elsei else while set done   ";
+    char code[] = "\tW\t pW_3rogif 1W1 []#23'$';int if:()) ch$archar\n char set0elsei else while set done   ";
     // char code[] = "This is a cool prog! :)";
 
     do_compile(code);

@@ -266,7 +266,7 @@ void lexer_fsm_set_alnum_identifier(Lexer_FSM* fsm, int state_index, char except
 {
     int i;
     for (i = 0; i < NUM_OF_CHARACTERS; i++)
-        if (isalnum(i) && i != except)
+        if ((isalnum(i) || i == '_') && i != except)
             lexer_fsm_add_edge(fsm, state_index, i, lexer_fsm_get_state_index(fsm, '_'));
 }
 
