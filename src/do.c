@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "../include/do.h"
+#include "../include/io.h"
 #include "../include/lexer.h"
 #include "../include/token.h"
 
@@ -28,4 +29,11 @@ void do_compile(char* src)
     }
 
     lexer_destroy(lexer);
+}
+
+void do_compile_file(const char* filename)
+{
+    char* src = read_file(filename);
+    do_compile(src);
+    free(src);
 }

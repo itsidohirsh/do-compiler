@@ -11,14 +11,20 @@ void lexer_fsm_init(Lexer_FSM* fsm)
 
     // - Whitespace -> 1
     lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index(' '), s);
-    lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index('\n'), s);
     lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index('\t'), s);
+    lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index('\r'), s);
+    lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index('\n'), s);
+    lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index('\v'), s);
+    lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index('\f'), s);
     // -- states
     lexer_fsm_add_state(fsm, s, Token_Whitespace);
     // -- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index(' '), s);
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('\t'), s);
+    lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('\r'), s);
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('\n'), s);
+    lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('\v'), s);
+    lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('\f'), s);
 
     // - Identifier -> 2
     s = 2;

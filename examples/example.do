@@ -5,8 +5,8 @@ prog simple:
 	if (x == 5):
 		int y;
 		set y = x * 3;
-	end if
-	
+	done if
+
 	else:
 		int w;
 		int z;
@@ -15,7 +15,7 @@ prog simple:
 
 		char ch;
 		set ch = '3';
-	end else
+	done else
 
 	int do;
 	set do = 0;
@@ -25,6 +25,6 @@ prog simple:
 	while (do <= 10):
 		count = count + 1;
 		do = do + 1;
-	end while
+	done while
 
-end prog :)
+done prog :)

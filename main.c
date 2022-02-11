@@ -3,12 +3,15 @@
 
 #include "include/do.h"
 
-int main()
+int main(int argc, char* argv[])
 {
-    char code[] = "\tW\t pW_3rogif 1W1 []#23'$';int if:()) ch$archar\n char set0elsei else while set done   ";
-    // char code[] = "This is a cool prog! :)";
+    if (argc <= 1)
+    {
+        printf("Please specify input file.\n");
+        return 1;
+    }
 
-    do_compile(code);
+    do_compile_file(argv[1]);
 
     return 0;
 }
