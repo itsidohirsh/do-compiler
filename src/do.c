@@ -5,6 +5,7 @@
 #include "../include/io.h"
 #include "../include/lexer.h"
 #include "../include/token.h"
+#include "../include/error_handler.h"
 
 void do_compile(char* src)
 {
@@ -15,14 +16,12 @@ void do_compile(char* src)
     // While the token is not EOF
     while ((token = lexer_next_token(lexer))->type != Token_Eof)
     {
-        if (token->type != Token_Error)
-        {
-            type = token_to_str(token);
-            printf("%s\n", type);
-            free(type);
-        }
-        else
-            printf("[Lexer]: Unexpected characters `%s`\n", token->value);
+        if (token->type == Token_Error)
+            error_handler_report(lexer->line, "Unexpected character '%s'", 1, (void* []) { (void*) token->value });
+
+        type = token_to_str(token);
+        printf("%s\n", type);
+        free(type);
 
         free(token->value);
         free(token);

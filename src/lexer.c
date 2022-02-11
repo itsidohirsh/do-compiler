@@ -11,6 +11,7 @@ Lexer* lexer_init(char* src)
     lexer->src = src;
     lexer->i = 0;
     lexer->c = lexer->src[lexer->i];
+    lexer->line = 1;
     // Create lexer's FSM
     lexer->fsm = (Lexer_FSM*) calloc(1, sizeof(Lexer_FSM));
     lexer_fsm_init(lexer->fsm);
@@ -28,6 +29,10 @@ void lexer_advance(Lexer* lexer)
 {
     lexer->i++;
     lexer->c = lexer->src[lexer->i];
+
+    // Advance line number if current character is Line Feed '\n'
+    if (lexer->c == '\n')
+        lexer->line++;
 }
 
 Token* lexer_advance_with(Lexer* lexer, Token* token)

@@ -7,6 +7,8 @@ prog simple:
 		set y = x * 3;
 	done if
 
+	# // error check
+
 	else:
 		int w;
 		int z;
