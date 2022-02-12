@@ -47,6 +47,7 @@ static const char* token_type_to_str(Token_Type type)
         case Token_Open_Paren: return "Open_Paren";
         case Token_Close_Paren: return "Close_Paren";
         case Token_Colon: return "Colon";
+        case Token_Smiley: return "Smiley";
         case Token_Semi_Colon: return "Semi_Colon";
         case Token_Eof: break;
     }

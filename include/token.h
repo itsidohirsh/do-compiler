@@ -36,6 +36,7 @@ typedef enum Token_Type
     Token_Open_Paren,
     Token_Close_Paren,
     Token_Colon,
+    Token_Smiley,
     Token_Semi_Colon,
     Token_Eof,
 } Token_Type;

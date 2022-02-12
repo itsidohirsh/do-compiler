@@ -246,8 +246,17 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     // --- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('&'), s + 1);
 
-    // - Single state symbols
+    // -- : & :)
     s = 47;
+    lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index(':'), s);
+    // --- states
+    lexer_fsm_add_state(fsm, s, Token_Colon); // :
+    lexer_fsm_add_state(fsm, s + 1, Token_Smiley); // :)
+    // --- edges
+    lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index(')'), s + 1);
+
+    // - Single state symbols
+    s = 49;
     lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index('+'), s);
     lexer_fsm_add_state(fsm, s++, Token_Plus); // +
     lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index('-'), s);
@@ -262,8 +271,6 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_state(fsm, s++, Token_Open_Paren); // (
     lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index(')'), s);
     lexer_fsm_add_state(fsm, s++, Token_Close_Paren); // )
-    lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index(':'), s);
-    lexer_fsm_add_state(fsm, s++, Token_Colon); // :
     lexer_fsm_add_state_index(fsm, lexer_fsm_get_char_index(';'), s);
     lexer_fsm_add_state(fsm, s++, Token_Semi_Colon); // ;
 }
