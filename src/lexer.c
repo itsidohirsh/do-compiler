@@ -1,6 +1,4 @@
 #include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "../include/lexer.h"
 
@@ -12,6 +10,7 @@ Lexer* lexer_init(char* src)
     lexer->i = 0;
     lexer->c = lexer->src[lexer->i];
     lexer->line = 1;
+
     // Create lexer's FSM
     lexer->fsm = (Lexer_FSM*) calloc(1, sizeof(Lexer_FSM));
     lexer_fsm_init(lexer->fsm);
@@ -41,7 +40,7 @@ Token* lexer_advance_with(Lexer* lexer, Token* token)
     return token;
 }
 
-Token* lexer_next_token(Lexer* lexer)
+Token* lexer_get_token(Lexer* lexer)
 {
     // Get the starting state according to the current character from the source code
     int state = lexer_fsm_get_state_index(lexer->fsm, lexer->c);

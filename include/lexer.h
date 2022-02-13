@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdlib.h>
+
 #include "token.h"
 #include "lexer_fsm.h"
 
@@ -33,4 +35,4 @@ void lexer_advance(Lexer* lexer);
 Token* lexer_advance_with(Lexer* lexer, Token* token);
 
 // Returns the next token from the source code
-Token* lexer_next_token(Lexer* lexer);
+Token* lexer_get_token(Lexer* lexer);
