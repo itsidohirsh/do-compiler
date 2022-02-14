@@ -3,7 +3,6 @@
 
 #include "../include/error_handler.h"
 
-// Change printf colors
 void red() { printf("\033[0;31m"); }
 void cyan() { printf("\033[0;36m"); }
 void reset() { printf("\033[0m"); }

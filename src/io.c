@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "../include/io.h"
+#include "../include/error_handler.h"
 
 char* read_file(const char* filename)
 {
@@ -14,7 +15,13 @@ char* read_file(const char* filename)
     // Check for NULL file pointer
     if (fp == NULL)
     {
-        printf("Could not read file `%s`\n", filename);
+        red();
+        printf("[I/O Error] ");
+        reset();
+        printf("Could not read file ");
+        cyan();
+        printf("%s\n", filename);
+        reset();
         exit(1);
     }
 
