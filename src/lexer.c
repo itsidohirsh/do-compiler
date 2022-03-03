@@ -40,13 +40,13 @@ Token* lexer_advance_with(Lexer* lexer, Token* token)
     return token;
 }
 
-Token* lexer_get_token(Lexer* lexer)
+Token* lexer_get_next_token(Lexer* lexer)
 {
     // Get the starting state according to the current character from the source code
-    int state = lexer_fsm_get_state_index(lexer->fsm, lexer->c);
+    int state = lexer_fsm_get_starting_state_index(lexer->fsm, lexer->c);
 
     // The value of the token that will be returned
-    char* value = (char*) calloc(32, sizeof(char));
+    char* value = (char*) calloc(LEXER_SIZE_OF_TOKEN_VALUE, sizeof(char));
     int size = 0;
 
     // While not EOS

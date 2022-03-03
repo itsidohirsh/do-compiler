@@ -1,32 +1,22 @@
-prog simple:
-	num xaa;
-	set xaa = 3;
-
-	if (x == 5):
-		num y;
-		set y = x * 3;
-	done
+prog my_prog:
+	int num;
+	set num = 0;
 	
+	while (num < 10):
+		set num = num + 1;
+	done
+
+	int result;
+	char i;
+	set result = 0;
+	set i = '0'
+
+	if (result == 0 && i == 'A'):
+		set result = 1 - result;
+		set i = '1';
+	done
 	else:
-		num w;
-		num z;
-		set w = 5;
-		set z = 28;
-
-		char ch;
-		set ch = '3';
+		set result = 1 - result;
+		set i = '0'
 	done
-
-	# // error check
-
-	num do;
-	set do = 0;
-	num count;
-	set count = 0;
-
-	while (do <= 10):
-		count = count + 1;
-		do = do + 1;
-	done
-
 done :)

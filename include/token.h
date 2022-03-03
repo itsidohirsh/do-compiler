@@ -5,40 +5,40 @@
 // Enum of all the token types
 typedef enum Token_Type
 {
-    Token_Error,
-    Token_Whitespace,
-    Token_Identifier,
-    Token_Number,
-    Token_Character,
-    Token_Int,
-    Token_Char,
-    Token_Prog,
-    Token_If,
-    Token_Else,
-    Token_While,
-    Token_Set,
-    Token_Done,
-    Token_Assignment,
-    Token_Equal,
-    Token_Not,
-    Token_Not_Equal,
-    Token_Bigger,
-    Token_Bigger_Equal,
-    Token_Smaller,
-    Token_Smaller_Equal,
-    Token_Or,
-    Token_And,
-    Token_Plus,
-    Token_Minus,
-    Token_Multiply,
-    Token_Divide,
-    Token_Modulu,
-    Token_Open_Paren,
-    Token_Close_Paren,
-    Token_Colon,
-    Token_Smiley,
-    Token_Semi_Colon,
-    Token_Eof,
+    Token_Error,            // Error token, must be 0        
+    Token_Whitespace,       // Whitespace characters: ` `, `\n`, `\t`, `\r`, `\v`, `\f`
+    Token_Identifier,       // Identifier
+    Token_Number,           // Number literal
+    Token_Character,        // Character literal
+    Token_Int,              // `int`
+    Token_Char,             // `char`
+    Token_Prog,             // `prog`
+    Token_If,               // `if`
+    Token_Else,             // `else`
+    Token_While,            // `while`
+    Token_Set,              // `set`
+    Token_Done,             // `done`
+    Token_Assignment,       // `=`
+    Token_Equal,            // `==`
+    Token_Not,              // `!`
+    Token_Not_Equal,        // `!=`
+    Token_Bigger,           // `>`
+    Token_Bigger_Equal,     // `>=`
+    Token_Smaller,          // `<`
+    Token_Smaller_Equal,    // `<=`
+    Token_Or,               // `||`
+    Token_And,              // `&&`
+    Token_Plus,             // `+`
+    Token_Minus,            // `-`
+    Token_Multiply,         // `*`
+    Token_Divide,           // `/`
+    Token_Modulu,           // `%`
+    Token_Open_Paren,       // `(`
+    Token_Close_Paren,      // `)`
+    Token_Colon,            // `:`
+    Token_Smiley,           // `:)`
+    Token_Semi_Colon,       // `;`
+    Token_Eof,              // End Of File token
 } Token_Type;
 
 // Token struct

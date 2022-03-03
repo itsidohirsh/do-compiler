@@ -2,13 +2,20 @@
 
 cd ..
 
-if exist src/*.c (
-    gcc main.c src/*.c -o main
-) else (
-    gcc main.c -o main
+@REM Check if main.exe exists
+@REM If not, exiting with exit code 1
+if not exist main.exe (
+    echo Couldn't file main.exe
+    exit 1
 )
 
-if exist main.exe if exist examples/example.do (
-    main.exe examples/example.do
-    del main.exe
+@REM Check if the source code file exists
+@REM If not, exiting with exit code 1
+if not exist examples/example.do (
+    echo Couldn't find source code file
+    exit 1
 )
+
+@REM Running the program and exiting with exit code 0
+main.exe examples/example.do
+exit 0
