@@ -4,10 +4,11 @@
 
 #include "../include/token.h"
 
-Token* token_init(char* value, Token_Type type)
+Token* token_init(char* value, int value_len, Token_Type type)
 {
     Token* token = (Token*) calloc(1, sizeof(Token));
     token->value = value;
+    token->value_len = value_len;
     token->type = type;
 
     return token;
@@ -59,10 +60,10 @@ static const char* token_type_to_str(Token_Type type)
 char* token_to_str(Token* token)
 {
     const char* type_str = token_type_to_str(token->type);
-    const char* template = "%s: `%s`";
+    const char* template = "%s -> {`%s`, %d}";
 
     char* str = (char*) calloc(strlen(type_str) + strlen(template) + 8, sizeof(char));
-    sprintf(str, template, type_str, token->value);
+    sprintf(str, template, type_str, token->value, token->value_len);
 
     return str;
 }

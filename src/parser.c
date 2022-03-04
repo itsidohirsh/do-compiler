@@ -30,7 +30,7 @@ void parser_parse(Parser* parser)
     while ((token = lexer_get_next_token(parser->lexer))->type != Token_Eof)
     {
         if (token->type == Token_Error)
-            error_handler_report(parser->lexer->line, "Unexpected character '%s'", 1, (void* []) { (void*) token->value });
+            error_handler_report(parser->lexer->line, "Lexer: Unexpected characters '%s'", 1, (void* []) { (void*) token->value });
 
         if (token->type == Token_Whitespace)
             continue;

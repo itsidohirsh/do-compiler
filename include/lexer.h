@@ -7,7 +7,7 @@
 
 
 // The size to allocate for each new token value
-#define LEXER_SIZE_OF_TOKEN_VALUE 32
+#define LEXER_MAX_TOKEN_SIZE 33 // 32 + 1, the max size of a atoken is 32 characters long. +1 for the null terminator
 
 
 /* ---------- Structs ---------- */

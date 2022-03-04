@@ -45,6 +45,7 @@ typedef enum Token_Type
 typedef struct Token
 {
     char* value;
+    int value_len;
     Token_Type type;
 } Token;
 
@@ -52,7 +53,7 @@ typedef struct Token
 /* ---------- Functions ---------- */
 
 // Gets a value and a token type, and returns a Token with those inputs
-Token* token_init(char* value, Token_Type type);
+Token* token_init(char* value, int value_len, Token_Type type);
 
 // Converts the Token_Type to its matching type name in the enum of the types of a Token
 static const char* token_type_to_str(Token_Type type);
