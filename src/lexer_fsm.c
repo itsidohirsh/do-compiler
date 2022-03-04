@@ -6,10 +6,10 @@
 
 void lexer_fsm_init(Lexer_FSM* fsm)
 {
-    // Variable to create current state index for each state in the FSM of the lexer
+    // Variable to create current state index for each state in the FSM of the lexer.
     int s = 1;
 
-    // - Whitespace -> 1
+    // - Whitespace -> 1 state
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index(' '), s);
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('\t'), s);
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('\r'), s);
@@ -26,8 +26,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('\v'), s);
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('\f'), s);
 
-    // - Identifier -> 2
-    s = 2;
+    // - Identifier -> 1 state
+    s += 1; // To calculate s add to it the numer of states in the previous part
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('_'), s);
     int i;
     for (i = 0; i < NUM_OF_CHARACTERS; i++)
@@ -38,27 +38,48 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     // -- edges
     lexer_fsm_set_alnum_identifier(fsm, s, 0);
 
-    // - Number literal -> 3
-    s = 3;
-    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('0'), s);
-    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('1'), s);
-    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('2'), s);
-    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('3'), s);
-    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('4'), s);
-    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('5'), s);
-    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('6'), s);
-    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('7'), s);
-    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('8'), s);
-    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('9'), s);
+    // - Number literal -> 3 state
+    s += 1;
+    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('0'), s);      // s     -> Starting at a state for first digit 0
+    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('1'), s + 1);  // s + 1 -> Starting at a state for first digit different from 0
+    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('2'), s + 1);
+    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('3'), s + 1);
+    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('4'), s + 1);
+    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('5'), s + 1);
+    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('6'), s + 1);
+    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('7'), s + 1);
+    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('8'), s + 1);
+    lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('9'), s + 1);
     // -- states
-    lexer_fsm_add_state(fsm, s, Token_Number);
+    lexer_fsm_add_state(fsm, s, Token_Number); // State for first digit 0
+    lexer_fsm_add_state(fsm, s + 1, Token_Number); // State for first digit other digits
+    lexer_fsm_add_state(fsm, s + 2, Token_Error); // If there are continues 0s at the start of a number
     // -- edges
-    for (i = 0; i < NUM_OF_CHARACTERS; i++)
-        if (isdigit(i))
-            lexer_fsm_add_edge(fsm, s, i, s);
+    // --- Add edge for 0-9 from the first digit 0 state to an error state because if a number starts with 0 it must not continue
+    lexer_fsm_add_edge(fsm, s, '0', s + 2);
+    lexer_fsm_add_edge(fsm, s, '1', s + 2);
+    lexer_fsm_add_edge(fsm, s, '2', s + 2);
+    lexer_fsm_add_edge(fsm, s, '3', s + 2);
+    lexer_fsm_add_edge(fsm, s, '4', s + 2);
+    lexer_fsm_add_edge(fsm, s, '5', s + 2);
+    lexer_fsm_add_edge(fsm, s, '6', s + 2);
+    lexer_fsm_add_edge(fsm, s, '7', s + 2);
+    lexer_fsm_add_edge(fsm, s, '8', s + 2);
+    lexer_fsm_add_edge(fsm, s, '9', s + 2);
+    // --- Stay in first digit different from 0 state for every 0-9 digit
+    lexer_fsm_add_edge(fsm, s + 1, '0', s + 1);
+    lexer_fsm_add_edge(fsm, s + 1, '1', s + 1);
+    lexer_fsm_add_edge(fsm, s + 1, '2', s + 1);
+    lexer_fsm_add_edge(fsm, s + 1, '3', s + 1);
+    lexer_fsm_add_edge(fsm, s + 1, '4', s + 1);
+    lexer_fsm_add_edge(fsm, s + 1, '5', s + 1);
+    lexer_fsm_add_edge(fsm, s + 1, '6', s + 1);
+    lexer_fsm_add_edge(fsm, s + 1, '7', s + 1);
+    lexer_fsm_add_edge(fsm, s + 1, '8', s + 1);
+    lexer_fsm_add_edge(fsm, s + 1, '9', s + 1);
 
-    // - Character literal -> 4, 5, 6
-    s = 4;
+    // - Character literal -> 3 states
+    s += 3;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('\''), s);
     // -- states
     lexer_fsm_add_state(fsm, s, Token_Error); // '
@@ -70,8 +91,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_edge(fsm, s + 1, lexer_fsm_get_char_index('\''), s + 2);
 
     // - Keywords
-    // -- "int" & "if" -> 7, 8, 9, 10
-    s = 7;
+    // -- "int" & "if" -> 4 states
+    s += 3;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('i'), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Identifier); // i
@@ -89,8 +110,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('f'), s + 1);
     lexer_fsm_set_alnum_identifier(fsm, s + 1, 0);
 
-    // -- "char" -> 11, 12, 13, 14
-    s = 11;
+    // -- "char" -> 4 states
+    s += 4;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('c'), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Identifier); // c
@@ -106,8 +127,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_set_alnum_identifier(fsm, s + 2, 'r');
     lexer_fsm_set_alnum_identifier(fsm, s + 3, 0);
 
-    // -- "prog" -> 15, 16, 17, 18
-    s = 15;
+    // -- "prog" -> 4 states
+    s += 4;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('p'), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Identifier); // p
@@ -123,8 +144,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_set_alnum_identifier(fsm, s + 2, 'g');
     lexer_fsm_set_alnum_identifier(fsm, s + 3, 0);
 
-    // -- "else" -> 19, 20, 21, 22
-    s = 19;
+    // -- "else" -> 4 states
+    s += 4;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('e'), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Identifier); // e
@@ -140,8 +161,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_set_alnum_identifier(fsm, s + 2, 'e');
     lexer_fsm_set_alnum_identifier(fsm, s + 3, 0);
 
-    // -- "while" -> 23, 24, 25, 26, 27
-    s = 23;
+    // -- "while" -> 5 states
+    s += 4;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('w'), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Identifier); // w
@@ -160,8 +181,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_set_alnum_identifier(fsm, s + 4, 'e');
     lexer_fsm_set_alnum_identifier(fsm, s + 5, 0);
 
-    // -- "set" -> 28, 29, 30
-    s = 28;
+    // -- "set" -> 3 states
+    s += 5;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('s'), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Identifier); // s
@@ -174,8 +195,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_set_alnum_identifier(fsm, s + 1, 't');
     lexer_fsm_set_alnum_identifier(fsm, s + 2, 0);
 
-    // -- "done" -> 31, 32, 33, 34
-    s = 31;
+    // -- "done" -> 4 states
+    s += 3;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('d'), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Identifier); // d
@@ -192,8 +213,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_set_alnum_identifier(fsm, s + 3, 0);
 
     // - Double State Symbols
-    // -- = & == -> 35, 36
-    s = 35;
+    // -- = & == -> 2 states
+    s += 4;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('='), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Assignment); // =
@@ -201,8 +222,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     // --- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('='), s + 1);
 
-    // -- ! & != -> 37, 38
-    s = 37;
+    // -- ! & != -> 2 states
+    s += 2;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('!'), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Not); //_ !
@@ -210,8 +231,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     // --- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('='), s + 1);
 
-    // -- > & >= -> 39, 40
-    s = 39;
+    // -- > & >= -> 2 states
+    s += 2;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('>'), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Bigger); // >
@@ -219,8 +240,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     // --- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('='), s + 1);
 
-    // -- < & <= -> 41, 42
-    s = 41;
+    // -- < & <= -> 2 states
+    s += 2;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('<'), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Smaller); // <
@@ -228,8 +249,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     // --- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('='), s + 1);
 
-    // -- | & || -> 43, 44
-    s = 43;
+    // -- | & || -> 2 states
+    s += 2;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('|'), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Error); // |
@@ -237,8 +258,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     // --- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('|'), s + 1);
 
-    // -- & & && -> 45, 46
-    s = 45;
+    // -- & & && -> 2 states
+    s += 2;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('&'), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Error); // &
@@ -246,8 +267,8 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     // --- edges
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index('&'), s + 1);
 
-    // -- : & :) -> 47, 48
-    s = 47;
+    // -- : & :) -> 2 states
+    s += 2;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index(':'), s);
     // --- states
     lexer_fsm_add_state(fsm, s, Token_Colon); // :
@@ -256,7 +277,7 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_edge(fsm, s, lexer_fsm_get_char_index(')'), s + 1);
 
     // - Single state symbols
-    s = 49;
+    s += 2;
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('+'), s);
     lexer_fsm_add_state(fsm, s++, Token_Plus); // +
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index('-'), s);
@@ -305,9 +326,9 @@ void lexer_fsm_add_state(Lexer_FSM* fsm, int state_number, Token_Type token_type
     fsm->states[state_number].token_type = token_type;
 }
 
-void lexer_fsm_add_edge(Lexer_FSM* fsm, int from, int to, char state_number)
+void lexer_fsm_add_edge(Lexer_FSM* fsm, int state, int ch, char to_state)
 {
-    fsm->edges[from][to].state_number = state_number;
+    fsm->edges[state][ch].state_number = to_state;
 }
 
 void lexer_fsm_print(Lexer_FSM* fsm)

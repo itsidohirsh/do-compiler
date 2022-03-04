@@ -62,7 +62,7 @@ void lexer_fsm_add_starting_state_index(Lexer_FSM* fsm, int char_index, int star
 void lexer_fsm_add_state(Lexer_FSM* fsm, int state_number, Token_Type token_type);
 
 // Adds a connection to the lexer's FSM
-void lexer_fsm_add_edge(Lexer_FSM* fsm, int from, int to, char state_number);
+void lexer_fsm_add_edge(Lexer_FSM* fsm, int state, int ch, char to_state);
 
 // Prints the vertices & adjacency matrix of the graph that is representing the FSM
 void lexer_fsm_print(Lexer_FSM* fsm);
