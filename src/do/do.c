@@ -1,9 +1,8 @@
 #include <stdlib.h>
 
-#include "../include/do.h"
-#include "../include/io.h"
-#include "../include/parser.h"
-#include "../include/error_handler.h"
+#include "do.h"
+#include "../io/io.h"
+#include "../parser/parser.h"
 
 void do_compile(char* src)
 {

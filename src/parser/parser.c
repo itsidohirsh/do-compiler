@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/parser.h"
-#include "../include/error_handler.h"
+#include "parser.h"
+#include "../error_handler/error_handler.h"
 
 Parser* parser_init(char* src)
 {

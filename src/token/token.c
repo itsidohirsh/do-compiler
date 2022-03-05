@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../include/token.h"
+#include "token.h"
 
 Token* token_init(char* value, int value_len, Token_Type type)
 {

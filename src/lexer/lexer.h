@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-#include "token.h"
+#include "../token/token.h"
 #include "lexer_fsm.h"
 
 

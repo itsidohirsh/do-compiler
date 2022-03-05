@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/io.h"
-#include "../include/error_handler.h"
+#include "../io/io.h"
+#include "../error_handler/error_handler.h"
 
 char* read_file(const char* filename)
 {

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
-#include "../include/lexer.h"
-#include "../include/error_handler.h"
+#include "../lexer/lexer.h"
+#include "../error_handler/error_handler.h"
 
 Lexer* lexer_init(char* src)
 {

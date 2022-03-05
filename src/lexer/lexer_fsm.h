@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 
-#include "token.h"
+#include "../token/token.h"
 
 
 // Number of character in the language - 128 ascii characters

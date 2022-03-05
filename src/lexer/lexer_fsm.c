@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-#include "../include/lexer_fsm.h"
+#include "lexer_fsm.h"
 
 void lexer_fsm_init(Lexer_FSM* fsm)
 {

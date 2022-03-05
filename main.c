@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "include/do.h"
-#include "include/error_handler.h"
+#include "src/do/do.h"
+#include "src/error_handler/error_handler.h"
 
 int main(int argc, char* argv[])
 {

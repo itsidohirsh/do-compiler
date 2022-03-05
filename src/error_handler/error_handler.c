@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include/error_handler.h"
+#include "error_handler.h"
 
 void red() { printf("\033[0;31m"); }
 void cyan() { printf("\033[0;36m"); }
