@@ -1,8 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../io/io.h"
+#include "io.h"
 #include "../error_handler/error_handler.h"
+
 
 char* read_file(const char* filename)
 {
@@ -14,16 +15,7 @@ char* read_file(const char* filename)
 
     // Check for NULL file pointer
     if (fp == NULL)
-    {
-        red();
-        printf("[I/O Error] ");
-        reset();
-        printf("Could not read file ");
-        cyan();
-        printf("%s\n", filename);
-        reset();
-        exit(1);
-    }
+        error_handler_report_file_error(filename);
 
     // Using fseek & ftell to get length of file
     fseek(fp, 0, SEEK_END);
@@ -41,7 +33,7 @@ char* read_file(const char* filename)
         // Closing the file
         fclose(fp);
 
-        error_handler_report_alloc();
+        error_handler_report_memory_error();
     }
 
     // Copying the contents of the file to the buffer

@@ -1,13 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
 
 #include "parse_tree.h"
-#include "../parser/parsing_table/parsing_table_base.h"
 #include "../error_handler/error_handler.h"
 
-Parse_Tree_Node* parse_tree_init_node(Parse_Tree_Node_Type node_type, int symbol, Token* token, Parse_Tree_Node** children, int num_of_children)
+
+Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token* token, Parse_Tree_Node** children, int num_of_children)
 {
     // Create a new Parse_Tree_Node
     Parse_Tree_Node* node = (Parse_Tree_Node*) calloc(1, sizeof(Parse_Tree_Node));
@@ -26,11 +25,11 @@ Parse_Tree_Node* parse_tree_init_node(Parse_Tree_Node_Type node_type, int symbol
         free(children);
 
         // Report allocation error and exit
-        error_handler_report_alloc();
+        error_handler_report_memory_error();
     }
 
     // Update node's properties
-    node->node_type = node_type;
+    node->symbol_type = symbol_type;
     node->symbol = symbol;
     node->token = token;
     node->children = children;
@@ -58,15 +57,9 @@ void parse_tree_destroy_tree(Parse_Tree_Node* root)
     free(root);
 }
 
-void parse_tree_print_tree(Parse_Tree_Node* root)
+const char* parser_tree_non_terminal_to_str(Non_Terminal_Type non_terminal_type)
 {
-    char indent[256] = { 0 };
-    parse_tree_print_tree_rec(root, indent, true);
-}
-
-const char* parser_tree_non_terminal_to_str(Non_Terminal_Kind terminal_kind)
-{
-    switch (terminal_kind)
+    switch (non_terminal_type)
     {
         case Non_Terminal_PROG: return "PROG";
         case Non_Terminal_BLOCK: return "BLOCK";
@@ -84,16 +77,14 @@ const char* parser_tree_non_terminal_to_str(Non_Terminal_Kind terminal_kind)
         case Non_Terminal_F: return "F";
     }
 
-    // If the non_terminal_kind is not one of the values in the enum of types in Non_Terminal_Kind
-    return "Don't know that non_terminal_kind... 🤔";
+    // If the non_terminal_type is not one of the values in the enum of types in Non_Terminal_Type
+    return "Don't know that non_terminal_type... 🤔";
 }
 
-void parse_tree_print_node(Parse_Tree_Node* node)
+void parse_tree_print_tree(Parse_Tree_Node* root)
 {
-    if (node->node_type == Terminal)
-        printf("%s", token_to_str(node->token));
-    else
-        printf("%s", parser_tree_non_terminal_to_str(node->symbol));
+    char indent[256] = { 0 };
+    parse_tree_print_tree_rec(root, indent, true);
 }
 
 void parse_tree_print_tree_rec(Parse_Tree_Node* root, char* indent, bool is_last)
@@ -129,4 +120,12 @@ void parse_tree_print_tree_rec(Parse_Tree_Node* root, char* indent, bool is_last
         parse_tree_print_tree_rec(root->children[i], indent, i == root->num_of_children - 1);
         strcpy(indent, tmp);
     }
+}
+
+void parse_tree_print_node(Parse_Tree_Node* node)
+{
+    if (node->symbol_type == Terminal)
+        printf("%s", token_to_str(node->token));
+    else
+        printf("%s", parser_tree_non_terminal_to_str(node->symbol));
 }

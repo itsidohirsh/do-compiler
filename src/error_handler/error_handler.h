@@ -1,12 +1,15 @@
 #pragma once
 
-// Change printf colors
-void red();
-void cyan();
-void reset();
+
+// printf in different colors
+void printf_red(const char* format, ...);
+void printf_cyan(const char* format, ...);
 
 // Reports an error message to the user and exits
-void error_handler_report(int line, char* msg, int argc, void* argv[]);
+void error_handler_report(int line, char* format, ...);
 
 // Reports an allocation error message to the user and exits
-void error_handler_report_alloc();
+void error_handler_report_memory_error();
+
+// Reports a file I/O error message to the user and exits
+void error_handler_report_file_error(const char* filename);

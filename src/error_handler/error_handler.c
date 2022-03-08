@@ -1,48 +1,65 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
 
 #include "error_handler.h"
 
-void red() { printf("\033[0;31m"); }
-void cyan() { printf("\033[0;36m"); }
-void reset() { printf("\033[0m"); }
 
-void error_handler_report(int line, char* msg, int argc, void* argv[])
+void printf_red(const char* format, ...)
+{
+    printf("\033[0;31m"); // Make printing red
+
+    va_list args;           // Declare a va_list type variable
+    va_start(args, format); // Initialize the va_list with the ...
+    vprintf(format, args);  // Forward ... to vprintf
+    va_end(args);           // Clean up the va_list
+
+    printf("\033[0m"); // Reset printing color
+}
+
+void printf_cyan(const char* format, ...)
+{
+    printf("\033[0;36m"); // Make printing red
+
+    va_list args;           // Declare a va_list type variable
+    va_start(args, format); // Initialize the va_list with the ...
+    vprintf(format, args);  // Forward ... to vprintf
+    va_end(args);           // Clean up the va_list
+
+    printf("\033[0m"); // Reset printing color
+}
+
+void error_handler_report(int line, char* format, ...)
 {
     printf("[");
-    red();
-    printf("Error: ");
-    reset();
+    printf_red("Error: ");
     printf("on line");
-    cyan();
-    printf(" %d", line);
-    reset();
+    printf_cyan(" %d", line);
     printf("] ");
 
-    // Print msg according to the number of parameters
-    if (argc == 0)
-        printf(msg);
-
-    if (argc == 1)
-        printf(msg, argv[0]);
-
-    if (argc == 2)
-        printf(msg, argv[0], argv[1]);
+    va_list args;           // Declare a va_list type variable
+    va_start(args, format); // Initialize the va_list with the ...
+    vprintf(format, args);  // Forward ... to vprintf
+    va_end(args);           // Clean up the va_list
 
     printf("\n");
+    exit(1);
+}
+
+void error_handler_report_memory_error()
+{
+    printf("[");
+    printf_red("Allocation Error");
+    printf("] Failed to allocate needed memory\n");
 
     exit(1);
 }
 
-void error_handler_report_alloc()
+void error_handler_report_file_error(const char* filename)
 {
     printf("[");
-    red();
-    printf("Allocation Error");
-    reset();
-    printf("] ");
-    printf("Failed to allocate needed memory");
-    printf("\n");
+    printf_red("I/O Error");
+    printf("] Could not read file %s\n", filename);
 
     exit(1);
 }

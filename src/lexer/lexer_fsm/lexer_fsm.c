@@ -1,17 +1,17 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <ctype.h>
 
 #include "lexer_fsm.h"
 #include "../../error_handler/error_handler.h"
+
 
 Lexer_FSM* lexer_fsm_create()
 {
     // Create fsm
     Lexer_FSM* fsm = (Lexer_FSM*) calloc(1, sizeof(Lexer_FSM));
     // Check for allocation error
-    if (fsm == NULL) error_handler_report_alloc();
+    if (fsm == NULL) error_handler_report_memory_error();
 
     return fsm;
 }
@@ -19,6 +19,79 @@ Lexer_FSM* lexer_fsm_create()
 void lexer_fsm_destroy(Lexer_FSM* fsm)
 {
     free(fsm);
+}
+
+void lexer_fsm_set_alnum_identifier(Lexer_FSM* fsm, int state_index, char except)
+{
+    int i;
+    for (i = 0; i < NUM_OF_CHARACTERS; i++)
+        if ((isalnum(i) || i == '_') && i != except)
+            lexer_fsm_add_edge(fsm, state_index, i, lexer_fsm_get_starting_state_index(fsm, '_'));
+}
+
+int lexer_fsm_get_char_index(char value)
+{
+    // If the character is out of range return the first index in the array, 0
+    // Else reutrn it's proper index
+    return (value >= 0) ? value : 0;
+}
+
+int lexer_fsm_get_starting_state_index(Lexer_FSM* fsm, char value)
+{
+    return fsm->starting_state_indices[lexer_fsm_get_char_index(value)];
+}
+
+void lexer_fsm_add_starting_state_index(Lexer_FSM* fsm, int char_index, int starting_state_index)
+{
+    fsm->starting_state_indices[char_index] = starting_state_index;
+}
+
+void lexer_fsm_add_state(Lexer_FSM* fsm, int state_number, Token_Type token_type)
+{
+    fsm->states[state_number].token_type = token_type;
+}
+
+void lexer_fsm_add_edge(Lexer_FSM* fsm, int state, int ch, int to_state)
+{
+    fsm->edges[state][ch].state_number = to_state;
+}
+
+void lexer_fsm_print(Lexer_FSM* fsm)
+{
+    int i, j;
+
+    // Edges
+    printf("      ");
+    for (i = 0; i < NUM_OF_CHARACTERS + 0; i++)
+    {
+        if (i >= ' ')
+            printf("%c", i);
+        else
+            printf("%d", i % 10);
+    }
+    printf("\n");
+
+    printf("      ");
+    for (i = 0; i < NUM_OF_CHARACTERS; i++)
+    {
+        printf("%c", '_');
+    }
+    printf("\n");
+
+    for (i = 0; i < LEXER_FSM_NUM_OF_STATES; i++)
+    {
+        printf("%2d. | ", i);
+
+        for (j = 0; j < NUM_OF_CHARACTERS; j++)
+        {
+            if (fsm->edges[i][j].state_number != 0)
+                printf("%d", fsm->edges[i][j].state_number);
+            else
+                printf("%c", '.');
+        }
+        printf("\n");
+    }
+    printf("\n");
 }
 
 void lexer_fsm_init(Lexer_FSM* fsm)
@@ -311,77 +384,4 @@ void lexer_fsm_init(Lexer_FSM* fsm)
     lexer_fsm_add_state(fsm, s++, Token_Close_Paren); // )
     lexer_fsm_add_starting_state_index(fsm, lexer_fsm_get_char_index(';'), s);
     lexer_fsm_add_state(fsm, s++, Token_Semi_Colon); // ;
-}
-
-void lexer_fsm_set_alnum_identifier(Lexer_FSM* fsm, int state_index, char except)
-{
-    int i;
-    for (i = 0; i < NUM_OF_CHARACTERS; i++)
-        if ((isalnum(i) || i == '_') && i != except)
-            lexer_fsm_add_edge(fsm, state_index, i, lexer_fsm_get_starting_state_index(fsm, '_'));
-}
-
-int lexer_fsm_get_char_index(char value)
-{
-    // If the character is out of range return the first index in the array, 0
-    // Else reutrn it's proper index
-    return (value >= 0) ? value : 0;
-}
-
-int lexer_fsm_get_starting_state_index(Lexer_FSM* fsm, char value)
-{
-    return fsm->starting_state_indices[lexer_fsm_get_char_index(value)];
-}
-
-void lexer_fsm_add_starting_state_index(Lexer_FSM* fsm, int char_index, int starting_state_index)
-{
-    fsm->starting_state_indices[char_index] = starting_state_index;
-}
-
-void lexer_fsm_add_state(Lexer_FSM* fsm, int state_number, Token_Kind token_type)
-{
-    fsm->states[state_number].token_type = token_type;
-}
-
-void lexer_fsm_add_edge(Lexer_FSM* fsm, int state, int ch, char to_state)
-{
-    fsm->edges[state][ch].state_number = to_state;
-}
-
-void lexer_fsm_print(Lexer_FSM* fsm)
-{
-    int i, j;
-
-    // Edges
-    printf("      ");
-    for (i = 0; i < NUM_OF_CHARACTERS + 0; i++)
-    {
-        if (i >= ' ')
-            printf("%c", i);
-        else
-            printf("%d", i % 10);
-    }
-    printf("\n");
-
-    printf("      ");
-    for (i = 0; i < NUM_OF_CHARACTERS; i++)
-    {
-        printf("%c", '_');
-    }
-    printf("\n");
-
-    for (i = 0; i < LEXER_FSM_NUM_OF_STATES; i++)
-    {
-        printf("%2d. | ", i);
-
-        for (j = 0; j < NUM_OF_CHARACTERS; j++)
-        {
-            if (fsm->edges[i][j].state_number != 0)
-                printf("%d", fsm->edges[i][j].state_number);
-            else
-                printf("%c", '.');
-        }
-        printf("\n");
-    }
-    printf("\n");
 }

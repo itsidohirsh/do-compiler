@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stdbool.h>
-
 #include "../../token/token.h"
 
 
@@ -17,7 +15,7 @@
 typedef struct Lexer_State
 {
     // Every state holds a token type, so if we stoped on that state we would know what token we have
-    Token_Kind token_type;
+    Token_Type token_type;
 } Lexer_State;
 
 // Struct of a connection between states in the lexer's FSM
@@ -25,7 +23,7 @@ typedef struct Lexer_Edge
 {
     // An edge is representing a transition between states in the FSM
     // Every edge is holding which state to go next
-    char state_number;
+    int state_number;
 } Lexer_Edge;
 
 // Struct of the lexer's FSM
@@ -65,10 +63,10 @@ int lexer_fsm_get_starting_state_index(Lexer_FSM* fsm, char value);
 void lexer_fsm_add_starting_state_index(Lexer_FSM* fsm, int char_index, int starting_state_index);
 
 // Adds a state to the lexer's FSM
-void lexer_fsm_add_state(Lexer_FSM* fsm, int state_number, Token_Kind token_type);
+void lexer_fsm_add_state(Lexer_FSM* fsm, int state_number, Token_Type token_type);
 
 // Adds a connection to the lexer's FSM
-void lexer_fsm_add_edge(Lexer_FSM* fsm, int state, int ch, char to_state);
+void lexer_fsm_add_edge(Lexer_FSM* fsm, int state, int ch, int to_state);
 
 // Prints the vertices & adjacency matrix of the graph that is representing the FSM
 void lexer_fsm_print(Lexer_FSM* fsm);

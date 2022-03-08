@@ -1,9 +1,7 @@
-#include <stdlib.h>
-
 #include "do.h"
 #include "../io/io.h"
 #include "../parser/parser.h"
-#include "../parse_tree/parse_tree.h"
+
 
 void do_compile(char* src)
 {

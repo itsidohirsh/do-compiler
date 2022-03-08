@@ -5,7 +5,8 @@
 #include "token.h"
 #include "../error_handler/error_handler.h"
 
-Token* token_init(char* value, int value_len, Token_Kind token_kind)
+
+Token* token_init(char* value, int value_len, Token_Type token_type)
 {
     // Create a new token
     Token* token = (Token*) calloc(1, sizeof(Token));
@@ -13,13 +14,13 @@ Token* token_init(char* value, int value_len, Token_Kind token_kind)
     if (token == NULL)
     {
         free(value);
-        error_handler_report_alloc();
+        error_handler_report_memory_error();
     }
 
     // Update token's properties
     token->value = value;
     token->value_len = value_len;
-    token->token_kind = token_kind;
+    token->token_type = token_type;
 
     return token;
 }
@@ -33,9 +34,9 @@ void token_destroy(Token* token)
     free(token);
 }
 
-const char* token_type_to_str(Token_Kind token_kind)
+const char* token_type_to_str(Token_Type token_type)
 {
-    switch (token_kind)
+    switch (token_type)
     {
         case Token_Whitespace: return "Whitespace";
         case Token_Identifier: return "Identifier";
@@ -72,13 +73,13 @@ const char* token_type_to_str(Token_Kind token_kind)
         case Token_Eof: return "EOF";
     }
 
-    // If the token_kind is not one of the values in the enum of types in Token
-    return "Don't know that token_kind... 🤔";
+    // If the token_type is not one of the values in the enum of types in Token
+    return "Don't know that token_type... 🤔";
 }
 
 char* token_to_str(Token* token)
 {
-    const char* type_str = token_type_to_str(token->token_kind);
+    const char* type_str = token_type_to_str(token->token_type);
     const char* template = "%s: `%s`";
 
     char* str = (char*) calloc(strlen(type_str) + strlen(template) + 8, sizeof(char));

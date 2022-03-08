@@ -2,8 +2,9 @@
 
 #include "../lexer/lexer.h"
 #include "../parse_tree/parse_tree.h"
-#include "parsing_table/parsing_table.h"
-#include "parser_stack/parser_stack.h"
+#include "parse_table/parse_table.h"
+#include "parse_stack/parse_stack.h"
+
 
 // Number of production rules in the grammar of the language
 #define NUM_OF_PRODUCTION_RULES 28
@@ -15,7 +16,7 @@
 typedef struct Production_Rule
 {
     // The non-terminal that is on the LHS of a production rule
-    Non_Terminal_Kind non_terminal_kind;
+    Non_Terminal_Type non_terminal_type;
     // The number of Terminals and Non-Terminals that are on the RHS of a production rule
     int rule_length;
 } Production_Rule;
@@ -27,9 +28,9 @@ typedef struct Parser
     Lexer* lexer;
     // The parser's parsing table, made from action & goto tables
     // helps up to know which action to perform according to the next token
-    Parsing_Table* parsing_table;
+    Parse_Table* parse_table;
     // The parser's stack
-    Parser_Stack_Entry* parser_stack;
+    Parse_Stack_Entry* parse_stack;
     // Array of the production rules
     // This will be used when we reduce by a production rule in the parsing phase
     Production_Rule production_rules[NUM_OF_PRODUCTION_RULES];
@@ -47,7 +48,7 @@ void parser_destroy(Parser* parser);
 // Initializes the production rules array according to the grammar of the language
 void parser_init_production_rules(Production_Rule* production_rules);
 
-// Initializes the parser. Parsing table & stack
+// Initializes the parser. Lexer, parse table, stack, and production rules
 void parser_init(Parser* parser, char* src);
 
 // Parses the source code and returns an Abstract Syntax Tree / Parse Tree that represents the source code
