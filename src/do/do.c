@@ -6,8 +6,8 @@
 
 void do_compile(char* src)
 {
-    Parser* parser = parser_init(src);
-    parser_parse(parser);
+    Parser* parser = parser_create();
+    parser_parse(parser, src);
     parser_destroy(parser);
 }
 

@@ -33,3 +33,16 @@ void error_handler_report(int line, char* msg, int argc, void* argv[])
 
     exit(1);
 }
+
+void error_handler_report_alloc()
+{
+    printf("[");
+    red();
+    printf("Allocation Error: ");
+    reset();
+    printf("] ");
+    printf("Failed to allocate needed memory");
+    printf("\n");
+
+    exit(1);
+}

@@ -3,10 +3,19 @@
 #include <string.h>
 
 #include "token.h"
+#include "../error_handler/error_handler.h"
 
 Token* token_init(char* value, int value_len, Token_Type type)
 {
+    // Create a new token
     Token* token = (Token*) calloc(1, sizeof(Token));
+    // Check for allocation error
+    if (token == NULL)
+    {
+        free(value);
+        error_handler_report_alloc();
+    }
+
     token->value = value;
     token->value_len = value_len;
     token->type = type;
@@ -14,7 +23,13 @@ Token* token_init(char* value, int value_len, Token_Type type)
     return token;
 }
 
-static const char* token_type_to_str(Token_Type type)
+void token_destroy(Token* token)
+{
+    free(token->value);
+    free(token);
+}
+
+const char* token_type_to_str(Token_Type type)
 {
     switch (type)
     {
@@ -50,7 +65,7 @@ static const char* token_type_to_str(Token_Type type)
         case Token_Colon: return "Colon";
         case Token_Smiley: return "Smiley";
         case Token_Semi_Colon: return "Semi_Colon";
-        case Token_Eof: break;
+        case Token_Eof: return "EOF";
     }
 
     // If the type is not one of the values in the enum of types in Token

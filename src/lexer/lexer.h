@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "../token/token.h"
-#include "lexer_fsm.h"
+#include "lexer_fsm/lexer_fsm.h"
 
 
 // The size to allocate for each new token value
@@ -25,18 +25,20 @@ typedef struct Lexer
 
 /* ---------- Functions ---------- */
 
-// Initializes the lexer
-// Creates all neccesery components of the lexer on the heap and returns the lexer
-Lexer* lexer_init(char* src);
+// Create a new lexer on the heap and returns a pointer to it
+Lexer* lexer_create();
 
 // Frees everything we've allocated in the lexer_init() function
 void lexer_destroy(Lexer* lexer);
 
+// Initializes the lexer
+void lexer_init(Lexer* lexer, char* src);
+
 // Advances the lexer 1 character forward in the source code
 void lexer_advance(Lexer* lexer);
 
-// Advances the lexer and returns inputed token
-Token* lexer_advance_with(Lexer* lexer, Token* token);
+// Creates and returns a new token when reached to the end of a token
+Token* lexer_EOT(Lexer* lexer, char* value, int size, int state);
 
 // Returns the next token from the source code
 Token* lexer_get_next_token(Lexer* lexer);

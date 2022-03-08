@@ -55,8 +55,11 @@ typedef struct Token
 // Gets a value and a token type, and returns a Token with those inputs
 Token* token_init(char* value, int value_len, Token_Type type);
 
+// Frees a token
+void token_destroy(Token* token);
+
 // Converts the Token_Type to its matching type name in the enum of the types of a Token
-static const char* token_type_to_str(Token_Type type);
+const char* token_type_to_str(Token_Type type);
 
 // Creates a string that describes the inputed token
 char* token_to_str(Token* token);
