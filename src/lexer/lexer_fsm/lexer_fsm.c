@@ -338,7 +338,7 @@ void lexer_fsm_add_starting_state_index(Lexer_FSM* fsm, int char_index, int star
     fsm->starting_state_indices[char_index] = starting_state_index;
 }
 
-void lexer_fsm_add_state(Lexer_FSM* fsm, int state_number, Token_Type token_type)
+void lexer_fsm_add_state(Lexer_FSM* fsm, int state_number, Token_Kind token_type)
 {
     fsm->states[state_number].token_type = token_type;
 }

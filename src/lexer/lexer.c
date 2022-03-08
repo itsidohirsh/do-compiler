@@ -23,7 +23,6 @@ Lexer* lexer_create()
 void lexer_destroy(Lexer* lexer)
 {
     lexer_fsm_destroy(lexer->fsm);
-    free(lexer->src);
     free(lexer);
 }
 

@@ -3,12 +3,14 @@
 #include "do.h"
 #include "../io/io.h"
 #include "../parser/parser.h"
+#include "../parse_tree/parse_tree.h"
 
 void do_compile(char* src)
 {
     Parser* parser = parser_create();
-    parser_parse(parser, src);
-    parser_destroy(parser);
+    Parse_Tree_Node* parse_tree = parser_parse(parser, src);
+    parse_tree_print_tree(parse_tree);
+    parse_tree_destroy_tree(parse_tree);
 }
 
 void do_compile_file(const char* filename)

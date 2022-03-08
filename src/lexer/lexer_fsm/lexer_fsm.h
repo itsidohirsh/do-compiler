@@ -17,7 +17,7 @@
 typedef struct Lexer_State
 {
     // Every state holds a token type, so if we stoped on that state we would know what token we have
-    Token_Type token_type;
+    Token_Kind token_type;
 } Lexer_State;
 
 // Struct of a connection between states in the lexer's FSM
@@ -65,7 +65,7 @@ int lexer_fsm_get_starting_state_index(Lexer_FSM* fsm, char value);
 void lexer_fsm_add_starting_state_index(Lexer_FSM* fsm, int char_index, int starting_state_index);
 
 // Adds a state to the lexer's FSM
-void lexer_fsm_add_state(Lexer_FSM* fsm, int state_number, Token_Type token_type);
+void lexer_fsm_add_state(Lexer_FSM* fsm, int state_number, Token_Kind token_type);
 
 // Adds a connection to the lexer's FSM
 void lexer_fsm_add_edge(Lexer_FSM* fsm, int state, int ch, char to_state);

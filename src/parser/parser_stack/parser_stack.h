@@ -8,10 +8,9 @@
 // The stack is represents by a linear linked list, where the head of the list is the top of the stack.
 typedef struct Parser_Stack_Entry
 {
-    Parse_Tree_Node* tree_node; // Each entry of the stack holds a pointer to a tree node
-    int goto_state; // The state to go to in the next iteration of the parser
-    struct Parser_Stack_Entry* next; // The next entry of the stack, the one on the bottom of the current one
-    // TODO: Maybe add line number for error reporting
+    Parse_Tree_Node* tree_node;         // Each entry of the stack holds a pointer to a tree node
+    int goto_state;                     // The state to go to in the next iteration of the parser
+    struct Parser_Stack_Entry* next;    // The next entry of the stack, the one on the bottom of the current one
 } Parser_Stack_Entry;
 
 
@@ -32,4 +31,5 @@ void parser_stack_push(Parser_Stack_Entry** head, Parser_Stack_Entry* entry);
 // Pops the top entry from the stack and returns the pointer to it
 Parser_Stack_Entry* parser_stack_pop(Parser_Stack_Entry** head);
 
-// TODO: Maybe add stack_print() function
+// Prints the stack in a nice format
+void parser_stack_print_stack(Parser_Stack_Entry* head);

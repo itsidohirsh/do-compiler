@@ -38,7 +38,7 @@ void error_handler_report_alloc()
 {
     printf("[");
     red();
-    printf("Allocation Error: ");
+    printf("Allocation Error");
     reset();
     printf("] ");
     printf("Failed to allocate needed memory");

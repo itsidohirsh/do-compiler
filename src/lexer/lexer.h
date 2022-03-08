@@ -38,6 +38,7 @@ void lexer_init(Lexer* lexer, char* src);
 void lexer_advance(Lexer* lexer);
 
 // Creates and returns a new token when reached to the end of a token
+// If that token is a Whitespace token, returns NULL to indicate that
 Token* lexer_EOT(Lexer* lexer, char* value, int size, int state);
 
 // Returns the next token from the source code

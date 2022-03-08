@@ -11,26 +11,26 @@
 #define PARSING_TABLE_NUM_OF_STATES 62
 
 // Enum of all the possible actions a cell in the parsing table can do
-typedef enum Action_Type
+typedef enum Action_Kind
 {
     Action_Error,
     Action_Shift,
     Action_Reduce,
     Action_Accept
-} Action_Type;
+} Action_Kind;
 
-// Enum of all terminals, Exactly the same as the Token_Type enum
+// Enum of all terminals, Exactly the same as the Token_Kind enum
 // Only for ease of use and readability
-typedef Token_Type Terminal_Type;
+typedef Token_Kind Terminal_Kind;
 
 // Enum of all the non-terminals in the grammar of the language
-typedef enum Non_Terminal_Type
+typedef enum Non_Terminal_Kind
 {
     Non_Terminal_PROG,
     Non_Terminal_BLOCK,
     Non_Terminal_STMT,
     Non_Terminal_DECL,
-    Non_Terminal_ASSIGM,
+    Non_Terminal_ASSIGN,
     Non_Terminal_IF_ELSE,
     Non_Terminal_WHILE,
     Non_Terminal_L_LOG_E,
@@ -40,4 +40,4 @@ typedef enum Non_Terminal_Type
     Non_Terminal_E,
     Non_Terminal_T,
     Non_Terminal_F,
-} Non_Terminal_Type;
+} Non_Terminal_Kind;
