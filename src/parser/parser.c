@@ -190,7 +190,7 @@ Parse_Tree_Node* parser_parse(Parser* parser, char* src)
             // If reached an Error, save error line, destroy the parser, output error message and exit
             i = parser->lexer->line;
             parser_destroy(&parser);
-            error_handler_report(i, Error_Parser, "Unexpected token `%s`", token->value);
+            error_handler_report(i, Error_Parser, "Unexpected token %s", token_to_str(token));
         }
     }
 }

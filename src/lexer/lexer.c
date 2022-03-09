@@ -60,8 +60,12 @@ Token* lexer_EOT(Lexer* lexer, char* value, int size, int state)
     {
         // Making sure there is a null terminator at the end of the value, for the error reporting
         value[size] = '\0';
-
-        error_handler_report(lexer->line, Error_Lexer, "Unexpected characters '%s'", value);
+        // Save the current line number
+        size = lexer->line;
+        // Destroy the lexer
+        lexer_destroy(&lexer);
+        // Report an error and exit
+        error_handler_report(size, Error_Lexer, "Unexpected characters `%s`", value);
     }
 
     // Reallocating the value to its actual size
