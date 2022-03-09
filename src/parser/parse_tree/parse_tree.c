@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "parse_tree.h"
-#include "../error_handler/error_handler.h"
+#include "../../error_handler/error_handler.h"
 
 
 Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token* token, Parse_Tree_Node** children, int num_of_children)
@@ -16,10 +16,10 @@ Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token
         // Free all of the children trees in the children array
         int i;
         for (i = 0; i < num_of_children; i++)
-            parse_tree_destroy_tree(children[i]);
+            parse_tree_destroy_tree(&(children[i]));
 
         // Free the token
-        token_destroy(token);
+        token_destroy(&token);
 
         // Free the children pointers array
         free(children);
@@ -38,23 +38,24 @@ Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token
     return node;
 }
 
-void parse_tree_destroy_tree(Parse_Tree_Node* root)
+void parse_tree_destroy_tree(Parse_Tree_Node** root)
 {
     // If reached a leaf stop recursion
-    if (root == NULL)
+    if (*root == NULL)
         return;
 
     // Destroy children
     int i;
-    for (i = 0; i < root->num_of_children; i++)
-        parse_tree_destroy_tree(root->children[i]);
+    for (i = 0; i < (*root)->num_of_children; i++)
+        parse_tree_destroy_tree(&((*root)->children[i]));
 
     // Free the node's token
-    token_destroy(root->token);
+    token_destroy(&((*root)->token));
 
     // Destroy current node
-    free(root->children);
-    free(root);
+    free((*root)->children);
+    free(*root);
+    *root = NULL;
 }
 
 const char* parser_tree_non_terminal_to_str(Non_Terminal_Type non_terminal_type)
@@ -75,10 +76,9 @@ const char* parser_tree_non_terminal_to_str(Non_Terminal_Type non_terminal_type)
         case Non_Terminal_E: return "E";
         case Non_Terminal_T: return "T";
         case Non_Terminal_F: return "F";
-    }
 
-    // If the non_terminal_type is not one of the values in the enum of types in Non_Terminal_Type
-    return "Don't know that non_terminal_type... 🤔";
+        default: return "Don't know that non-terminal type... ;|";
+    }
 }
 
 void parse_tree_print_tree(Parse_Tree_Node* root)

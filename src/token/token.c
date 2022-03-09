@@ -25,13 +25,18 @@ Token* token_init(char* value, int value_len, Token_Type token_type)
     return token;
 }
 
-void token_destroy(Token* token)
+void token_destroy(Token** token)
 {
-    // Free the memory allocated for the token's value
-    if (token != NULL)
-        free(token->value);
-    // Free the token
-    free(token);
+    // check for NULL pointer
+    if (*token != NULL)
+    {
+        // Free the memory allocated for the token's value
+        free((*token)->value);
+
+        // Free the token
+        free(*token);
+        *token = NULL;
+    }
 }
 
 const char* token_type_to_str(Token_Type token_type)
@@ -71,10 +76,9 @@ const char* token_type_to_str(Token_Type token_type)
         case Token_Smiley: return "Smiley";
         case Token_Semi_Colon: return "Semi_Colon";
         case Token_Eof: return "EOF";
-    }
 
-    // If the token_type is not one of the values in the enum of types in Token
-    return "Don't know that token_type... 🤔";
+        default: return "Don't know that token type... ;|";
+    }
 }
 
 char* token_to_str(Token* token)

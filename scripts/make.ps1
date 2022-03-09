@@ -1,10 +1,10 @@
-# Script to build and run the project #
+# Script to build the project and run the a sample source file #
 
 # Compile
-.\build.ps1
+& .\build.ps1
 
 # Run
-.\run.ps1
+& .\run.ps1 ..\example.do
 
-# clean
-.\clean.ps1
+# Clean
+& .\clean.ps1

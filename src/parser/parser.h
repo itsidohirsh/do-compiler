@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../lexer/lexer.h"
-#include "../parse_tree/parse_tree.h"
+#include "parse_tree/parse_tree.h"
 #include "parse_table/parse_table.h"
 #include "parse_stack/parse_stack.h"
 
@@ -43,7 +43,7 @@ typedef struct Parser
 Parser* parser_create();
 
 // Frees everything we've allocated in the parser_create() function
-void parser_destroy(Parser* parser);
+void parser_destroy(Parser** parser);
 
 // Initializes the production rules array according to the grammar of the language
 void parser_init_production_rules(Production_Rule* production_rules);

@@ -9,7 +9,7 @@ Lexer* lexer_create()
     // Check for allocation error
     if (lexer == NULL)
     {
-        lexer_destroy(lexer);
+        lexer_destroy(&lexer);
         error_handler_report_memory_error();
     }
 
@@ -19,10 +19,16 @@ Lexer* lexer_create()
     return lexer;
 }
 
-void lexer_destroy(Lexer* lexer)
+void lexer_destroy(Lexer** lexer)
 {
-    lexer_fsm_destroy(lexer->fsm);
-    free(lexer);
+    // check for NULL pointer
+    if (*lexer != NULL)
+    {
+        lexer_fsm_destroy(&((*lexer)->fsm));
+
+        free(*lexer);
+        *lexer = NULL;
+    }
 }
 
 void lexer_init(Lexer* lexer, char* src)
@@ -55,7 +61,7 @@ Token* lexer_EOT(Lexer* lexer, char* value, int size, int state)
         // Making sure there is a null terminator at the end of the value, for the error reporting
         value[size] = '\0';
 
-        error_handler_report(lexer->line, "Lexer: Unexpected characters '%s'", value);
+        error_handler_report(lexer->line, Error_Lexer, "Unexpected characters '%s'", value);
     }
 
     // Reallocating the value to its actual size
@@ -88,7 +94,7 @@ Token* lexer_get_next_token(Lexer* lexer)
     {
         // Check for Token's max length
         if (size == LEXER_MAX_TOKEN_SIZE - 1)
-            error_handler_report(lexer->line, "Lexer: Token can't be longer than %d characters", LEXER_MAX_TOKEN_SIZE - 1);
+            error_handler_report(lexer->line, Error_Lexer, "Token can't be longer than %d characters", LEXER_MAX_TOKEN_SIZE - 1);
 
         // Update value
         value[size++] = lexer->c;

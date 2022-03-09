@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../parse_tree/parse_tree.h"
+#include "../parse_tree/parse_tree.h"
 
 
 /* ---------- Structs ---------- */

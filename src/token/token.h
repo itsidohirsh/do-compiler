@@ -57,7 +57,7 @@ typedef struct Token
 Token* token_init(char* value, int value_len, Token_Type token_type);
 
 // Frees a token
-void token_destroy(Token* token);
+void token_destroy(Token** token);
 
 // Converts the Token_Type to its matching token_type name in the enum of the types of a Token
 const char* token_type_to_str(Token_Type token_type);

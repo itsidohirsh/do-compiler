@@ -11,7 +11,7 @@ Parser* parser_create()
     // Check for allocation error
     if (parser == NULL)
     {
-        parser_destroy(parser);
+        parser_destroy(&parser);
         error_handler_report_memory_error();
     }
 
@@ -24,19 +24,24 @@ Parser* parser_create()
     return parser;
 }
 
-void parser_destroy(Parser* parser)
+void parser_destroy(Parser** parser)
 {
-    // Free the parser's lexer
-    lexer_destroy(parser->lexer);
+    // check for NULL pointer
+    if (*parser != NULL)
+    {
+        // Free the parser's lexer
+        lexer_destroy(&((*parser)->lexer));
 
-    // Free parser's parsing table
-    parse_table_destroy(parser->parse_table);
+        // Free parser's parsing table
+        parse_table_destroy(&((*parser)->parse_table));
 
-    // Free parser's stack
-    parse_stack_destroy_stack(&(parser->parse_stack));
+        // Free parser's stack
+        parse_stack_destroy_stack(&((*parser)->parse_stack));
 
-    // Free the parser
-    free(parser);
+        // Free the parser
+        free(*parser);
+        *parser = NULL;
+    }
 }
 
 void parser_init_production_rules(Production_Rule* production_rules)
@@ -147,7 +152,7 @@ Parse_Tree_Node* parser_parse(Parser* parser, char* src)
             if (children == NULL)
             {
                 // Destroy parser
-                parser_destroy(parser);
+                parser_destroy(&parser);
                 error_handler_report_memory_error();
             }
             // Pop Length(Production rule) entries from the stack, and put the trees of each entry as a child in the array.
@@ -158,7 +163,7 @@ Parse_Tree_Node* parser_parse(Parser* parser, char* src)
                 stack_entry = parse_stack_pop(&(parser->parse_stack));
                 // Place its tree in the children array
                 children[i] = stack_entry->tree;
-                // Free that entry
+                // Free poped entry
                 free(stack_entry);
             }
             // Create a new tree node from the non-terminal on the LHS of the production rule we reduce by
@@ -175,17 +180,17 @@ Parse_Tree_Node* parser_parse(Parser* parser, char* src)
             tree_node = parser->parse_stack->tree;
             // Disconnect tree node from entry so it won't be destroyed
             parser->parse_stack->tree = NULL;
-            parser_destroy(parser);
+            parser_destroy(&parser);
             // Returns the parse tree
             return tree_node;
         }
         // If Action[state, token] == Error
         else
         {
-            // When reached an Error, save error line, destroy the parser, output error message and exit
+            // If reached an Error, save error line, destroy the parser, output error message and exit
             i = parser->lexer->line;
-            parser_destroy(parser);
-            error_handler_report(i, "Parser: Unexpected token `%s`", token->value);
+            parser_destroy(&parser);
+            error_handler_report(i, Error_Parser, "Unexpected token `%s`", token->value);
         }
     }
 }

@@ -15,7 +15,7 @@ char* read_file(const char* filename)
 
     // Check for NULL file pointer
     if (fp == NULL)
-        error_handler_report_file_error(filename);
+        error_handler_report_file_IO_error(filename);
 
     // Using fseek & ftell to get length of file
     fseek(fp, 0, SEEK_END);

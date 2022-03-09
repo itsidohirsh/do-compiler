@@ -44,7 +44,7 @@ typedef struct Lexer_FSM
 Lexer_FSM* lexer_fsm_create();
 
 // Frees everything we've allocated in the lexer_fsm_create() function
-void lexer_fsm_destroy(Lexer_FSM* fsm);
+void lexer_fsm_destroy(Lexer_FSM** fsm);
 
 // Initializes the FSM of the lexer
 // Creates all the states and connections between them to make the FSM work properlly
