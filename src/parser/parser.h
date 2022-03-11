@@ -45,11 +45,17 @@ Parser* parser_create();
 // Frees everything we've allocated in the parser_create() function
 void parser_destroy(Parser** parser);
 
+// Initializes the parser. Lexer, parse table, stack, and production rules
+void parser_init(Parser* parser, char* src);
+
 // Initializes the production rules array according to the grammar of the language
 void parser_init_production_rules(Production_Rule* production_rules);
 
-// Initializes the parser. Lexer, parse table, stack, and production rules
-void parser_init(Parser* parser, char* src);
+// Shifts the token and goto state onto the parse stack
+void parser_shift(Parser* parser, Token* token, int goto_state);
+
+// Reduce by the production rule
+void parser_reduce(Parser* parser, int production_rule_num);
 
 // Parses the source code and returns an Abstract Syntax Tree / Parse Tree that represents the source code
 Parse_Tree_Node* parser_parse(Parser* parser, char* src);

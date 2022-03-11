@@ -95,6 +95,50 @@ void parser_init(Parser* parser, char* src)
     parser_init_production_rules(parser->production_rules);
 }
 
+void parser_shift(Parser* parser, Token* token, int goto_state)
+{
+    // Create a new tree node from the current token
+    Parse_Tree_Node* tree_node = parse_tree_init_node(Terminal, token->token_type, token, NULL, 0);
+    // Create a new stack entry for terminal 
+    Parse_Stack_Entry* stack_entry = parse_stack_init_entry(tree_node, goto_state);
+    // Push created stack entry onto the stack
+    parse_stack_push(&(parser->parse_stack), stack_entry);
+}
+
+void parser_reduce(Parser* parser, int production_rule_num)
+{
+    // The produced stack entry
+    Parse_Stack_Entry* stack_entry;
+    // Get the current production rule
+    Production_Rule production_rule = parser->production_rules[production_rule_num];
+    // Create an array of the size of number of symbols on the RHS of the production rule that we reduce by
+    Parse_Tree_Node** children = (Parse_Tree_Node**) calloc(production_rule.rule_length, sizeof(Parse_Tree_Node*));
+    // Check allocation error
+    if (children == NULL)
+    {
+        // Destroy parser
+        parser_destroy(&parser);
+        error_handler_report_memory_error();
+    }
+    // Pop Length(Production rule) entries from the stack, and put the trees of each entry as a child in the array.
+    // From right of array to the left because the production rule is "reversed" in the stack
+    for (int i = production_rule.rule_length - 1; i >= 0; i--)
+    {
+        // Pop entry from the stack
+        stack_entry = parse_stack_pop(&(parser->parse_stack));
+        // Place its tree in the children array
+        children[i] = stack_entry->tree;
+        // Free poped entry
+        free(stack_entry);
+    }
+    // Create a new tree node from the non-terminal on the LHS of the production rule we reduce by
+    Parse_Tree_Node* tree_node = parse_tree_init_node(Non_Terminal, production_rule.non_terminal_type, NULL, children, production_rule.rule_length);
+    // Create a new stack entry using the created tree node and Goto table
+    stack_entry = parse_stack_init_entry(tree_node, parser->parse_table->goto_table[parser->parse_stack->goto_state][production_rule.non_terminal_type]);
+    // Push created entry onto the stack
+    parse_stack_push(&(parser->parse_stack), stack_entry);
+}
+
 Parse_Tree_Node* parser_parse(Parser* parser, char* src)
 {
     // Initializes the parser. Lexer, parse table, stack, and production rules
@@ -106,16 +150,6 @@ Parse_Tree_Node* parser_parse(Parser* parser, char* src)
     int state;
     // Current action table cell
     Action action;
-    // Current tree node
-    Parse_Tree_Node* tree_node;
-    // Current node's children array
-    Parse_Tree_Node** children;
-    // Current stack entry
-    Parse_Stack_Entry* stack_entry;
-    // Current production rule
-    Production_Rule production_rule;
-    // Iterator
-    int i;
 
     // Input first token from the source code
     token = lexer_get_next_token(parser->lexer);
@@ -132,65 +166,33 @@ Parse_Tree_Node* parser_parse(Parser* parser, char* src)
         // If Action[state, token] == Shift
         if (action.action_type == Action_Shift)
         {
-            // Create a new tree node from the current token
-            tree_node = parse_tree_init_node(Terminal, token->token_type, token, NULL, 0);
-            // Create a new stack entry for terminal 
-            stack_entry = parse_stack_init_entry(tree_node, action.state_or_rule);
-            // Push created stack entry onto the stack
-            parse_stack_push(&(parser->parse_stack), stack_entry);
+            parser_shift(parser, token, action.state_or_rule);
             // Get next token from the source code
             token = lexer_get_next_token(parser->lexer);
         }
         // If Action[state, token] == Reduce
         else if (action.action_type == Action_Reduce)
         {
-            // Get the current production rule
-            production_rule = parser->production_rules[action.state_or_rule];
-            // Create an array of the size of number of symbols on the RHS of the production rule that we reduce by
-            children = (Parse_Tree_Node**) calloc(production_rule.rule_length, sizeof(Parse_Tree_Node*));
-            // Check allocation error
-            if (children == NULL)
-            {
-                // Destroy parser
-                parser_destroy(&parser);
-                error_handler_report_memory_error();
-            }
-            // Pop Length(Production rule) entries from the stack, and put the trees of each entry as a child in the array.
-            // From left of array to the right because the production rule is "reversed" in the stack
-            for (i = production_rule.rule_length - 1; i >= 0; i--)
-            {
-                // Pop entry from the stack
-                stack_entry = parse_stack_pop(&(parser->parse_stack));
-                // Place its tree in the children array
-                children[i] = stack_entry->tree;
-                // Free poped entry
-                free(stack_entry);
-            }
-            // Create a new tree node from the non-terminal on the LHS of the production rule we reduce by
-            tree_node = parse_tree_init_node(Non_Terminal, production_rule.non_terminal_type, NULL, children, production_rule.rule_length);
-            // Create a new stack entry using the created tree node and Goto table
-            stack_entry = parse_stack_init_entry(tree_node, parser->parse_table->goto_table[parser->parse_stack->goto_state][production_rule.non_terminal_type]);
-            // Push created entry onto the stack
-            parse_stack_push(&(parser->parse_stack), stack_entry);
+            parser_reduce(parser, action.state_or_rule);
         }
         // If Action[state, token] == Accept
         else if (action.action_type == Action_Accept)
         {
             // When reached an Accept, the stack only has one entry other than the start entry, which contains the parse tree
-            tree_node = parser->parse_stack->tree;
+            Parse_Tree_Node* parse_tree = parser->parse_stack->tree;
             // Disconnect tree node from entry so it won't be destroyed
             parser->parse_stack->tree = NULL;
             parser_destroy(&parser);
             // Returns the parse tree
-            return tree_node;
+            return parse_tree;
         }
         // If Action[state, token] == Error
         else
         {
             // If reached an Error, save error line, destroy the parser, output error message and exit
-            i = parser->lexer->line;
+            int line = parser->lexer->line;
             parser_destroy(&parser);
-            error_handler_report(i, Error_Parser, "Unexpected token %s", token_to_str(token));
+            error_handler_report(line, Error_Parser, "Unexpected token %s", token_to_str(token));
         }
     }
 }

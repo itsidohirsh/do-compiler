@@ -11,7 +11,7 @@
 // Struct of a node in the parse tree
 typedef struct Parse_Tree_Node
 {
-    Symbol_Type symbol_type;              // Terminal / Non-Terminal
+    Symbol_Type symbol_type;            // Terminal / Non-Terminal
     int symbol;                         // The terminal or non-terminal kind of the current node
     Token* token;                       // If a node is a terminal then it will have a token, otherwise it will be NULL
     struct Parse_Tree_Node** children;  // Array of a node pointers which represents a node's children
