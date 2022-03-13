@@ -16,10 +16,10 @@ Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token
         // Free all of the children trees in the children array
         int i;
         for (i = 0; i < num_of_children; i++)
-            parse_tree_destroy_tree(&(children[i]));
+            parse_tree_destroy_tree(children[i]);
 
         // Free the token
-        token_destroy(&token);
+        token_destroy(token);
 
         // Free the children pointers array
         free(children);
@@ -38,24 +38,23 @@ Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token
     return node;
 }
 
-void parse_tree_destroy_tree(Parse_Tree_Node** root)
+void parse_tree_destroy_tree(Parse_Tree_Node* root)
 {
     // If reached a leaf stop recursion
-    if (*root == NULL)
+    if (root == NULL)
         return;
 
     // Destroy children
     int i;
-    for (i = 0; i < (*root)->num_of_children; i++)
-        parse_tree_destroy_tree(&((*root)->children[i]));
+    for (i = 0; i < root->num_of_children; i++)
+        parse_tree_destroy_tree(root->children[i]);
 
     // Free the node's token
-    token_destroy(&((*root)->token));
+    token_destroy(root->token);
 
     // Destroy current node
-    free((*root)->children);
-    free(*root);
-    *root = NULL;
+    free(root->children);
+    free(root);
 }
 
 const char* parser_tree_non_terminal_to_str(Non_Terminal_Type non_terminal_type)

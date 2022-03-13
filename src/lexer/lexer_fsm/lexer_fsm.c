@@ -16,13 +16,13 @@ Lexer_FSM* lexer_fsm_create()
     return fsm;
 }
 
-void lexer_fsm_destroy(Lexer_FSM** fsm)
+void lexer_fsm_destroy(Lexer_FSM* fsm)
 {
     // check for NULL pointer
-    if (*fsm != NULL)
+    if (fsm != NULL)
     {
-        free(*fsm);
-        *fsm = NULL;
+        free(fsm);
+        fsm = NULL;
     }
 }
 

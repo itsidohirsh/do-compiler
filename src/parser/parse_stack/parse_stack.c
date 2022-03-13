@@ -11,7 +11,7 @@ Parse_Stack_Entry* parse_stack_init_entry(Parse_Tree_Node* tree, int goto_state)
     // Check for allocation error
     if (entry == NULL)
     {
-        parse_tree_destroy_tree(&tree);
+        parse_tree_destroy_tree(tree);
         error_handler_report_memory_error();
     }
 
@@ -36,7 +36,7 @@ void parse_stack_destroy_stack(Parse_Stack_Entry** stack)
         // Free entry if not NULL
         if (entry != NULL)
         {
-            parse_tree_destroy_tree(&(entry->tree));
+            parse_tree_destroy_tree(entry->tree);
             free(entry);
         }
     }

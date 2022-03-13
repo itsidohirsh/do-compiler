@@ -33,7 +33,7 @@ typedef struct Parse_Table
 Parse_Table* parse_table_create();
 
 // Frees everything we've allocated the parse_table_create() function
-void parse_table_destroy(Parse_Table** parse_table);
+void parse_table_destroy(Parse_Table* parse_table);
 
 // Initializes the parsing table according to the grammar rules
 void parse_table_init(Parse_Table* parse_table);

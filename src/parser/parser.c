@@ -11,36 +11,35 @@ Parser* parser_create()
     // Check for allocation error
     if (parser == NULL)
     {
-        parser_destroy(&parser);
+        parser_destroy(parser);
         error_handler_report_memory_error();
     }
 
     // Create parser's lexer
     parser->lexer = lexer_create();
 
-    // Creates and initializes the parser's parsing table
+    // Create parser's parse table
     parser->parse_table = parse_table_create();
 
     return parser;
 }
 
-void parser_destroy(Parser** parser)
+void parser_destroy(Parser* parser)
 {
     // check for NULL pointer
-    if (*parser != NULL)
+    if (parser != NULL)
     {
         // Free the parser's lexer
-        lexer_destroy(&((*parser)->lexer));
+        lexer_destroy(parser->lexer);
 
         // Free parser's parsing table
-        parse_table_destroy(&((*parser)->parse_table));
+        parse_table_destroy(parser->parse_table);
 
         // Free parser's stack
-        parse_stack_destroy_stack(&((*parser)->parse_stack));
+        parse_stack_destroy_stack(&((parser)->parse_stack));
 
         // Free the parser
-        free(*parser);
-        *parser = NULL;
+        free(parser);
     }
 }
 
@@ -97,9 +96,9 @@ void parser_init(Parser* parser, char* src)
 
 void parser_shift(Parser* parser, Token* token, int goto_state)
 {
-    // Create a new tree node from the current token
+    // Create a new terminal tree node from the current token
     Parse_Tree_Node* tree_node = parse_tree_init_node(Terminal, token->token_type, token, NULL, 0);
-    // Create a new stack entry for terminal 
+    // Create a new stack entry for created tree node
     Parse_Stack_Entry* stack_entry = parse_stack_init_entry(tree_node, goto_state);
     // Push created stack entry onto the stack
     parse_stack_push(&(parser->parse_stack), stack_entry);
@@ -117,7 +116,7 @@ void parser_reduce(Parser* parser, int production_rule_num)
     if (children == NULL)
     {
         // Destroy parser
-        parser_destroy(&parser);
+        parser_destroy(parser);
         error_handler_report_memory_error();
     }
     // Pop Length(Production rule) entries from the stack, and put the trees of each entry as a child in the array.
@@ -182,7 +181,7 @@ Parse_Tree_Node* parser_parse(Parser* parser, char* src)
             Parse_Tree_Node* parse_tree = parser->parse_stack->tree;
             // Disconnect tree node from entry so it won't be destroyed
             parser->parse_stack->tree = NULL;
-            parser_destroy(&parser);
+            parser_destroy(parser);
             // Returns the parse tree
             return parse_tree;
         }
@@ -191,7 +190,7 @@ Parse_Tree_Node* parser_parse(Parser* parser, char* src)
         {
             // If reached an Error, save error line, destroy the parser, output error message and exit
             int line = parser->lexer->line;
-            parser_destroy(&parser);
+            parser_destroy(parser);
             error_handler_report(line, Error_Parser, "Unexpected token %s", token_to_str(token));
         }
     }

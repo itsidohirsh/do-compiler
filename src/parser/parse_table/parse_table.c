@@ -15,10 +15,9 @@ Parse_Table* parse_table_create()
     return parse_table;
 }
 
-void parse_table_destroy(Parse_Table** parse_table)
+void parse_table_destroy(Parse_Table* parse_table)
 {
-    free(*parse_table);
-    *parse_table = NULL;
+    free(parse_table);
 }
 
 int parse_table_get_terminal_index(Terminal_Type terminal_type)

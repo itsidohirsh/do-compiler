@@ -43,7 +43,7 @@ typedef struct Parser
 Parser* parser_create();
 
 // Frees everything we've allocated in the parser_create() function
-void parser_destroy(Parser** parser);
+void parser_destroy(Parser* parser);
 
 // Initializes the parser. Lexer, parse table, stack, and production rules
 void parser_init(Parser* parser, char* src);

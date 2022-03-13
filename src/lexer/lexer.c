@@ -9,7 +9,7 @@ Lexer* lexer_create()
     // Check for allocation error
     if (lexer == NULL)
     {
-        lexer_destroy(&lexer);
+        lexer_destroy(lexer);
         error_handler_report_memory_error();
     }
 
@@ -19,15 +19,15 @@ Lexer* lexer_create()
     return lexer;
 }
 
-void lexer_destroy(Lexer** lexer)
+void lexer_destroy(Lexer* lexer)
 {
     // check for NULL pointer
-    if (*lexer != NULL)
+    if (lexer != NULL)
     {
-        lexer_fsm_destroy(&((*lexer)->fsm));
+        lexer_fsm_destroy(lexer->fsm);
 
-        free(*lexer);
-        *lexer = NULL;
+        free(lexer);
+        lexer = NULL;
     }
 }
 
@@ -63,7 +63,7 @@ Token* lexer_EOT(Lexer* lexer, char* value, int size, int state)
         // Save the current line number
         size = lexer->line;
         // Destroy the lexer
-        lexer_destroy(&lexer);
+        lexer_destroy(lexer);
         // Report an error and exit
         error_handler_report(size, Error_Lexer, "Unexpected characters `%s`", value);
     }

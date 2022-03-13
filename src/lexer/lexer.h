@@ -29,7 +29,7 @@ typedef struct Lexer
 Lexer* lexer_create();
 
 // Frees everything we've allocated in the lexer_init() function
-void lexer_destroy(Lexer** lexer);
+void lexer_destroy(Lexer* lexer);
 
 // Initializes the lexer
 void lexer_init(Lexer* lexer, char* src);

@@ -25,17 +25,16 @@ Token* token_init(char* value, int value_len, Token_Type token_type)
     return token;
 }
 
-void token_destroy(Token** token)
+void token_destroy(Token* token)
 {
     // check for NULL pointer
-    if (*token != NULL)
+    if (token != NULL)
     {
         // Free the memory allocated for the token's value
-        free((*token)->value);
+        free(token->value);
 
         // Free the token
-        free(*token);
-        *token = NULL;
+        free(token);
     }
 }
 
