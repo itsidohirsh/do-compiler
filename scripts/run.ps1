@@ -6,7 +6,7 @@ if ($args.length -gt 0) {
 }
 # If not, print out error, return to the scripts directory and exit
 else {
-    Write-Host "Please specify source file" -ForegroundColor red
+    Write-Host "Please specify source file." -ForegroundColor red
     exit
 }
 

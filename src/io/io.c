@@ -5,7 +5,7 @@
 #include "../error_handler/error_handler.h"
 
 
-char* read_file(const char* filename)
+char* io_read_file(char* filename)
 {
     char* buffer = 0;
     unsigned long long length;
@@ -25,7 +25,7 @@ char* read_file(const char* filename)
     fseek(fp, 0, SEEK_SET);
 
     // Allocate the buffer size according to the length of the file + 1 for \0
-    buffer = malloc((length + 1) * sizeof(char));
+    buffer = calloc(length + 1, sizeof(char));
 
     // Check for allocation error
     if (buffer == NULL)

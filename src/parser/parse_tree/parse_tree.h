@@ -25,16 +25,7 @@ typedef struct Parse_Tree_Node
 Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token* token, Parse_Tree_Node** children, int num_of_children);
 
 // Recursive function to free a node and all of it's children trees
-void parse_tree_destroy_tree(Parse_Tree_Node* root);
-
-// Converts a non-terminal type to a string representation
-const char* parser_tree_non_terminal_to_str(Non_Terminal_Type non_terminal_type);
+void parse_tree_destroy(Parse_Tree_Node* root);
 
 // Prints the parse tree in a nice format
-void parse_tree_print_tree(Parse_Tree_Node* root);
-
-// The recursive function that actually prints the parse tree
-void parse_tree_print_tree_rec(Parse_Tree_Node* root, char* indent, bool is_last);
-
-// Prints a single node in the parse tree
-void parse_tree_print_node(Parse_Tree_Node* node);
+void parse_tree_print(Parse_Tree_Node* root);

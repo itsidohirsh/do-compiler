@@ -83,7 +83,7 @@ const char* token_type_to_str(Token_Type token_type)
 char* token_to_str(Token* token)
 {
     const char* type_str = token_type_to_str(token->token_type);
-    const char* template = "%s `%s`";
+    char* template = "%s `%s`";
 
     char* str = (char*) calloc(strlen(type_str) + strlen(template) + 8, sizeof(char));
     sprintf(str, template, type_str, token->value);

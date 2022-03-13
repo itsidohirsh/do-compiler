@@ -11,7 +11,7 @@ typedef struct Parse_Stack_Entry
 {
     Parse_Tree_Node* tree;          // Each entry of the stack holds a tree
     int goto_state;                 // The state to go to in the next iteration of the parser
-    struct Parse_Stack_Entry* next; // The next entry of the stack, the one on the bottom of the current one
+    struct Parse_Stack_Entry* next_entry; // The next entry of the stack, the one on the bottom of the current one
 } Parse_Stack_Entry;
 
 
@@ -21,7 +21,7 @@ typedef struct Parse_Stack_Entry
 Parse_Stack_Entry* parse_stack_init_entry(Parse_Tree_Node* tree, int goto_state);
 
 // Frees the whole stack
-void parse_stack_destroy_stack(Parse_Stack_Entry** stack);
+void parse_stack_destroy(Parse_Stack_Entry** stack);
 
 // Pushes a stack entry onto the stack
 void parse_stack_push(Parse_Stack_Entry** stack, Parse_Stack_Entry* entry);

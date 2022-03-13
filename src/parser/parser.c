@@ -36,7 +36,7 @@ void parser_destroy(Parser* parser)
         parse_table_destroy(parser->parse_table);
 
         // Free parser's stack
-        parse_stack_destroy_stack(&((parser)->parse_stack));
+        parse_stack_destroy(&((parser)->parse_stack));
 
         // Free the parser
         free(parser);

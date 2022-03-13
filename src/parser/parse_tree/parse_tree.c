@@ -14,9 +14,8 @@ Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token
     if (node == NULL)
     {
         // Free all of the children trees in the children array
-        int i;
-        for (i = 0; i < num_of_children; i++)
-            parse_tree_destroy_tree(children[i]);
+        for (int i = 0; i < num_of_children; i++)
+            parse_tree_destroy(children[i]);
 
         // Free the token
         token_destroy(token);
@@ -38,16 +37,15 @@ Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token
     return node;
 }
 
-void parse_tree_destroy_tree(Parse_Tree_Node* root)
+void parse_tree_destroy(Parse_Tree_Node* root)
 {
     // If reached a leaf stop recursion
     if (root == NULL)
         return;
 
     // Destroy children
-    int i;
-    for (i = 0; i < root->num_of_children; i++)
-        parse_tree_destroy_tree(root->children[i]);
+    for (int i = 0; i < root->num_of_children; i++)
+        parse_tree_destroy(root->children[i]);
 
     // Free the node's token
     token_destroy(root->token);
@@ -56,6 +54,17 @@ void parse_tree_destroy_tree(Parse_Tree_Node* root)
     free(root->children);
     free(root);
 }
+
+// ----- Print tree helper functions -----
+
+// Converts a non-terminal type to a string representation
+const char* parser_tree_non_terminal_to_str(Non_Terminal_Type non_terminal_type);
+
+// The recursive function that actually prints the parse tree
+void parse_tree_print_tree_rec(Parse_Tree_Node* root, char* indent, bool is_last);
+
+// Prints a single node in the parse tree
+void parse_tree_print_node(Parse_Tree_Node* node);
 
 const char* parser_tree_non_terminal_to_str(Non_Terminal_Type non_terminal_type)
 {
@@ -80,10 +89,18 @@ const char* parser_tree_non_terminal_to_str(Non_Terminal_Type non_terminal_type)
     }
 }
 
-void parse_tree_print_tree(Parse_Tree_Node* root)
+void parse_tree_print(Parse_Tree_Node* root)
 {
     char indent[256] = { 0 };
     parse_tree_print_tree_rec(root, indent, true);
+}
+
+void parse_tree_print_node(Parse_Tree_Node* node)
+{
+    if (node->symbol_type == Terminal)
+        printf("%s", token_to_str(node->token));
+    else
+        printf("%s", parser_tree_non_terminal_to_str(node->symbol));
 }
 
 void parse_tree_print_tree_rec(Parse_Tree_Node* root, char* indent, bool is_last)
@@ -113,18 +130,9 @@ void parse_tree_print_tree_rec(Parse_Tree_Node* root, char* indent, bool is_last
     char tmp[256];
     strcpy(tmp, indent);
 
-    int i;
-    for (i = 0; i < root->num_of_children; i++)
+    for (int i = 0; i < root->num_of_children; i++)
     {
         parse_tree_print_tree_rec(root->children[i], indent, i == root->num_of_children - 1);
         strcpy(indent, tmp);
     }
-}
-
-void parse_tree_print_node(Parse_Tree_Node* node)
-{
-    if (node->symbol_type == Terminal)
-        printf("%s", token_to_str(node->token));
-    else
-        printf("%s", parser_tree_non_terminal_to_str(node->symbol));
 }

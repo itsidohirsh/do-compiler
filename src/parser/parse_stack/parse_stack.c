@@ -11,19 +11,19 @@ Parse_Stack_Entry* parse_stack_init_entry(Parse_Tree_Node* tree, int goto_state)
     // Check for allocation error
     if (entry == NULL)
     {
-        parse_tree_destroy_tree(tree);
+        parse_tree_destroy(tree);
         error_handler_report_memory_error();
     }
 
     // Update entry properties
     entry->tree = tree;
     entry->goto_state = goto_state;
-    entry->next = NULL;
+    entry->next_entry = NULL;
 
     return entry;
 }
 
-void parse_stack_destroy_stack(Parse_Stack_Entry** stack)
+void parse_stack_destroy(Parse_Stack_Entry** stack)
 {
     Parse_Stack_Entry* entry;
 
@@ -36,7 +36,7 @@ void parse_stack_destroy_stack(Parse_Stack_Entry** stack)
         // Free entry if not NULL
         if (entry != NULL)
         {
-            parse_tree_destroy_tree(entry->tree);
+            parse_tree_destroy(entry->tree);
             free(entry);
         }
     }
@@ -45,7 +45,7 @@ void parse_stack_destroy_stack(Parse_Stack_Entry** stack)
 void parse_stack_push(Parse_Stack_Entry** stack, Parse_Stack_Entry* entry)
 {
     // Connect the entry as the stack of the stack
-    entry->next = *stack;
+    entry->next_entry = *stack;
     // Make stack point to the new entry
     *stack = entry;
 }
@@ -59,9 +59,9 @@ Parse_Stack_Entry* parse_stack_pop(Parse_Stack_Entry** stack)
     // Extract the top node
     Parse_Stack_Entry* top_entry = *stack;
     // Advance the stack of the stack list
-    *stack = (*stack)->next;
+    *stack = (*stack)->next_entry;
     // Disconect it from the stack list
-    top_entry->next = NULL;
+    top_entry->next_entry = NULL;
 
     return top_entry;
 }
