@@ -42,6 +42,9 @@ void symbol_table_entry_destroy(Symbol_Table_Entry* entry)
 
 void symbol_table_entry_print(Symbol_Table_Entry* entry)
 {
+    // Check for NULL pointer
+    if (entry == NULL)
+        return;
 
     if (entry->data_type == Data_Type_Int)
     {

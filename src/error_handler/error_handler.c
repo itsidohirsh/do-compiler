@@ -68,11 +68,11 @@ void error_handler_report_memory_error()
     exit(Error_Memory);
 }
 
-void error_handler_report_file_IO_error(char* filename)
+void error_handler_report_file_IO_error(char* file_name)
 {
     printf("[");
     printf_red(error_handler_error_to_str(Error_File_IO));
-    printf("] Could not read file %s\n", filename);
+    printf("] Could not read file %s\n", file_name);
 
     exit(Error_File_IO);
 }

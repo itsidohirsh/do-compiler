@@ -1,5 +1,7 @@
 # Script to test the code. All the tests are from the ../tests folder. A test is passed if the exit code of it is NOT 0 #
 
+Clear-Host
+
 # Build
 & .\build.ps1
 

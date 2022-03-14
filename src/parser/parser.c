@@ -138,7 +138,7 @@ void parser_reduce(Parser* parser, int production_rule_num)
     parse_stack_push(&(parser->parse_stack), stack_entry);
 }
 
-Parse_Tree_Node* parser_parse(Parser* parser, char* src)
+Parse_Tree_Node* parser_parse(Parser* parser, char* src, Scope_Tree* scope_tree)
 {
     // Initializes the parser. Lexer, parse table, stack, and production rules
     parser_init(parser, src);

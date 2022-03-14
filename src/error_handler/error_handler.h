@@ -30,4 +30,4 @@ void error_handler_report(int line, Error_Type error_type, char* format, ...);
 void error_handler_report_memory_error();
 
 // Reports a file I/O error message to the user and exits
-void error_handler_report_file_IO_error(char* filename);
+void error_handler_report_file_IO_error(char* file_name);

@@ -16,7 +16,7 @@ Symbol_Table* symbol_table_create()
     // Initial symbol table properties
     symbol_table->capacity = SYMBOL_TABLE_INITIAL_CAPACITY;
     symbol_table->num_of_entries = 0;
-    symbol_table->num_or_indices_occupied = 0;
+    symbol_table->num_of_indices_occupied = 0;
 
     // Create symbol table entries array
     symbol_table->entries = (Symbol_Table_Entry**) calloc(symbol_table->capacity, sizeof(Symbol_Table_Entry*));
@@ -36,7 +36,7 @@ void symbol_table_destroy(Symbol_Table* symbol_table)
     Symbol_Table_Entry* prev_entry;
 
     // Free symbol table entries
-    for (int i = 0; i < symbol_table->num_of_entries; i++)
+    for (int i = 0; i < symbol_table->capacity; i++)
     {
         // For each index, free all the entries in it
         cur_entry = symbol_table->entries[i];
@@ -74,11 +74,9 @@ void symbol_table_insert(Symbol_Table* symbol_table, Symbol_Table_Entry* entry)
     uint64_t hash = symbol_table_hash(entry->identifier);
     int index = (int) (hash % (uint64_t) (symbol_table->capacity - 1));
 
-    // TODO: Check if need to expand table
-
     // Check if added to new index, if so adds 1 to the number of indices occupied in the table
     if (symbol_table->entries[index] == NULL)
-        symbol_table->num_or_indices_occupied++;
+        symbol_table->num_of_indices_occupied++;
 
     // Insert the entry into the table
     entry->next_entry = symbol_table->entries[index];
@@ -86,6 +84,15 @@ void symbol_table_insert(Symbol_Table* symbol_table, Symbol_Table_Entry* entry)
 
     // Increment the number of entries in the table
     symbol_table->num_of_entries++;
+
+    // TODO: Make the λ calculation the best possible
+    // Calculate lambda - The load factor of the hash table
+    // λ = num_of_entries / number_of_indices_occupied
+    float lambda = (float) symbol_table->num_of_entries / (float) symbol_table->num_of_indices_occupied;
+
+    // If λ is greater then the SYMBOL_TABLE_LAMBDA_LIMIT, expand table to ensure constant time operations on the hash table
+    if (lambda > SYMBOL_TABLE_LAMBDA_LIMIT)
+        symbol_table_expand(symbol_table);
 }
 
 Symbol_Table_Entry* symbol_table_fetch(Symbol_Table* symbol_table, char* identifier)
@@ -108,26 +115,81 @@ Symbol_Table_Entry* symbol_table_fetch(Symbol_Table* symbol_table, char* identif
     return NULL;
 }
 
+void symbol_table_expand(Symbol_Table* symbol_table)
+{
+    // Create new entries array
+    int new_capacity = symbol_table->capacity * 2;
+    Symbol_Table_Entry** new_entries = (Symbol_Table_Entry**) calloc(new_capacity, sizeof(Symbol_Table_Entry*));
+    // Check for allocation error
+    if (new_entries == NULL)
+    {
+        symbol_table_destroy(symbol_table);
+        error_handler_report_memory_error();
+    }
+
+    // Zero the symbol table's number of entries and number of occupied indices
+    symbol_table->num_of_entries = 0;
+    symbol_table->num_of_indices_occupied = 0;
+
+    Symbol_Table_Entry* old_entry;
+    Symbol_Table_Entry* new_entry;
+    uint64_t hash;
+    int new_index;
+
+    // Move already existing entries into the new entries table
+    for (int i = 0; i < symbol_table->capacity; i++)
+    {
+        old_entry = symbol_table->entries[i];
+
+        // Go over all the entries in that index
+        while (old_entry != NULL)
+        {
+            // Save the current entry in the old array to the new array, and advance
+            new_entry = old_entry;
+            old_entry = old_entry->next_entry;
+
+            // Get old_entry's new index in the new table
+            hash = symbol_table_hash(new_entry->identifier);
+            new_index = (int) (hash % (uint64_t) (new_capacity - 1));
+
+            // Check if added to new index, if so adds 1 to the number of indices occupied in the table
+            if (new_entries[new_index] == NULL)
+                symbol_table->num_of_indices_occupied++;
+
+            // Insert the old entry into the new table
+            new_entry->next_entry = new_entries[new_index];
+            new_entries[new_index] = new_entry;
+
+            // Increment the number of entries in the table
+            symbol_table->num_of_entries++;
+        }
+    }
+
+    // Free old entries array, and update the new entries array in the table
+    free(symbol_table->entries);
+    symbol_table->capacity = new_capacity;
+    symbol_table->entries = new_entries;
+}
+
 void symbol_table_print(Symbol_Table* symbol_table)
 {
     printf("%d entries in total\n", symbol_table->num_of_entries);
-    printf("%d / %d indices are occupied\n\n", symbol_table->num_or_indices_occupied, symbol_table->capacity);
+    printf("%d / %d indices are occupied\n\n", symbol_table->num_of_indices_occupied, symbol_table->capacity);
 
     Symbol_Table_Entry* entry;
     for (int i = 0; i < symbol_table->capacity; i++)
     {
+        printf("%2d| ", i);
+
         entry = symbol_table->entries[i];
 
-        if (entry == NULL)
-            printf("----------");
-        else
-            while (entry != NULL)
-            {
-                printf("[");
-                symbol_table_entry_print(entry);
-                printf("] -> ");
-                entry = entry->next_entry;
-            }
+        while (entry != NULL)
+        {
+            printf("[");
+            symbol_table_entry_print(entry);
+            printf("] -> ");
+            entry = entry->next_entry;
+        }
 
         printf("\n");
     }

@@ -14,7 +14,7 @@ typedef struct Symbol_Table
     Symbol_Table_Entry** entries;   // Array of the entry pointers of the symbol table
     int capacity;                   // Max capacity of symbol table
     int num_of_entries;             // Current number of entries in the symbol table
-    int num_or_indices_occupied;    // Number of indices that have entries in them
+    int num_of_indices_occupied;    // Number of indices that have entries in them
 } Symbol_Table;
 
 
@@ -40,6 +40,10 @@ void symbol_table_insert(Symbol_Table* symbol_table, Symbol_Table_Entry* entry);
 // Returns a pointer to the entry in the symbol table that corresponds to the given identifier.
 // If the identifier was not found, returns NULL
 Symbol_Table_Entry* symbol_table_fetch(Symbol_Table* symbol_table, char* identifier);
+
+// Expands the symbol table to be twice its current size.
+// To asure constant time operations on the symbol table
+void symbol_table_expand(Symbol_Table* symbol_table);
 
 // Prints the symbol table in a nice format
 void symbol_table_print(Symbol_Table* symbol_table);

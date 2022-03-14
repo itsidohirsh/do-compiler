@@ -5,17 +5,17 @@
 #include "../error_handler/error_handler.h"
 
 
-char* io_read_file(char* filename)
+char* io_read_file(char* file_name)
 {
     char* buffer = 0;
     unsigned long long length;
 
     // Opening the file
-    FILE* fp = fopen(filename, "rb");
+    FILE* fp = fopen(file_name, "rb");
 
     // Check for NULL file pointer
     if (fp == NULL)
-        error_handler_report_file_IO_error(filename);
+        error_handler_report_file_IO_error(file_name);
 
     // Using fseek & ftell to get length of file
     fseek(fp, 0, SEEK_END);

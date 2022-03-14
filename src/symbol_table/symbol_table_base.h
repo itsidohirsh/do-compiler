@@ -1,8 +1,13 @@
 #pragma once
 
 
-// The initial capacity of a symbol table when creating it
-#define SYMBOL_TABLE_INITIAL_CAPACITY 16
+// The initial capacity of a symbol table when creating it.
+// Number of indices in the array.
+#define SYMBOL_TABLE_INITIAL_CAPACITY 32
+
+// TODO: Set λ limit value to the best value possible
+// The maximum value the load factor of the hash table can have before expanding the table
+#define SYMBOL_TABLE_LAMBDA_LIMIT 2.5
 
 
 // Enum of all the possible types of entries in the symbol table.

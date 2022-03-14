@@ -18,6 +18,10 @@
                 "src/parser/parse_table/*.c",
                 "src/parser/parse_tree/*.c",
                 "src/token/*.c",
+                "src/symbol_table/*.c",
+                "src/symbol_table/scope_tree/*.c",
+                "src/symbol_table/scope_tree/scope/*.c",
+                "src/symbol_table/symbol_table_entry/*.c",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],

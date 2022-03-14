@@ -1,9 +1,10 @@
 #pragma once
 
-#include "../lexer/lexer.h"
 #include "parse_tree/parse_tree.h"
 #include "parse_table/parse_table.h"
 #include "parse_stack/parse_stack.h"
+#include "../lexer/lexer.h"
+#include "../symbol_table/scope_tree/scope_tree.h"
 
 
 // Number of production rules in the grammar of the language
@@ -57,5 +58,6 @@ void parser_shift(Parser* parser, Token* token, int goto_state);
 // Reduce by the production rule
 void parser_reduce(Parser* parser, int production_rule_num);
 
-// Parses the source code and returns an Abstract Syntax Tree / Parse Tree that represents the source code
-Parse_Tree_Node* parser_parse(Parser* parser, char* src);
+// Parses the source code and returns an Abstract Syntax Tree / Parse Tree that represents the source code.
+// Also updates the symbol tables scopes tree that is given to it.
+Parse_Tree_Node* parser_parse(Parser* parser, char* src, Scope_Tree* scope_tree);
