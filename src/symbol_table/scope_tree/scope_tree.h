@@ -24,3 +24,14 @@ void scope_tree_destroy(Scope_Tree* scope_tree);
 
 // Frees all allocated memory in the tree of scopes
 void scope_tree_destroy_tree(Scope* global_scope);
+
+// Creates a new scope child for the given scope tree's current scope
+// and advances the scope tree's current scope to that new scope.
+void scope_tree_add_scope();
+
+// Moves the current scope in the scope tree to point to its parent scope
+void scope_tree_goto_parent();
+
+// Moves the current scope in the scope tree to point to its next child scope.
+// Also updates the current scope's next child to the next child.
+void scope_tree_goto_child();

@@ -14,12 +14,12 @@ typedef struct Scope
     struct Scope** children;
     int num_of_children;        // Length of the children array
     int current_child_index;    // Index of the current child in children array
-    // Pointer to the current scope's father in the symbol tables scopes tree
-    struct Scope* father;
+    // Pointer to the current scope's parent in the symbol tables scopes tree
+    struct Scope* parent;
 } Scope;
 
 
 /* ---------- Functions ---------- */
 
-// Creates a scope with an empty symbol table and the given father pointer
-Scope* scope_init(Scope* father);
+// Creates a scope with an empty symbol table and the given parent pointer
+Scope* scope_init(Scope* parent);

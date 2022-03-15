@@ -3,7 +3,7 @@
 #include "scope.h"
 #include "../../../error_handler/error_handler.h"
 
-Scope* scope_init(Scope* father)
+Scope* scope_init(Scope* parent)
 {
     // Create a new scope
     Scope* scope = (Scope*) calloc(1, sizeof(Scope));
@@ -18,8 +18,8 @@ Scope* scope_init(Scope* father)
     // Create empty symbol table
     scope->symbol_table = symbol_table_create();
 
-    // Set father
-    scope->father = father;
+    // Set parent
+    scope->parent = parent;
 
     return scope;
 }
