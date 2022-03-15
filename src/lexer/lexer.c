@@ -8,10 +8,7 @@ Lexer* lexer_create()
     Lexer* lexer = (Lexer*) calloc(1, sizeof(Lexer));
     // Check for allocation error
     if (lexer == NULL)
-    {
-        lexer_destroy(lexer);
         error_handler_report_memory_error();
-    }
 
     // Create lexer's FSM
     lexer->fsm = lexer_fsm_create();
@@ -61,11 +58,11 @@ Token* lexer_EOT(Lexer* lexer, char* value, int size, int state)
         // Making sure there is a null terminator at the end of the value, for the error reporting
         value[size] = '\0';
         // Save the current line number
-        size = lexer->line;
+        int line = lexer->line;
         // Destroy the lexer
         lexer_destroy(lexer);
         // Report an error and exit
-        error_handler_report(size, Error_Lexer, "Unexpected characters `%s`", value);
+        error_handler_report(line, Error_Lexer, "Unexpected characters `%s`", value);
     }
 
     // Reallocating the value to its actual size
@@ -89,7 +86,12 @@ Token* lexer_get_next_token(Lexer* lexer)
     // The value of the token that will be returned
     char* value = (char*) calloc(LEXER_MAX_TOKEN_SIZE, sizeof(char));
     // Check for allocation error
-    if (value == NULL) error_handler_report_memory_error();
+    if (value == NULL)
+    {
+        lexer_destroy(lexer);
+        error_handler_report_memory_error();
+    }
+
     // The size of the token's value
     int size = 0;
 
@@ -98,7 +100,10 @@ Token* lexer_get_next_token(Lexer* lexer)
     {
         // Check for Token's max length
         if (size == LEXER_MAX_TOKEN_SIZE - 1)
+        {
+            lexer_destroy(lexer);
             error_handler_report(lexer->line, Error_Lexer, "Token can't be longer than %d characters", LEXER_MAX_TOKEN_SIZE - 1);
+        }
 
         // Update value
         value[size++] = lexer->c;
