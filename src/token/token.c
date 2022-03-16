@@ -86,6 +86,12 @@ char* token_to_str(Token* token)
     char* template = "%s `%s`";
 
     char* str = (char*) calloc(strlen(type_str) + strlen(template) + 8, sizeof(char));
+    if (str == NULL)
+    {
+        token_destroy(token);
+        error_handler_report_memory_error();
+    }
+
     sprintf(str, template, type_str, token->value);
 
     return str;

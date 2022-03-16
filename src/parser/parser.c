@@ -9,11 +9,7 @@ Parser* parser_create()
     // Create parser
     Parser* parser = (Parser*) calloc(1, sizeof(Parser));
     // Check for allocation error
-    if (parser == NULL)
-    {
-        parser_destroy(parser);
-        error_handler_report_memory_error();
-    }
+    if (parser == NULL) error_handler_report_memory_error();
 
     // Create parser's lexer
     parser->lexer = lexer_create();
@@ -115,7 +111,6 @@ void parser_reduce(Parser* parser, int production_rule_num)
     // Check allocation error
     if (children == NULL)
     {
-        // Destroy parser
         parser_destroy(parser);
         error_handler_report_memory_error();
     }

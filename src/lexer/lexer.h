@@ -17,8 +17,8 @@ typedef struct Lexer
 {
     char* src;      // The src code
     char c;         // Current character in the src code
-    size_t i;       // Current offsest from the starting of the source code
-    size_t line;    // Current line number in source file for error reporting
+    int i;       // Current offsest from the starting of the source code
+    int line;    // Current line number in source file for error reporting
     Lexer_FSM* fsm; // The lexer's FSM
 } Lexer;
 

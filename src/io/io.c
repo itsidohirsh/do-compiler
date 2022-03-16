@@ -14,8 +14,7 @@ char* io_read_file(char* file_name)
     FILE* fp = fopen(file_name, "rb");
 
     // Check for NULL file pointer
-    if (fp == NULL)
-        error_handler_report_file_IO_error(file_name);
+    if (fp == NULL) error_handler_report_file_IO_error(file_name);
 
     // Using fseek & ftell to get length of file
     fseek(fp, 0, SEEK_END);
@@ -25,7 +24,7 @@ char* io_read_file(char* file_name)
     fseek(fp, 0, SEEK_SET);
 
     // Allocate the buffer size according to the length of the file + 1 for \0
-    buffer = calloc(length + 1, sizeof(char));
+    buffer = (char*) calloc(length + 1, sizeof(char));
 
     // Check for allocation error
     if (buffer == NULL)

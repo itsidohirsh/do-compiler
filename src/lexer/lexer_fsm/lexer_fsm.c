@@ -18,12 +18,7 @@ Lexer_FSM* lexer_fsm_create()
 
 void lexer_fsm_destroy(Lexer_FSM* fsm)
 {
-    // check for NULL pointer
-    if (fsm != NULL)
-    {
-        free(fsm);
-        fsm = NULL;
-    }
+    free(fsm);
 }
 
 void lexer_fsm_set_alnum_identifier(Lexer_FSM* fsm, int state_index, char except)

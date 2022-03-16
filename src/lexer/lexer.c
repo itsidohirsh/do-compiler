@@ -7,8 +7,7 @@ Lexer* lexer_create()
     // Create lexer
     Lexer* lexer = (Lexer*) calloc(1, sizeof(Lexer));
     // Check for allocation error
-    if (lexer == NULL)
-        error_handler_report_memory_error();
+    if (lexer == NULL) error_handler_report_memory_error();
 
     // Create lexer's FSM
     lexer->fsm = lexer_fsm_create();
@@ -24,7 +23,6 @@ void lexer_destroy(Lexer* lexer)
         lexer_fsm_destroy(lexer->fsm);
 
         free(lexer);
-        lexer = NULL;
     }
 }
 
@@ -68,7 +66,11 @@ Token* lexer_EOT(Lexer* lexer, char* value, int size, int state)
     // Reallocating the value to its actual size
     value = (char*) realloc(value, (size + 1) * sizeof(char));
     // Check for allocation error
-    if (value == NULL) error_handler_report_memory_error();
+    if (value == NULL)
+    {
+        lexer_destroy(lexer);
+        error_handler_report_memory_error();
+    }
 
     // Making sure there is a null terminator at the end of the value
     value[size] = '\0';

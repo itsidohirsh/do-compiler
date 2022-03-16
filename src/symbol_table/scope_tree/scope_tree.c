@@ -46,7 +46,11 @@ void scope_tree_add_scope(Scope_Tree* scope_tree)
     // Resizes the children array of the current scope in the scope tree, and add 1 to the number of children
     scope_tree->current_scope->children = (Scope**) realloc(scope_tree->current_scope->children, ++scope_tree->current_scope->num_of_children * sizeof(Scope*));
     // Check for allocation error
-    if (scope_tree->current_scope->children == NULL) error_handler_report_memory_error();
+    if (scope_tree->current_scope->children == NULL)
+    {
+        scope_tree_destroy(scope_tree);
+        error_handler_report_memory_error();
+    }
 
     // Advance the current child to the next child
     scope_tree->current_scope->current_child_index++;

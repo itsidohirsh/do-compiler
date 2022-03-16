@@ -35,4 +35,5 @@ void do_compile_file(char* file_name)
 
     // Free the buffer
     free(src);
+    src = NULL;
 }
