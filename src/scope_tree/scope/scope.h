@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../../symbol_table.h"
+#include "../symbol_table/symbol_table.h"
+
 
 /* ---------- Structs ---------- */
 

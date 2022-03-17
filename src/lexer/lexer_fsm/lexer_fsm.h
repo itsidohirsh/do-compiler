@@ -40,33 +40,33 @@ typedef struct Lexer_FSM
 
 /* ---------- Functions ---------- */
 
-// Creates a new lexer fsm on the heap and returns a pointer to it
-Lexer_FSM* lexer_fsm_create();
+// Creates a new lexer fsm on the heap and updates the compiler's lexer finite state machine to point to it
+void lexer_fsm_create();
 
-// Frees everything we've allocated in the lexer_fsm_create() function
-void lexer_fsm_destroy(Lexer_FSM* fsm);
+// Frees everything we've allocated in the lexer_fsm_create() function for the compiler's lexer finite state machine
+void lexer_fsm_destroy();
 
 // Initializes the FSM of the lexer
 // Creates all the states and connections between them to make the FSM work properlly
-void lexer_fsm_init(Lexer_FSM* fsm);
+void lexer_fsm_init();
 
 // Sets an edge between state and every alpha-numeric character in the adjacency matrix except for the except char
-void lexer_fsm_set_alnum_identifier(Lexer_FSM* fsm, int state, char except);
+void lexer_fsm_set_alnum_identifier(int state, char except);
 
 // Returns the index of a certain character in the FSM adjacency matrix
 int lexer_fsm_get_char_index(char value);
 
 // Returns The index of the starting state of a token according to the current character
-int lexer_fsm_get_starting_state_index(Lexer_FSM* fsm, char value);
+int lexer_fsm_get_starting_state_index(char value);
 
 // Adds a starting state index to the lexer's starting state indices array
-void lexer_fsm_add_starting_state_index(Lexer_FSM* fsm, int char_index, int starting_state_index);
+void lexer_fsm_add_starting_state_index(int char_index, int starting_state_index);
 
 // Adds a state to the lexer's FSM
-void lexer_fsm_add_state(Lexer_FSM* fsm, int state_number, Token_Type token_type);
+void lexer_fsm_add_state(int state_number, Token_Type token_type);
 
 // Adds a connection to the lexer's FSM
-void lexer_fsm_add_edge(Lexer_FSM* fsm, int state, int ch, int to_state);
+void lexer_fsm_add_edge(int state, int ch, int to_state);
 
 // Prints the vertices & adjacency matrix of the graph that is representing the FSM
-void lexer_fsm_print(Lexer_FSM* fsm);
+void lexer_fsm_print();

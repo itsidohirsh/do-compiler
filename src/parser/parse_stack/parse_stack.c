@@ -1,5 +1,7 @@
 #include <stdlib.h>
 
+#include "../../global.h"
+
 #include "parse_stack.h"
 #include "../../error_handler/error_handler.h"
 
@@ -23,15 +25,15 @@ Parse_Stack_Entry* parse_stack_init_entry(Parse_Tree_Node* tree, int goto_state)
     return entry;
 }
 
-void parse_stack_destroy(Parse_Stack_Entry** stack)
+void parse_stack_destroy()
 {
     Parse_Stack_Entry* entry;
 
     // While the stack is not empty
-    while (*stack != NULL)
+    while (compiler.parser->parse_stack != NULL)
     {
         // Pop and destroy the entry
-        entry = parse_stack_pop(stack);
+        entry = parse_stack_pop();
 
         // Free entry if not NULL
         if (entry != NULL)
@@ -42,24 +44,24 @@ void parse_stack_destroy(Parse_Stack_Entry** stack)
     }
 }
 
-void parse_stack_push(Parse_Stack_Entry** stack, Parse_Stack_Entry* entry)
+void parse_stack_push(Parse_Stack_Entry* entry)
 {
     // Connect the entry as the stack of the stack
-    entry->next_entry = *stack;
+    entry->next_entry = compiler.parser->parse_stack;
     // Make stack point to the new entry
-    *stack = entry;
+    compiler.parser->parse_stack = entry;
 }
 
-Parse_Stack_Entry* parse_stack_pop(Parse_Stack_Entry** stack)
+Parse_Stack_Entry* parse_stack_pop()
 {
     // Check for NULL pointer
-    if (*stack == NULL)
+    if (compiler.parser->parse_stack == NULL)
         return NULL;
 
     // Extract the top node
-    Parse_Stack_Entry* top_entry = *stack;
+    Parse_Stack_Entry* top_entry = compiler.parser->parse_stack;
     // Advance the stack of the stack list
-    *stack = (*stack)->next_entry;
+    compiler.parser->parse_stack = compiler.parser->parse_stack->next_entry;
     // Disconect it from the stack list
     top_entry->next_entry = NULL;
 

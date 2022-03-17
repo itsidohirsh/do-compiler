@@ -86,6 +86,7 @@ char* token_to_str(Token* token)
     char* template = "%s `%s`";
 
     char* str = (char*) calloc(strlen(type_str) + strlen(template) + 8, sizeof(char));
+    // Check for allocation error
     if (str == NULL)
     {
         token_destroy(token);

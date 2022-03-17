@@ -1,7 +1,8 @@
 #include <stdlib.h>
 
 #include "scope.h"
-#include "../../../error_handler/error_handler.h"
+#include "../../error_handler/error_handler.h"
+
 
 Scope* scope_init(Scope* parent)
 {

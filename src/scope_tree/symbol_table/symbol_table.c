@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "symbol_table.h"
-#include "../error_handler/error_handler.h"
+#include "../../error_handler/error_handler.h"
 
 
 Symbol_Table* symbol_table_create()

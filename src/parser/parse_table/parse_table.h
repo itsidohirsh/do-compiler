@@ -30,22 +30,22 @@ typedef struct Parse_Table
 /* ---------- Functions ---------- */
 
 // Creates a new Parse_Table on the heap and returns a pointer to it
-Parse_Table* parse_table_create();
+void parse_table_create();
 
 // Frees everything we've allocated the parse_table_create() function
-void parse_table_destroy(Parse_Table* parse_table);
+void parse_table_destroy();
 
 // Initializes the parsing table according to the grammar rules
-void parse_table_init(Parse_Table* parse_table);
+void parse_table_init();
 
 // Returns the index of a terminal in the action table
 int parse_table_get_terminal_index(Terminal_Type terminal_type);
 
 // Inserts a new cell into the action table
-void parse_table_insert_action(Parse_Table* parse_table, int state, int terminal_index, Action action);
+void parse_table_insert_action(int state, int terminal_index, Action action);
 
 // Inserts a new cell into the goto table
-void parse_table_insert_goto(Parse_Table* parse_table, int state, int non_terminal_index, int goto_state);
+void parse_table_insert_goto(int state, int non_terminal_index, int goto_state);
 
 // Prints the parsing table in a nice format
-void parse_table_print(Parse_Table* parse_table);
+void parse_table_print();

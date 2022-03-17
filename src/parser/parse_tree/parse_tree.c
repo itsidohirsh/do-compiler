@@ -17,11 +17,11 @@ Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token
         for (int i = 0; i < num_of_children; i++)
             parse_tree_destroy(children[i]);
 
-        // Free the token
-        token_destroy(token);
-
         // Free the children pointers array
         free(children);
+
+        // Free the token
+        token_destroy(token);
 
         // Report allocation error and exit
         error_handler_report_memory_error();

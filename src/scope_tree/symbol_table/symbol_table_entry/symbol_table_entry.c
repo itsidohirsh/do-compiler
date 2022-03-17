@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "symbol_table_entry.h"
-#include "../../error_handler/error_handler.h"
+#include "../../../error_handler/error_handler.h"
 
 
 Symbol_Table_Entry* symbol_table_entry_init(Entry_Type entry_type, char* identifier, Data_Type data_type, void* value)

@@ -3,6 +3,7 @@
 #include <stdarg.h>
 
 #include "error_handler.h"
+#include "../compiler/compiler.h"
 
 
 void printf_red(const char* format, ...)
@@ -56,6 +57,8 @@ void error_handler_report(int line, Error_Type error_type, char* format, ...)
     va_end(args);           // Clean up the va_list
 
     printf("\n");
+
+    compiler_destroy();
     exit(error_type);
 }
 
@@ -65,6 +68,7 @@ void error_handler_report_memory_error()
     printf_red(error_handler_error_to_str(Error_Memory));
     printf("] Failed to allocate needed memory\n");
 
+    compiler_destroy();
     exit(Error_Memory);
 }
 
@@ -74,5 +78,6 @@ void error_handler_report_file_IO_error(char* file_name)
     printf_red(error_handler_error_to_str(Error_File_IO));
     printf("] Could not read file %s\n", file_name);
 
+    compiler_destroy();
     exit(Error_File_IO);
 }

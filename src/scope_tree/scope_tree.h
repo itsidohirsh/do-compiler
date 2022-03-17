@@ -2,6 +2,7 @@
 
 #include "scope/scope.h"
 
+
 /* ---------- Structs ---------- */
 
 // Struct of the symbol tables scope tree.
@@ -17,10 +18,10 @@ typedef struct Scope_Tree
 /* ---------- Functions ---------- */
 
 // Create a new symbol tables scopes tree, initialized with an empty global scope
-Scope_Tree* scope_tree_create();
+void scope_tree_create();
 
 // Destory the scope tree
-void scope_tree_destroy(Scope_Tree* scope_tree);
+void scope_tree_destroy();
 
 // Frees all allocated memory in the tree of scopes
 void scope_tree_destroy_tree(Scope* global_scope);

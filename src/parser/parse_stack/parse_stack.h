@@ -21,10 +21,10 @@ typedef struct Parse_Stack_Entry
 Parse_Stack_Entry* parse_stack_init_entry(Parse_Tree_Node* tree, int goto_state);
 
 // Frees the whole stack
-void parse_stack_destroy(Parse_Stack_Entry** stack);
+void parse_stack_destroy();
 
 // Pushes a stack entry onto the stack
-void parse_stack_push(Parse_Stack_Entry** stack, Parse_Stack_Entry* entry);
+void parse_stack_push(Parse_Stack_Entry* entry);
 
 // Pops the top entry from the stack and returns the pointer to it
-Parse_Stack_Entry* parse_stack_pop(Parse_Stack_Entry** stack);
+Parse_Stack_Entry* parse_stack_pop();

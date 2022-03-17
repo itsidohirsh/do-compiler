@@ -15,31 +15,30 @@
 // Struct of the lexer
 typedef struct Lexer
 {
-    char* src;      // The src code
     char c;         // Current character in the src code
-    int i;       // Current offsest from the starting of the source code
-    int line;    // Current line number in source file for error reporting
+    int i;          // Current offsest from the starting of the source code
+    int line;       // Current line number in source file for error reporting
     Lexer_FSM* fsm; // The lexer's FSM
 } Lexer;
 
 
 /* ---------- Functions ---------- */
 
-// Create a new lexer on the heap and returns a pointer to it
-Lexer* lexer_create();
+// Create a new lexer on the heap and updates the compiler's lexer to point to it
+void lexer_create();
 
-// Frees everything we've allocated in the lexer_init() function
-void lexer_destroy(Lexer* lexer);
+// Frees everything we've allocated in the lexer_init() function for the compiler's lexer
+void lexer_destroy();
 
-// Initializes the lexer
-void lexer_init(Lexer* lexer, char* src);
+// Initializes the compiler's lexer
+void lexer_init();
 
 // Advances the lexer 1 character forward in the source code
-void lexer_advance(Lexer* lexer);
+void lexer_advance();
 
 // Creates and returns a new token when reached to the end of a token
 // If that token is a Whitespace token, returns NULL to indicate that
-Token* lexer_EOT(Lexer* lexer, char* value, int size, int state);
+Token* lexer_EOT(char* value, int size, int state);
 
 // Returns the next token from the source code
-Token* lexer_get_next_token(Lexer* lexer);
+Token* lexer_get_next_token();
