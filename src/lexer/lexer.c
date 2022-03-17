@@ -21,7 +21,7 @@ void lexer_destroy(Lexer* lexer)
     if (lexer != NULL)
     {
         lexer_fsm_destroy(lexer->fsm);
-
+        lexer->fsm = NULL;
         free(lexer);
     }
 }

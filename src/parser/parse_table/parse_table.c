@@ -22,7 +22,7 @@ void parse_table_destroy(Parse_Table* parse_table)
 
 int parse_table_get_terminal_index(Terminal_Type terminal_type)
 {
-    // Returning the terminal_type - Token_Identifier because the tokens enum has 2 extra tokens at the start of it,
+    // Returning the terminal_type - 2 because the tokens enum has 2 extra tokens at the start of it,
     // Token_Error & Token_Whitespace, which we don't care about here. We want to start the indexing from 0 and not from 2.
     return terminal_type - 2;
 }

@@ -27,12 +27,15 @@ void parser_destroy(Parser* parser)
     {
         // Free the parser's lexer
         lexer_destroy(parser->lexer);
+        parser->lexer = NULL;
 
         // Free parser's parsing table
         parse_table_destroy(parser->parse_table);
+        parser->parse_table = NULL;
 
         // Free parser's stack
-        parse_stack_destroy(&((parser)->parse_stack));
+        parse_stack_destroy(&(parser->parse_stack));
+        parser->parse_stack = NULL;
 
         // Free the parser
         free(parser);
