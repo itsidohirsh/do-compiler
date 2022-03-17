@@ -3,18 +3,17 @@
 #include "../../global.h"
 
 #include "parse_stack.h"
-#include "../../error_handler/error_handler.h"
+#include "../../general/general.h"
 
 
 Parse_Stack_Entry* parse_stack_init_entry(Parse_Tree_Node* tree, int goto_state)
 {
     // Create a new stack entry
     Parse_Stack_Entry* entry = (Parse_Stack_Entry*) calloc(1, sizeof(Parse_Stack_Entry));
-    // Check for allocation error
     if (entry == NULL)
     {
         parse_tree_destroy(tree);
-        error_handler_report_memory_error();
+        exit_memory_error(__FILE__, __LINE__);
     }
 
     // Update entry properties

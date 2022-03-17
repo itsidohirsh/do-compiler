@@ -1,6 +1,6 @@
-#include "src/io/io.h"
+#include "src/general/general.h"
 #include "src/compiler/compiler.h"
-#include "src/error_handler/error_handler.h"
+#include "src/io/io.h"
 
 
 int main(int argc, char* argv[])

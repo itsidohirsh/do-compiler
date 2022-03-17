@@ -2,21 +2,18 @@
 #include <stdio.h>
 
 #include "symbol_table_entry.h"
-#include "../../../error_handler/error_handler.h"
+#include "../../../general/general.h"
 
 
 Symbol_Table_Entry* symbol_table_entry_init(Entry_Type entry_type, char* identifier, Data_Type data_type, void* value)
 {
     // Create entry
     Symbol_Table_Entry* entry = (Symbol_Table_Entry*) calloc(1, sizeof(Symbol_Table_Entry));
-    // Check for allocation error
     if (entry == NULL)
     {
-        // If allocation error occured, free allocated memory and report allocation error
         free(identifier);
         free(value);
-
-        error_handler_report_memory_error();
+        exit_memory_error(__FILE__, __LINE__);
     }
 
     // Update entry's properties

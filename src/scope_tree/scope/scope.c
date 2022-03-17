@@ -1,15 +1,14 @@
 #include <stdlib.h>
 
 #include "scope.h"
-#include "../../error_handler/error_handler.h"
+#include "../../general/general.h"
 
 
 Scope* scope_init(Scope* parent)
 {
     // Create a new scope
     Scope* scope = (Scope*) calloc(1, sizeof(Scope));
-    // Check for allocation error
-    if (scope == NULL) error_handler_report_memory_error();
+    if (scope == NULL) exit_memory_error(__FILE__, __LINE__);
 
     // Initialize without children
     scope->children = NULL;

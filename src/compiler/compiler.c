@@ -45,9 +45,11 @@ void compiler_compile()
 {
     // Parse the source code and create a parse tree that represents it.
     // Also updates the symbol table.
-    Parse_Tree_Node* parse_tree = parser_parse(compiler.parser, compiler.src, compiler.scope_tree);
+    Parse_Tree_Node* parse_tree = parser_parse();
 
     // Print the parse tree and symbol table
     parse_tree_print(parse_tree);
     symbol_table_print(compiler.scope_tree->global_scope->symbol_table);
+
+    parse_tree_destroy(parse_tree);
 }

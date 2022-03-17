@@ -1,9 +1,7 @@
 #pragma once
 
-#include <stdlib.h>
-
-#include "../token/token.h"
 #include "lexer_fsm/lexer_fsm.h"
+#include "../token/token.h"
 
 
 // The size to allocate for each new token value

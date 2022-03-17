@@ -3,15 +3,14 @@
 #include <string.h>
 
 #include "symbol_table.h"
-#include "../../error_handler/error_handler.h"
+#include "../../general/general.h"
 
 
 Symbol_Table* symbol_table_create()
 {
     // Create a new symbol table
     Symbol_Table* symbol_table = (Symbol_Table*) calloc(1, sizeof(Symbol_Table));
-    // Check for allocation error
-    if (symbol_table == NULL) error_handler_report_memory_error();
+    if (symbol_table == NULL) exit_memory_error(__FILE__, __LINE__);
 
     // Initial symbol table properties
     symbol_table->capacity = SYMBOL_TABLE_INITIAL_CAPACITY;
@@ -24,7 +23,7 @@ Symbol_Table* symbol_table_create()
     if (symbol_table->entries == NULL)
     {
         free(symbol_table);
-        error_handler_report_memory_error();
+        exit_memory_error(__FILE__, __LINE__);
     }
 
     return symbol_table;
@@ -90,8 +89,8 @@ void symbol_table_insert(Symbol_Table* symbol_table, Symbol_Table_Entry* entry)
     // λ = num_of_entries / number_of_indices_occupied
     float lambda = (float) symbol_table->num_of_entries / (float) symbol_table->num_of_indices_occupied;
 
-    // If λ is greater then the SYMBOL_TABLE_LAMBDA_LIMIT, expand table to ensure constant time operations on the hash table
-    if (lambda > SYMBOL_TABLE_LAMBDA_LIMIT)
+    // If λ is greater then the SYMBOL_TABLE_MAX_LAMBDA, expand table to ensure constant time operations on the hash table
+    if (lambda > SYMBOL_TABLE_MAX_LAMBDA)
         symbol_table_expand(symbol_table);
 }
 
@@ -124,7 +123,7 @@ void symbol_table_expand(Symbol_Table* symbol_table)
     if (new_entries == NULL)
     {
         symbol_table_destroy(symbol_table);
-        error_handler_report_memory_error();
+        exit_memory_error(__FILE__, __LINE__);
     }
 
     // Zero the symbol table's number of entries and number of occupied indices

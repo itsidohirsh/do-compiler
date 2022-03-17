@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "io.h"
-#include "../error_handler/error_handler.h"
+#include "../general/general.h"
 
 
 char* io_read_file(char* file_name)
@@ -12,9 +12,7 @@ char* io_read_file(char* file_name)
 
     // Opening the file
     FILE* fp = fopen(file_name, "rb");
-
-    // Check for NULL file pointer
-    if (fp == NULL) error_handler_report_file_IO_error(file_name);
+    if (fp == NULL) exit_file_io_error(file_name);
 
     // Using fseek & ftell to get length of file
     fseek(fp, 0, SEEK_END);
@@ -25,14 +23,10 @@ char* io_read_file(char* file_name)
 
     // Allocate the buffer size according to the length of the file + 1 for \0
     buffer = (char*) calloc(length + 1, sizeof(char));
-
-    // Check for allocation error
     if (buffer == NULL)
     {
-        // Closing the file
         fclose(fp);
-
-        error_handler_report_memory_error();
+        exit_memory_error(__FILE__, __LINE__);
     }
 
     // Copying the contents of the file to the buffer

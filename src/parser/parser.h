@@ -3,8 +3,6 @@
 #include "parse_tree/parse_tree.h"
 #include "parse_table/parse_table.h"
 #include "parse_stack/parse_stack.h"
-#include "../lexer/lexer.h"
-#include "../scope_tree/scope_tree.h"
 
 
 // Number of production rules in the grammar of the language

@@ -1,16 +1,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "parse_tree.h"
-#include "../../error_handler/error_handler.h"
+#include "../../general/general.h"
 
 
 Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token* token, Parse_Tree_Node** children, int num_of_children)
 {
     // Create a new Parse_Tree_Node
     Parse_Tree_Node* node = (Parse_Tree_Node*) calloc(1, sizeof(Parse_Tree_Node));
-    // Check for allocation error
     if (node == NULL)
     {
         // Free all of the children trees in the children array
@@ -23,8 +23,7 @@ Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token
         // Free the token
         token_destroy(token);
 
-        // Report allocation error and exit
-        error_handler_report_memory_error();
+        exit_memory_error(__FILE__, __LINE__);
     }
 
     // Update node's properties

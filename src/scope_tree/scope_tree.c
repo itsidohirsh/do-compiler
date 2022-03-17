@@ -3,14 +3,14 @@
 #include "../global.h"
 
 #include "scope_tree.h"
-#include "../error_handler/error_handler.h"
+#include "../general/general.h"
+
 
 void scope_tree_create()
 {
     // Create a new scope tree
     compiler.scope_tree = (Scope_Tree*) calloc(1, sizeof(Scope_Tree));
-    // Check for allocation error
-    if (compiler.scope_tree == NULL) error_handler_report_memory_error();
+    if (compiler.scope_tree == NULL) exit_memory_error(__FILE__, __LINE__);
 
     // Create global scope with it's parent set to NULL (The only scope with NULL father)
     compiler.scope_tree->global_scope = scope_init(NULL);
@@ -50,8 +50,7 @@ void scope_tree_add_scope()
 
     // Resizes the children array of the current scope in the scope tree, and add 1 to the number of children
     compiler.scope_tree->current_scope->children = (Scope**) realloc(compiler.scope_tree->current_scope->children, ++compiler.scope_tree->current_scope->num_of_children * sizeof(Scope*));
-    // Check for allocation error
-    if (compiler.scope_tree->current_scope->children == NULL) error_handler_report_memory_error();
+    if (compiler.scope_tree->current_scope->children == NULL) exit_memory_error(__FILE__, __LINE__);
 
     // Advance the current child to the next child
     compiler.scope_tree->current_scope->current_child_index++;

@@ -1,9 +1,7 @@
 #pragma once
 
-#include <stdbool.h>
-
-#include "../../token/token.h"
 #include "../parser_base.h"
+#include "../../token/token.h"
 
 
 /* ---------- Structs ---------- */

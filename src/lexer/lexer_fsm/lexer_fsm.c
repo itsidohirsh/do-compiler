@@ -5,6 +5,7 @@
 #include "../../global.h"
 
 #include "lexer_fsm.h"
+#include "../../general/general.h"
 #include "../../error_handler/error_handler.h"
 
 
@@ -12,8 +13,7 @@ void lexer_fsm_create()
 {
     // Create fsm
     compiler.lexer->fsm = (Lexer_FSM*) calloc(1, sizeof(Lexer_FSM));
-    // Check for allocation error
-    if (compiler.lexer->fsm == NULL) error_handler_report_memory_error();
+    if (compiler.lexer->fsm == NULL) exit_memory_error(__FILE__, __LINE__);
 }
 
 void lexer_fsm_destroy()

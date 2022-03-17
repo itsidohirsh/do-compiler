@@ -4,15 +4,14 @@
 #include "../../global.h"
 
 #include "parse_table.h"
-#include "../../error_handler/error_handler.h"
+#include "../../general/general.h"
 
 
 void parse_table_create()
 {
     // Create a new parsing table
     compiler.parser->parse_table = (Parse_Table*) calloc(1, sizeof(Parse_Table));
-    // Check for allocation error
-    if (compiler.parser->parse_table == NULL) error_handler_report_memory_error();
+    if (compiler.parser->parse_table == NULL) exit_memory_error(__FILE__, __LINE__);
 }
 
 void parse_table_destroy()

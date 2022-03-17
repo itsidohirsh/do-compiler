@@ -1,8 +1,10 @@
+#include <stdlib.h>
 #include <string.h>
 
 #include "../global.h"
 
 #include "lexer.h"
+#include "../general/general.h"
 #include "../error_handler/error_handler.h"
 
 
@@ -10,8 +12,7 @@ void lexer_create()
 {
     // Create lexer
     compiler.lexer = (Lexer*) calloc(1, sizeof(Lexer));
-    // Check for allocation error
-    if (compiler.lexer == NULL) error_handler_report_memory_error();
+    if (compiler.lexer == NULL) exit_memory_error(__FILE__, __LINE__);
 
     // Create lexer's FSM
     lexer_fsm_create();
@@ -72,8 +73,7 @@ Token* lexer_EOT(char* value, int size, int state)
 
     // Reallocating the value to its actual size
     value = (char*) realloc(value, (size + 1) * sizeof(char));
-    // Check for allocation error
-    if (value == NULL) error_handler_report_memory_error();
+    if (value == NULL) exit_memory_error(__FILE__, __LINE__);
 
     // Making sure there is a null terminator at the end of the value
     value[size] = '\0';
@@ -90,8 +90,7 @@ Token* lexer_get_next_token()
 
     // The value of the token that will be returned
     char* value = (char*) calloc(LEXER_MAX_TOKEN_SIZE, sizeof(char));
-    // Check for allocation error
-    if (value == NULL) error_handler_report_memory_error();
+    if (value == NULL) exit_memory_error(__FILE__, __LINE__);
 
     // The size of the token's value
     int size = 0;

@@ -3,18 +3,17 @@
 #include <string.h>
 
 #include "token.h"
-#include "../error_handler/error_handler.h"
+#include "../general/general.h"
 
 
 Token* token_init(char* value, int value_len, Token_Type token_type)
 {
     // Create a new token
     Token* token = (Token*) calloc(1, sizeof(Token));
-    // Check for allocation error
     if (token == NULL)
     {
         free(value);
-        error_handler_report_memory_error();
+        exit_memory_error(__FILE__, __LINE__);
     }
 
     // Update token's properties
@@ -86,11 +85,10 @@ char* token_to_str(Token* token)
     char* template = "%s `%s`";
 
     char* str = (char*) calloc(strlen(type_str) + strlen(template) + 8, sizeof(char));
-    // Check for allocation error
     if (str == NULL)
     {
         token_destroy(token);
-        error_handler_report_memory_error();
+        exit_memory_error(__FILE__, __LINE__);
     }
 
     sprintf(str, template, type_str, token->value);

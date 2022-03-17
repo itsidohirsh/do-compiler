@@ -1,8 +1,10 @@
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "../global.h"
 
 #include "parser.h"
+#include "../general/general.h"
 #include "../error_handler/error_handler.h"
 
 
@@ -10,8 +12,7 @@ void parser_create()
 {
     // Create parser
     compiler.parser = (Parser*) calloc(1, sizeof(Parser));
-    // Check for allocation error
-    if (compiler.parser == NULL) error_handler_report_memory_error();
+    if (compiler.parser == NULL) exit_memory_error(__FILE__, __LINE__);
 
     // Create parser's parse table
     parse_table_create();
@@ -100,8 +101,7 @@ void parser_reduce(int production_rule_num)
     Production_Rule production_rule = compiler.parser->production_rules[production_rule_num];
     // Create an array of the size of number of symbols on the RHS of the production rule that we reduce by
     Parse_Tree_Node** children = (Parse_Tree_Node**) calloc(production_rule.rule_length, sizeof(Parse_Tree_Node*));
-    // Check allocation error
-    if (children == NULL) error_handler_report_memory_error();
+    if (children == NULL) exit_memory_error(__FILE__, __LINE__);
 
     // Pop Length(Production rule) entries from the stack, and put the trees of each entry as a child in the array.
     // From right of array to the left because the production rule is "reversed" in the stack
@@ -158,8 +158,11 @@ Parse_Tree_Node* parser_parse()
         // If Action[state, token] == Accept
         else if (action.action_type == Action_Accept)
         {
-            // When reached an Accept, the stack only has one entry other than the start entry, which contains the parse tree
-            return compiler.parser->parse_stack->tree;
+            // When reached an Accept, the stack only has one entry other than the start entry, which contains the parse tree.
+            // Disconect the parse tree from the stack so it won't be destoyred later, and return it.
+            Parse_Tree_Node* parse_tree = compiler.parser->parse_stack->tree;
+            compiler.parser->parse_stack->tree = NULL;
+            return parse_tree;
         }
         // If Action[state, token] == Error
         else
