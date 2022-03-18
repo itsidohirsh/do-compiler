@@ -5,6 +5,7 @@
 
 #include "parse_table.h"
 #include "../../general/general.h"
+#include "../../semantic/semantic.h"
 
 
 void parse_table_create()
@@ -464,7 +465,7 @@ void parse_table_init()
     // - Action
     // -- Reduce
     // --- for (`done`, `int`, `char`, `set`, `if`, `while`) -> R7
-    action = (Action) { Action_Reduce, 7, NULL };
+    action = (Action) { Action_Reduce, 7, semantic_decl };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Done), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Int), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Char), action);

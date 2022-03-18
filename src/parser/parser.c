@@ -23,6 +23,10 @@ void parser_destroy()
     // check for NULL pointer
     if (compiler.parser != NULL)
     {
+        // Free parser's token
+        token_destroy(compiler.parser->token);
+        compiler.parser->token = NULL;
+
         // Free parser's parsing table
         parse_table_destroy();
 
@@ -37,6 +41,9 @@ void parser_destroy()
 
 void parser_init()
 {
+    // Initialize token to NULL
+    compiler.parser->token = NULL;
+
     // Initialize parsing table
     parse_table_init();
 
@@ -83,10 +90,10 @@ void parser_init_production_rules()
     compiler.parser->production_rules[prod_num++] = (Production_Rule) { Non_Terminal_F, 2 };         // F -> - F
 }
 
-void parser_shift(Token* token, int goto_state)
+void parser_shift(int goto_state)
 {
     // Create a new terminal tree node from the current token
-    Parse_Tree_Node* tree_node = parse_tree_init_node(Terminal, token->token_type, token, NULL, 0);
+    Parse_Tree_Node* tree_node = parse_tree_init_node(Terminal, compiler.parser->token->token_type, compiler.parser->token, NULL, 0);
     // Create a new stack entry for created tree node
     Parse_Stack_Entry* stack_entry = parse_stack_init_entry(tree_node, goto_state);
     // Push created stack entry onto the stack
@@ -124,15 +131,13 @@ void parser_reduce(int production_rule_num)
 
 Parse_Tree_Node* parser_parse()
 {
-    // The current token from the source code
-    Token* token;
     // The next state to go to
     int state;
     // Current action table cell
     Action action;
 
     // Input first token from the source code
-    token = lexer_get_next_token();
+    compiler.parser->token = lexer_get_next_token();
 
     // While not done parsing. We'll be done parsing by an Accept or Error
     while (true)
@@ -141,19 +146,28 @@ Parse_Tree_Node* parser_parse()
         state = compiler.parser->parse_stack->goto_state;
 
         // Save the current cell in the action table
-        action = compiler.parser->parse_table->action_table[state][parse_table_get_terminal_index(token->token_type)];
+        action = compiler.parser->parse_table->action_table[state][parse_table_get_terminal_index(compiler.parser->token->token_type)];
 
         // If Action[state, token] == Shift
         if (action.action_type == Action_Shift)
         {
-            parser_shift(token, action.state_or_rule);
+            parser_shift(action.state_or_rule);
+
+            // Performs a semantic function if needed
+            if (action.semantic_func != NULL)
+                action.semantic_func();
+
             // Get next token from the source code
-            token = lexer_get_next_token();
+            compiler.parser->token = lexer_get_next_token();
         }
         // If Action[state, token] == Reduce
         else if (action.action_type == Action_Reduce)
         {
             parser_reduce(action.state_or_rule);
+
+            // Performs a semantic function if needed
+            if (action.semantic_func != NULL)
+                action.semantic_func();
         }
         // If Action[state, token] == Accept
         else if (action.action_type == Action_Accept)
@@ -168,7 +182,7 @@ Parse_Tree_Node* parser_parse()
         else
         {
             // If reached an Error, save error line, destroy the parser, output error message and exit
-            error_handler_report(compiler.lexer->line, Error_Parser, "Unexpected token %s", token_to_str(token));
+            error_handler_report(compiler.lexer->line, Error_Syntax, "Unexpected token %s", token_to_str(compiler.parser->token));
         }
     }
 }

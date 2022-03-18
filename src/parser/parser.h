@@ -3,6 +3,7 @@
 #include "parse_tree/parse_tree.h"
 #include "parse_table/parse_table.h"
 #include "parse_stack/parse_stack.h"
+#include "../token/token.h"
 
 
 // Number of production rules in the grammar of the language
@@ -23,6 +24,8 @@ typedef struct Production_Rule
 // Struct of the parser
 typedef struct Parser
 {
+    // The current token from the source code produced by the lexer
+    Token* token;
     // The parser's parsing table, made from action & goto tables
     // helps up to know which action to perform according to the next token
     Parse_Table* parse_table;
@@ -48,8 +51,8 @@ void parser_init();
 // Initializes the production rules array according to the grammar of the language
 void parser_init_production_rules();
 
-// Shifts the token and goto state onto the parse stack
-void parser_shift(Token* token, int goto_state);
+// Shifts the current parser's token and goto state onto the parse stack
+void parser_shift(int goto_state);
 
 // Reduce by the production rule
 void parser_reduce(int production_rule_num);

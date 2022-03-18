@@ -68,7 +68,7 @@ Token* lexer_EOT(char* value, int size, int state)
         free(value);
 
         // Report an error and exit
-        error_handler_report(compiler.lexer->line, Error_Lexer, "Unexpected characters `%s`", buffer);
+        error_handler_report(compiler.lexer->line, Error_Lexical, "Unexpected characters `%s`", buffer);
     }
 
     // Reallocating the value to its actual size
@@ -100,7 +100,7 @@ Token* lexer_get_next_token()
     {
         // Check for Token's max length
         if (size == LEXER_MAX_TOKEN_SIZE - 1)
-            error_handler_report(compiler.lexer->line, Error_Lexer, "Token can't be longer than %d characters", LEXER_MAX_TOKEN_SIZE - 1);
+            error_handler_report(compiler.lexer->line, Error_Lexical, "Token can't be longer than %d characters", LEXER_MAX_TOKEN_SIZE - 1);
 
         // Update value
         value[size++] = compiler.lexer->c;

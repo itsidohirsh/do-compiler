@@ -52,14 +52,8 @@ void scope_tree_add_scope()
     compiler.scope_tree->current_scope->children = (Scope**) realloc(compiler.scope_tree->current_scope->children, ++compiler.scope_tree->current_scope->num_of_children * sizeof(Scope*));
     if (compiler.scope_tree->current_scope->children == NULL) exit_memory_error(__FILE__, __LINE__);
 
-    // Advance the current child to the next child
-    compiler.scope_tree->current_scope->current_child_index++;
-
     // Add the new scope to the last index of the children array of the current scope in the scope tree
-    compiler.scope_tree->current_scope->children[compiler.scope_tree->current_scope->current_child_index] = new_scope;
-
-    // Advance the scope tree's current scope to the newly added scope in the children array
-    compiler.scope_tree->current_scope = compiler.scope_tree->current_scope->children[compiler.scope_tree->current_scope->current_child_index];
+    compiler.scope_tree->current_scope->children[compiler.scope_tree->current_scope->num_of_children - 1] = new_scope;
 }
 
 void scope_tree_goto_parent()
@@ -77,7 +71,7 @@ void scope_tree_goto_child()
 {
     // Check if there is a child to go to next.
     // If there is, advances the current scope's current_child_index and advances the current scope to the next child scope.
-    // If there is not, remains in the current scope.
+    // If there is not, the current scope remains as it is.
     if (compiler.scope_tree->current_scope->current_child_index + 1 <= compiler.scope_tree->current_scope->num_of_children - 1)
     {
         // Advance the current child to the next child
@@ -86,4 +80,19 @@ void scope_tree_goto_child()
         // Advance the current scope to the next child scope
         compiler.scope_tree->current_scope = compiler.scope_tree->current_scope->children[compiler.scope_tree->current_scope->current_child_index];
     }
+}
+
+Symbol_Table_Entry* scope_tree_fetch(char* identifier)
+{
+    Scope* current_scope = compiler.scope_tree->current_scope;
+    Symbol_Table_Entry* entry = NULL;
+
+    // Loop up to the global scope, or untill identifier found
+    while (current_scope != NULL && entry == NULL)
+    {
+        entry = symbol_table_fetch(current_scope->symbol_table, identifier);
+        current_scope = current_scope->parent;
+    }
+
+    return entry;
 }

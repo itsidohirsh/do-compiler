@@ -14,6 +14,7 @@ typedef struct Parse_Tree_Node
     Token* token;                       // If a node is a terminal then it will have a token, otherwise it will be NULL
     struct Parse_Tree_Node** children;  // Array of a node pointers which represents a node's children
     int num_of_children;                // The length of the childrens array
+    // TODO: Add semantic atribute
 } Parse_Tree_Node;
 
 

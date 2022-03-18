@@ -7,6 +7,7 @@
 #include "../compiler/compiler.h"
 
 
+// TODO: Maybe remove line
 void error_handler_report(int line, Error_Type error_type, char* format, ...)
 {
     printf("[");
@@ -30,8 +31,9 @@ const char* error_handler_error_to_str(Error_Type error_type)
 {
     switch (error_type)
     {
-        case Error_Lexer: return "Lexical Error";
-        case Error_Parser: return "Syntax Error";
+        case Error_Lexical: return "Lexical Error";
+        case Error_Syntax: return "Syntax Error";
+        case Error_Semantic: return "Semantic Error";
 
         default: return "Error";
     }

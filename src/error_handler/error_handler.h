@@ -7,8 +7,9 @@
 typedef enum Error_Type
 {
     Error_General = 1,
-    Error_Lexer,
-    Error_Parser,
+    Error_Lexical,
+    Error_Syntax,
+    Error_Semantic,
 } Error_Type;
 
 

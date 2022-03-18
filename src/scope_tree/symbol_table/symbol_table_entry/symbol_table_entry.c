@@ -5,14 +5,13 @@
 #include "../../../general/general.h"
 
 
-Symbol_Table_Entry* symbol_table_entry_init(Entry_Type entry_type, char* identifier, Data_Type data_type, void* value)
+Symbol_Table_Entry* symbol_table_entry_init(Entry_Type entry_type, char* identifier, Data_Type data_type)
 {
     // Create entry
     Symbol_Table_Entry* entry = (Symbol_Table_Entry*) calloc(1, sizeof(Symbol_Table_Entry));
     if (entry == NULL)
     {
         free(identifier);
-        free(value);
         exit_memory_error(__FILE__, __LINE__);
     }
 
@@ -20,7 +19,6 @@ Symbol_Table_Entry* symbol_table_entry_init(Entry_Type entry_type, char* identif
     entry->entry_type = entry_type;
     entry->identifier = identifier;
     entry->data_type = data_type;
-    entry->value = value;
     entry->next_entry = NULL;
 
     return entry;
@@ -32,7 +30,6 @@ void symbol_table_entry_destroy(Symbol_Table_Entry* entry)
     if (entry != NULL)
     {
         free(entry->identifier);
-        free(entry->value);
         free(entry);
     }
 }
@@ -44,14 +41,11 @@ void symbol_table_entry_print(Symbol_Table_Entry* entry)
         return;
 
     if (entry->data_type == Data_Type_Int)
-    {
-        printf("int %s = ", entry->identifier);
-        printf("%d", *((int*) entry->value));
-    }
+        printf("int %s", entry->identifier);
+
+    else if (entry->data_type == Data_Type_Char)
+        printf("char %s", entry->identifier);
 
     else
-    {
-        printf("char %s = ", entry->identifier);
-        printf("'%c'", *((char*) entry->value));
-    }
+        printf("Don't know that data type... ;|");
 }

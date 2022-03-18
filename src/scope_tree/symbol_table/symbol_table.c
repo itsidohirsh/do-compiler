@@ -105,9 +105,12 @@ Symbol_Table_Entry* symbol_table_fetch(Symbol_Table* symbol_table, char* identif
     // Go over all the entries in that index and find the wanted entry
     while (entry != NULL)
     {
-        // If found wated entry then return it
+        // If found wanted entry then return it
         if (strcmp(entry->identifier, identifier) == 0)
             return entry;
+
+        // If not found, advance to the next entry
+        entry = entry->next_entry;
     }
 
     // If entry was not found, return NULL
