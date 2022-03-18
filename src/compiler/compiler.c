@@ -1,11 +1,8 @@
 #include <stdlib.h>
 
-#include "compiler.h"
-
-// Definind COMPILER_DEFINITION so the compiler will be decleared globaly
-// This should only be decleared once when including global.h
-#define COMPILER_DEFINITION
 #include "../global.h"
+
+#include "compiler.h"
 
 
 void compiler_init(char* src)

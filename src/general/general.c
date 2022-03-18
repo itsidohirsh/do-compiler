@@ -10,10 +10,10 @@ void exit_memory_error(char* file, int line)
 {
     printf("[");
     printf_red("Memory Error");
-    printf("] Failed to allocate needed memory\n");
-    printf("File: ");
+    printf("] Memory allocation failed.\n");
+    printf("\tIn file: ");
     printf_purple("%s\n", file);
-    printf("On line: ");
+    printf("\tOn line: ");
     printf_cyan("%d\n", line);
 
     compiler_destroy();

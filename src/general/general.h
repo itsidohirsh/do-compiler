@@ -3,7 +3,7 @@
 
 /* ---------- Functions ---------- */
 
-// Expecting __LINE__ and __FILE__ to report a memory allocation error.
+// Expecting __FILE__ and __LINE__ to report a memory allocation error.
 // Reports an memory allocation error, destorys the global compiler and exits with exit code 1.
 void exit_memory_error(char* file, int line);
 
