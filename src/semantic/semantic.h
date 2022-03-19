@@ -23,7 +23,12 @@ bool semantic_check_assign_compatibility(Data_Type id_type, Data_Type expr_type)
 // Checks if the data type of the left and right operands is compatible with the operator.
 // If yes returns the data type of the combined expression.
 // If not return Data_Type_NULL
-Data_Type semantic_check_operation_compatibility(Data_Type left_op, Token* operator, Data_Type right_op);
+Data_Type semantic_check_binary_op_compatibility(Data_Type left_op, Token* operator, Data_Type right_op);
+
+// Checks if the data type of the operand is compatible with the operator.
+// If yes returns the data type of the expression.
+// If not return Data_Type_NULL
+Data_Type semantic_check_unary_op_compatibility(Data_Type operand, Token* operator);
 
 // Called after encountering :
 // After : we know we are know in a new block, which means a new scope.

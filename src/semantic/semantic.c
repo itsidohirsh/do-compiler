@@ -16,10 +16,18 @@ bool semantic_check_assign_compatibility(Data_Type id_type, Data_Type expr_type)
     return true;
 }
 
-Data_Type semantic_check_operation_compatibility(Data_Type left_op, Token* operator, Data_Type right_op)
+Data_Type semantic_check_binary_op_compatibility(Data_Type left_op, Token* operator, Data_Type right_op)
 {
     // For now this will always return Data_Type_Int, because I only have int and char in my language,
     // And all the operations between int and char should return int type.
+    // If I'll add more types this will have more logic.
+    return Data_Type_Int;
+}
+
+Data_Type semantic_check_unary_op_compatibility(Data_Type operand, Token* operator)
+{
+    // For now this will always return Data_Type_Int, because I only have int and char in my language,
+    // And all the operations on int or char should return int type.
     // If I'll add more types this will have more logic.
     return Data_Type_Int;
 }
@@ -90,10 +98,6 @@ void semantic_assign()
     // Check for matching types
     else if (semantic_check_assign_compatibility(entry->data_type, L_LOG_E->data_type) == false)
         error_handler_report(compiler.lexer->line - 1, Error_Semantic, "Assignment of type '%s' to identifier '%s' of type '%s'", semantic_data_type_to_str(L_LOG_E->data_type), identifier, semantic_data_type_to_str(entry->data_type));
-
-    // If everything checks, sets the LHS_Non_Terminala.type = the matching type
-    else
-        compiler.parser->parse_stack->tree->data_type = entry->data_type;
 }
 
 void semantic_set_type()
@@ -113,10 +117,10 @@ void semantic_type_check()
     Parse_Tree_Node* right_op = compiler.parser->parse_stack->tree->children[2];
 
     // If the types match with that operator
-    Data_Type result_type = semantic_check_operation_compatibility(left_op->data_type, operator->token, right_op->data_type);
+    Data_Type result_type = semantic_check_binary_op_compatibility(left_op->data_type, operator->token, right_op->data_type);
     if (result_type != Data_Type_NULL)
         // Set the parent type to that type
-        compiler.parser->parse_stack->tree->data_type = left_op->data_type;
+        compiler.parser->parse_stack->tree->data_type = result_type;
 
     else
         error_handler_report(compiler.lexer->line, Error_Semantic, "Invalid operands to operator %s, have '%s' and '%s' ", operator->token->value, semantic_data_type_to_str(left_op->data_type), semantic_data_type_to_str(right_op->data_type));
@@ -156,7 +160,13 @@ void semantic_F_to_L_LOG_E()
 
 void semantic_F_to_unary_op_F()
 {
-    compiler.parser->parse_stack->tree->data_type = compiler.parser->parse_stack->tree->children[0]->data_type;
+    // Get the operand from the tree at the top of the stack
+    Parse_Tree_Node* operand = compiler.parser->parse_stack->tree->children[1];
+
+    // Get the operator from the tree at the top of the stack
+    Parse_Tree_Node* operator = compiler.parser->parse_stack->tree->children[0];
+
+    compiler.parser->parse_stack->tree->data_type = semantic_check_unary_op_compatibility(operand->data_type, operator->token);
 }
 
 const char* semantic_data_type_to_str(Data_Type data_type)

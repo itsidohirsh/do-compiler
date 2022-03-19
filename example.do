@@ -1,6 +1,8 @@
 prog my_prog:
 	int num;
-	set num = 10;
+	char hi;
+	set hi = 7;
+	set num = (-(num)*!hi*(3-2)/4&&7);
 	
 	while (num < 10):
 		set num = num + 1;
