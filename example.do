@@ -11,7 +11,9 @@ prog my_prog:
 	set result = 0;
 	set i = '0';
 
+	int ido;
 	if (result == 0 && i == 'A'):
+		char wow;
 		if (wow * 2 == 30 && 14):
 			set ido = 2;
 		done

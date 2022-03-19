@@ -3,6 +3,7 @@
 
 #include "symbol_table_entry.h"
 #include "../../../general/general.h"
+#include "../../../semantic/semantic.h"
 
 
 Symbol_Table_Entry* symbol_table_entry_init(Entry_Type entry_type, char* identifier, Data_Type data_type)

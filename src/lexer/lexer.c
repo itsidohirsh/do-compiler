@@ -68,7 +68,7 @@ Token* lexer_EOT(char* value, int size, int state)
         free(value);
 
         // Report an error and exit
-        error_handler_report(compiler.lexer->line, Error_Lexical, "Unexpected characters `%s`", buffer);
+        error_handler_report(compiler.lexer->line, Error_Lexical, "Unexpected characters '%s'", buffer);
     }
 
     // Reallocating the value to its actual size

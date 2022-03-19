@@ -46,7 +46,7 @@ void compiler_compile()
 
     // Print the parse tree and symbol table
     parse_tree_print(parse_tree);
-    symbol_table_print(compiler.scope_tree->global_scope->symbol_table);
+    scope_tree_print(compiler.scope_tree->global_scope);
 
     parse_tree_destroy(parse_tree);
 }

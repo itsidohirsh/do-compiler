@@ -14,7 +14,7 @@ typedef struct Action
     // If the current cell is a Reduce, then this int represents the number of the production rule to reduce by
     int state_or_rule;
     // Pointer to a function to be called when we reach that cell. Will also be part of the semantic analysis
-    void (*semantic_func) (); // TODO: Maybe update function pointer
+    void (*semantic_func) ();
 } Action;
 
 // Struct to hold the parsing table. Action & Goto tables all together

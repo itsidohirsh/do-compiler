@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../symbol_table_base.h"
+#include "../../../semantic/semantic.h"
 
 
 /* ---------- Structs ---------- */

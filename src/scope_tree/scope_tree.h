@@ -41,4 +41,5 @@ void scope_tree_goto_child();
 // identifier. If managed to find it, returns a pointer to it. Otherwise return NULL.
 Symbol_Table_Entry* scope_tree_fetch(char* identifier);
 
-// TODO: Add print scope tree function
+// Prints the scope tree in a nice format
+void scope_tree_print();

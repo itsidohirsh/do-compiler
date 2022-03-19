@@ -32,6 +32,8 @@ Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token
     node->token = token;
     node->children = children;
     node->num_of_children = num_of_children;
+    // Initialize node with no data type
+    node->data_type = Data_Type_NULL;
 
     return node;
 }

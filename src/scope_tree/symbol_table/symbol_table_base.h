@@ -20,11 +20,3 @@ typedef enum Entry_Type
 {
     Entry_Type_Variable
 } Entry_Type;
-
-// Enum of all the possible types of an identifier in the language.
-// This enum is only for readability and ease of use.
-typedef enum Data_Type
-{
-    Data_Type_Int = Token_Int,      // int
-    Data_Type_Char = Token_Char,    // char
-} Data_Type;

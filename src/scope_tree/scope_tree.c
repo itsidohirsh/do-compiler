@@ -1,4 +1,7 @@
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 
 #include "../global.h"
 
@@ -95,4 +98,46 @@ Symbol_Table_Entry* scope_tree_fetch(char* identifier)
     }
 
     return entry;
+}
+
+void scope_tree_print_tree(Scope* global_scope, char* indent, bool is_last);
+
+void scope_tree_print()
+{
+    char indent[256] = { 0 };
+    scope_tree_print_tree(compiler.scope_tree->global_scope, indent, true);
+}
+
+void scope_tree_print_tree(Scope* global_scope, char* indent, bool is_last)
+{
+    if (global_scope == NULL)
+        return;
+
+    char marker[256] = " |---";
+    char cur_indent[256] = " |   ";
+
+    if (is_last)
+    {
+        sprintf(marker, " `---");
+        sprintf(cur_indent, "     ");
+    }
+
+    printf("%s", indent);
+    printf("%s", marker);
+
+    printf(" ");
+    printf("Entries: %d", global_scope->symbol_table->num_of_entries);
+    printf("\n");
+
+    strcat(indent, cur_indent);
+
+    // Save current indentation before recursing
+    char tmp[256];
+    strcpy(tmp, indent);
+
+    for (int i = 0; i < global_scope->num_of_children; i++)
+    {
+        scope_tree_print_tree(global_scope->children[i], indent, i == global_scope->num_of_children - 1);
+        strcpy(indent, tmp);
+    }
 }

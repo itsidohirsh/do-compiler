@@ -2,6 +2,7 @@
 
 #include "../parser_base.h"
 #include "../../token/token.h"
+#include "../../semantic/semantic.h"
 
 
 /* ---------- Structs ---------- */
@@ -14,7 +15,9 @@ typedef struct Parse_Tree_Node
     Token* token;                       // If a node is a terminal then it will have a token, otherwise it will be NULL
     struct Parse_Tree_Node** children;  // Array of a node pointers which represents a node's children
     int num_of_children;                // The length of the childrens array
-    // TODO: Add semantic atribute
+    // Attribute of a node in the tree.
+    //If the node is part of expression it has a data type.
+    Data_Type data_type;
 } Parse_Tree_Node;
 
 

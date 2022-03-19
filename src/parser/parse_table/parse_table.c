@@ -145,6 +145,8 @@ void parse_table_init()
     // - Action
     // -- Shift
     // --- `:` -> S4
+    // ---- Here I'm not using semantic_enter_block() when encountering : because here is the enter to the global
+    // ---- scope, which is already created when intializing the scope tree.
     action = (Action) { Action_Shift, 4, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Colon), action);
 
@@ -239,7 +241,9 @@ void parse_table_init()
     // - Action
     // -- Reduce
     // --- for (`:)`, `done`, `int`, `char`, `set`, `if`, `else`, `while`) -> R2
-    action = (Action) { Action_Reduce, 2, NULL };
+    // ---- Using semantic_exit_block() because when we reduce by rule no. 2 we know we've exited a scope.
+    // ---- Rule no. 2: BLOCK -> done
+    action = (Action) { Action_Reduce, 2, semantic_exit_block };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Smiley), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Done), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Int), action);
@@ -465,6 +469,8 @@ void parse_table_init()
     // - Action
     // -- Reduce
     // --- for (`done`, `int`, `char`, `set`, `if`, `while`) -> R7
+    // ---- Using semantic_decl() because after reducing by rule no. 7, we must check for unique identifier.
+    // ---- Rule no. 7: DECL -> data_type id ;
     action = (Action) { Action_Reduce, 7, semantic_decl };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Done), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Int), action);
@@ -533,7 +539,9 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_And), action);
     // -- Reduce
     // --- for (`;`, `)`, `||`) -> R14
-    action = (Action) { Action_Reduce, 14, NULL };
+    // ---- Using semantic_set_type() because after reducing by rule no. 14, we need to set the LHS non-terminal's type to the RHS type
+    // ---- Rule no. 14: L_LOG_E -> H_LOG_E
+    action = (Action) { Action_Reduce, 14, semantic_set_type };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -553,7 +561,9 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Smaller_Equal), action);
     // -- Reduce
     // --- for (`;`, `)`, `||`, `&&`) -> R16
-    action = (Action) { Action_Reduce, 16, NULL };
+    // ---- Using semantic_set_type() because after reducing by rule no. 16, we need to set the LHS non-terminal's type to the RHS type
+    // ---- Rule no. 16: H_LOG_E -> BOOL_E
+    action = (Action) { Action_Reduce, 16, semantic_set_type };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -570,7 +580,9 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Minus), action);
     // -- Reduce
     // --- for (`;`, `)`, `||`, `&&`, `==`, `!=`, `>`, `>=`, `<`, `<=`) -> R18
-    action = (Action) { Action_Reduce, 18, NULL };
+    // ---- Using semantic_set_type() because after reducing by rule no. 18, we need to set the LHS non-terminal's type to the RHS type
+    // ---- Rule no. 18: BOOL_E -> E
+    action = (Action) { Action_Reduce, 18, semantic_set_type };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -594,7 +606,9 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Modulu), action);
     // -- Reduce
     // --- for (`;`, `)`, `||`, `&&`, `==`, `!=`, `>`, `>=`, `<`, `<=`, `+`, `-`) -> R20
-    action = (Action) { Action_Reduce, 20, NULL };
+    // ---- Using semantic_set_type() because after reducing by rule no. 20, we need to set the LHS non-terminal's type to the RHS type
+    // ---- Rule no. 20: E -> T
+    action = (Action) { Action_Reduce, 20, semantic_set_type };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -614,7 +628,9 @@ void parse_table_init()
     // - Action
     // -- Reduce
     // --- for (`;`, `)`, `||`, `&&`, `==`, `!=`, `>`, `>=`, `<`, `<=`, `+`, `-`, `*`, `/`, `%`) -> R22
-    action = (Action) { Action_Reduce, 22, NULL };
+    // ---- Using semantic_set_type() because after reducing by rule no. 22, we need to set the LHS non-terminal's type to the RHS type
+    // ---- Rule no. 22: T -> F
+    action = (Action) { Action_Reduce, 22, semantic_set_type };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -637,7 +653,9 @@ void parse_table_init()
     // - Action
     // -- Reduce
     // --- for (`;`, `)`, `||`, `&&`, `==`, `!=`, `>`, `>=`, `<`, `<=`, `+`, `-`, `*`, `/`, `%`) -> R23
-    action = (Action) { Action_Reduce, 23, NULL };
+    // ---- Using semantic_F_to_id() because after reducing by rule no. 23, we must check that id exists and set type accordingly.
+    // ---- Rule no. 23: F -> id
+    action = (Action) { Action_Reduce, 23, semantic_F_to_id };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -660,7 +678,9 @@ void parse_table_init()
     // - Action
     // -- Reduce
     // --- for (`;`, `)`, `||`, `&&`, `==`, `!=`, `>`, `>=`, `<`, `<=`, `+`, `-`, `*`, `/`, `%`) -> R24
-    action = (Action) { Action_Reduce, 24, NULL };
+    // ---- Using semantic_F_to_literal() because after reducing by rule no. 24, we need to set type accordingly.
+    // ---- Rule no. 24: F -> literal
+    action = (Action) { Action_Reduce, 24, semantic_F_to_literal };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -801,7 +821,8 @@ void parse_table_init()
     // - Action
     // -- Shift
     // --- `:` -> S48
-    action = (Action) { Action_Shift, 48, NULL };
+    // ---- Using semantic_enter_block() because every time we encounter : we know we've entered a new block.
+    action = (Action) { Action_Shift, 48, semantic_enter_block };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Colon), action);
 
 
@@ -982,7 +1003,9 @@ void parse_table_init()
     // - Action
     // -- Reduce
     // --- for (`;`, `)`, `||`, `&&`, `==`, `!=`, `>`, `>=`, `<`, `<=`, `+`, `-`, `*`, `/`, `%`) -> R26
-    action = (Action) { Action_Reduce, 26, NULL };
+    // ---- Using semantic_F_to_unary_op_F() because after reducing by rule no. 26, we need to set type accordingly.
+    // ---- Rule no. 26: F -> ! F
+    action = (Action) { Action_Reduce, 26, semantic_F_to_unary_op_F };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -1005,7 +1028,9 @@ void parse_table_init()
     // - Action
     // -- Reduce
     // --- for (`;`, `)`, `||`, `&&`, `==`, `!=`, `>`, `>=`, `<`, `<=`, `+`, `-`, `*`, `/`, `%`) -> R27
-    action = (Action) { Action_Reduce, 27, NULL };
+    // ---- Using semantic_F_to_unary_op_F() because after reducing by rule no. 26, we need to set type accordingly.
+    // ---- Rule no. 27: F -> - F
+    action = (Action) { Action_Reduce, 27, semantic_F_to_unary_op_F };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -1028,7 +1053,8 @@ void parse_table_init()
     // - Action
     // -- Shift
     // --- `:` -> S55
-    action = (Action) { Action_Shift, 55, NULL };
+    // ---- Using semantic_enter_block() because every time we encounter : we know we've entered a new block.
+    action = (Action) { Action_Shift, 55, semantic_enter_block };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Colon), action);
 
 
@@ -1037,7 +1063,11 @@ void parse_table_init()
     // - Action
     // -- Reduce
     // --- for (`done`, `int`, `char`, `set`, `if`, `while`) -> R8
-    action = (Action) { Action_Reduce, 8, NULL };
+    // ---- Using semantic_assign() because after reducing by rule no. 8, we must check for:
+    // ---- 1. Existing identifier
+    // ---- 2. Matching types
+    // ---- Rule no. 7: DECL -> data_type id ;
+    action = (Action) { Action_Reduce, 8, semantic_assign };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Done), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Int), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Char), action);
@@ -1093,7 +1123,9 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_And), action);
     // -- Reduce
     // --- for (`;`, `)`, `||`) -> R13
-    action = (Action) { Action_Reduce, 13, NULL };
+    // ---- Using semantic_type_check() because after reducing by rule no. 13, we must check matching types of the operands.
+    // ---- Rule no. 13: L_LOG_E -> L_LOG_E l_log_op H_LOG_E
+    action = (Action) { Action_Reduce, 13, semantic_type_check };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -1113,7 +1145,9 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Smaller_Equal), action);
     // -- Reduce
     // --- for (`;`, `)`, `||`, `&&`) -> R15
-    action = (Action) { Action_Reduce, 15, NULL };
+    // ---- Using semantic_type_check() because after reducing by rule no. 15, we must check matching types of the operands.
+    // ---- Rule no. 15: H_LOG_E -> H_LOG_E h_log_op BOOL_E
+    action = (Action) { Action_Reduce, 15, semantic_type_check };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -1130,7 +1164,9 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Minus), action);
     // -- Reduce
     // --- for (`;`, `)`, `||`, `&&`, `==`, `!=`, `>`, `>=`, `<`, `<=`) -> R17
-    action = (Action) { Action_Reduce, 17, NULL };
+    // ---- Using semantic_type_check() because after reducing by rule no. 17, we must check matching types of the operands.
+    // ---- Rule no. 17: BOOL_E -> BOOL_E bool_op E
+    action = (Action) { Action_Reduce, 17, semantic_type_check };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -1154,7 +1190,9 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Modulu), action);
     // -- Reduce
     // --- for (`;`, `)`, `||`, `&&`, `==`, `!=`, `>`, `>=`, `<`, `<=`, `+`, `-`) -> R19
-    action = (Action) { Action_Reduce, 19, NULL };
+    // ---- Using semantic_type_check() because after reducing by rule no. 19, we must check matching types of the operands.
+    // ---- Rule no. 19: E -> E expr_op T
+    action = (Action) { Action_Reduce, 19, semantic_type_check };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -1174,7 +1212,9 @@ void parse_table_init()
     // - Action
     // -- Reduce
     // --- for (`;`, `)`, `||`, `&&`, `==`, `!=`, `>`, `>=`, `<`, `<=`, `+`, `-`, `*`, `/`, `%`) -> R21
-    action = (Action) { Action_Reduce, 21, NULL };
+    // ---- Using semantic_type_check() because after reducing by rule no. 21, we must check matching types of the operands.
+    // ---- Rule no. 21: T -> T term_op F
+    action = (Action) { Action_Reduce, 21, semantic_type_check };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -1196,8 +1236,10 @@ void parse_table_init()
     s = 54;
     // - Action
     // -- Reduce
-    // --- for (`;`, `)`, `||`, `&&`, `==`, `!=`, `>`, `>=`, `<`, `<=`, `+`, `-`, `*`, `/`, `%`) -> R21
-    action = (Action) { Action_Reduce, 25, NULL };
+    // --- for (`;`, `)`, `||`, `&&`, `==`, `!=`, `>`, `>=`, `<`, `<=`, `+`, `-`, `*`, `/`, `%`) -> R25
+    // ---- Using semantic_F_to_L_LOG_E() because after reducing by rule no. 25, we need to set type accordingly.
+    // ---- Rule no. 25: F -> ( L_LOG_E )
+    action = (Action) { Action_Reduce, 25, semantic_F_to_L_LOG_E };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
@@ -1308,7 +1350,8 @@ void parse_table_init()
     // - Action
     // -- Shift
     // --- `:` -> S60
-    action = (Action) { Action_Shift, 60, NULL };
+    // ---- Using semantic_enter_block() because every time we encounter : we know we've entered a new block.
+    action = (Action) { Action_Shift, 60, semantic_enter_block };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Colon), action);
 
 
