@@ -7,6 +7,3 @@ Clear-Host
 
 # Run
 & .\run.ps1 ..\example.do
-
-# Clean
-& .\clean.ps1

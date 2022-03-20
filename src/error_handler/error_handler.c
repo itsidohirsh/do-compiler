@@ -7,7 +7,6 @@
 #include "../compiler/compiler.h"
 
 
-// TODO: Maybe remove line
 void error_handler_report(int line, Error_Type error_type, char* format, ...)
 {
     printf("[");

@@ -10,18 +10,19 @@ $passed_tests = @()
 $failed_tests = @()
 
 # Run every test in the tests folder
-foreach ($file_path in $(Get-ChildItem ..\tests -Include '*.do' -Recurse | Resolve-Path)) {
+foreach ($file_path in $(Get-ChildItem ..\tests -Include '*.do' -Recurse | Resolve-Path -Relative)) {
     # Run test without it's output
     .\run.ps1 $file_path | Out-Null
 
     # If passed test, add to $passed_tests array
     # -ne 0 because the test is checking for error catching, and the error code will not be 0 in that casetests
-    if ($LASTEXITCODE -ne 0) {
+    # -or the path starts with X because a test that starts with X should return exit code 0
+    if (($LASTEXITCODE -ne 0) -or $(Split-Path $file_path -Leaf).StartsWith('X')) {
         $passed_tests += Split-Path $file_path -Leaf
     }
     # If passed test, add to $failed_tests array
     else {
-        $failed_tests += Split-Path $file_path -Leaf;
+        $failed_tests += Split-Path $file_path -Leaf
     }
 }
 
@@ -44,6 +45,3 @@ Write-Host $passed_tests.length -ForegroundColor green -NoNewline
 Write-Host " / " -NoNewline
 Write-Host $($passed_tests.length + $failed_tests.length) -ForegroundColor yellow -NoNewline
 Write-Host " tests passed successfuly"
-
-# Clean
-& .\clean.ps1
