@@ -56,21 +56,6 @@ void lexer_advance()
 
 Token* lexer_EOT(char* value, int size, int state)
 {
-    // If the token is an error token then report an error and exit
-    if (compiler.lexer->fsm->states[state].token_type == Token_Error)
-    {
-        // Copying the value to a buffer so that we can free it.
-        char buffer[LEXER_MAX_TOKEN_SIZE];
-        strcpy(buffer, value);
-        buffer[size] = '\0';
-
-        // Free the value
-        free(value);
-
-        // Report an error and exit
-        error_handler_report(compiler.lexer->line, Error_Lexical, "Unexpected characters '%s'", buffer);
-    }
-
     // Reallocating the value to its actual size
     value = (char*) realloc(value, (size + 1) * sizeof(char));
     if (value == NULL) exit_memory_error(__FILE__, __LINE__);
@@ -100,22 +85,41 @@ Token* lexer_get_next_token()
     {
         // Check for Token's max length
         if (size == LEXER_MAX_TOKEN_SIZE - 1)
+        {
             error_handler_report(compiler.lexer->line, Error_Lexical, "Token can't be longer than %d characters", LEXER_MAX_TOKEN_SIZE - 1);
+            lexer_advance();
+            state = lexer_fsm_get_starting_state_index(compiler.lexer->c);
+            size = 0;
+        }
 
         // Update value
         value[size++] = compiler.lexer->c;
 
-        // If there is no state to advance to according to the current state and input character, return a new token with the value
+        // If there is no state to advance to according to the current state and input character (reached EOT)
         if (compiler.lexer->fsm->edges[state][lexer_fsm_get_char_index(compiler.src[compiler.lexer->i + 1])].state_number == 0)
         {
-            // If the current token is not a Whitespace token, return it
-            if (compiler.lexer->fsm->states[state].token_type != Token_Whitespace)
+            // If reached an error token, report the error and continue
+            if (compiler.lexer->fsm->states[state].token_type == Token_Error)
+            {
+                // Making sure there is a null terminator
+                value[size] = '\0';
+                // Reporting error
+                error_handler_report(compiler.lexer->line, Error_Lexical, "Unexpected character '%s'", value);
+                // Continue to next token
+                lexer_advance();
+                state = lexer_fsm_get_starting_state_index(compiler.lexer->c);
+                size = 0;
+            }
+            // If reached a whitespace token, continue to the next token
+            else if (compiler.lexer->fsm->states[state].token_type == Token_Whitespace)
+            {
+                lexer_advance();
+                state = lexer_fsm_get_starting_state_index(compiler.lexer->c);
+                size = 0;
+            }
+            // If reached to other valid token, return it
+            else
                 return lexer_EOT(value, size, state);
-
-            // If the current token is a Whitespace token, continue to the next token like just started the function
-            lexer_advance();
-            state = lexer_fsm_get_starting_state_index(compiler.lexer->c);
-            size = 0;
         }
         // If not EOT yet, advance to the next state
         else

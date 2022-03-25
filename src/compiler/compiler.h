@@ -10,6 +10,8 @@
 // Struct of the entire compile
 typedef struct Compiler
 {
+    // Number of errors found during compilation
+    int errors;
     // The source code to be compiled
     char* src;
     // The symbol table of the compiler

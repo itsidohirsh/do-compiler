@@ -1,7 +1,5 @@
 # Script to run the executable of the project with a single source file argument #
 
-Clear-Host
-
 # Check if cli arguments exist
 if ($args.length -gt 0) {
     $source_file = $args[0]

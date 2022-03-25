@@ -2,11 +2,15 @@
 
 #include "../global.h"
 
+#include "../general/general.h"
 #include "compiler.h"
 
 
 void compiler_init(char* src)
 {
+    // Initialize with 0 errors
+    compiler.errors = 0;
+
     // Source code
     compiler.src = src;
 
@@ -44,9 +48,23 @@ void compiler_compile()
     // Also updates the symbol table.
     Parse_Tree_Node* parse_tree = parser_parse();
 
+    // If errors were encountered during compilation
+    if (compiler.errors > 0)
+    {
+        // Destroy parse tree
+        parse_tree_destroy(parse_tree);
+
+        // Destroy the compiler
+        compiler_destroy();
+
+        printf_red("\nCompilation terminated!\n");
+        exit(1);
+    }
+
     // Print the parse tree and symbol table
     parse_tree_print(parse_tree);
     scope_tree_print(compiler.scope_tree->global_scope);
 
+    // Destroy parse tree
     parse_tree_destroy(parse_tree);
 }

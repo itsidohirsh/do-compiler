@@ -139,7 +139,7 @@ Parse_Tree_Node* parser_parse()
     // Input first token from the source code
     compiler.parser->token = lexer_get_next_token();
 
-    // While not done parsing. We'll be done parsing by an Accept or Error
+    // While not done parsing. We'll be done parsing by an Accept or Error.
     while (true)
     {
         // Get the next state from the top of the stack
@@ -181,8 +181,15 @@ Parse_Tree_Node* parser_parse()
         // If Action[state, token] == Error
         else
         {
-            // If reached an Error, save error line, destroy the parser, output error message and exit
+            // If reached an Error output error message
             error_handler_report(compiler.lexer->line, Error_Syntax, "Unexpected token %s", token_to_str(compiler.parser->token));
+
+            // If reached EOF, return NULL to prevent further processing and infinite loop
+            if (compiler.parser->token->token_type == Token_Eof)
+                return NULL;
+
+            // Get next token from the source code
+            compiler.parser->token = lexer_get_next_token();
         }
     }
 }

@@ -1,7 +1,5 @@
 # Script to test the code. All the tests are from the ../tests folder. A test is passed if the exit code of it is NOT 0 #
 
-Clear-Host
-
 # Build
 & .\build.ps1
 
@@ -11,8 +9,15 @@ $failed_tests = @()
 
 # Run every test in the tests folder
 foreach ($file_path in $(Get-ChildItem ..\tests -Include '*.do' -Recurse | Resolve-Path -Relative)) {
-    # Run test without it's output
+    # Run test
+
+    # - Without output
     .\run.ps1 $file_path | Out-Null
+
+    # - With output
+    # Write-Host
+    # $file_path
+    # .\run.ps1 $file_path
 
     # If passed test, add to $passed_tests array
     # -ne 0 because the test is checking for error catching, and the error code will not be 0 in that casetests

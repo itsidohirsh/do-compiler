@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#include "../global.h"
+
 #include "error_handler.h"
 #include "../general/general.h"
 #include "../compiler/compiler.h"
@@ -22,8 +24,7 @@ void error_handler_report(int line, Error_Type error_type, char* format, ...)
 
     printf("\n");
 
-    compiler_destroy();
-    exit(error_type);
+    compiler.errors++;
 }
 
 const char* error_handler_error_to_str(Error_Type error_type)

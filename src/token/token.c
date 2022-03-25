@@ -73,7 +73,7 @@ const char* token_type_to_str(Token_Type token_type)
         case Token_Colon: return "Colon";
         case Token_Smiley: return "Smiley";
         case Token_Semi_Colon: return "Semi_Colon";
-        case Token_Eof: return "Eof";
+        case Token_Eof: return "EOF";
 
         default: return "Don't know that token type... ;|";
     }
@@ -82,16 +82,18 @@ const char* token_type_to_str(Token_Type token_type)
 char* token_to_str(Token* token)
 {
     const char* type_str = token_type_to_str(token->token_type);
-    char* template = "%s `%s`";
 
-    char* str = (char*) calloc(strlen(type_str) + strlen(template) + 8, sizeof(char));
+    char* str = (char*) calloc(strlen(type_str) + 16, sizeof(char));
     if (str == NULL)
     {
         token_destroy(token);
         exit_memory_error(__FILE__, __LINE__);
     }
 
-    sprintf(str, template, type_str, token->value);
+    if (token->token_type == Token_Eof)
+        sprintf(str, "%s", type_str);
+    else
+        sprintf(str, "%s `%s`", type_str, token->value);
 
     return str;
 }
