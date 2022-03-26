@@ -54,6 +54,9 @@ void parser_init()
 
     // Initialize production_rules array according to grammar rules of the language
     parser_init_production_rules();
+
+    // Initializes the array of statement production rule's starting states according to the parsing table of the language
+    parser_init_tokens_starting_state();
 }
 
 void parser_init_production_rules()
@@ -88,6 +91,25 @@ void parser_init_production_rules()
     compiler.parser->production_rules[prod_num++] = (Production_Rule) { Non_Terminal_F, 3 };         // F -> ( L_LOG_E )
     compiler.parser->production_rules[prod_num++] = (Production_Rule) { Non_Terminal_F, 2 };         // F -> ! F
     compiler.parser->production_rules[prod_num++] = (Production_Rule) { Non_Terminal_F, 2 };         // F -> - F
+}
+
+void parser_init_tokens_starting_state()
+{
+    // Those numbers (12, 13, 14, 15) are chosen based on the parsing table. More precisely, on the shift actions in the action table.
+    // The rest of the token's starting state is set to 0 because of the calloc used to create the parser.
+    // Token - 2 because at the enum of the token types, there are 2 additional tokens at the start (error, whitespace).
+    // In my language only `int`, `char`, `set`, `if`, `while` are at the start of a statement.
+    compiler.parser->tokens_starting_state[Token_Int - 2] = 12;
+    compiler.parser->tokens_starting_state[Token_Char - 2] = 12;
+    compiler.parser->tokens_starting_state[Token_Set - 2] = 13;
+    compiler.parser->tokens_starting_state[Token_If - 2] = 14;
+    compiler.parser->tokens_starting_state[Token_While - 2] = 15;
+}
+
+int parser_get_token_starting_state(Token_Type token_type)
+{
+    // terminal_type - 2 because at the enum of the token types, there are 2 additional tokens at the start (error, whitespace).
+    return compiler.parser->tokens_starting_state[token_type - 2];
 }
 
 void parser_shift(int goto_state)
@@ -184,12 +206,58 @@ Parse_Tree_Node* parser_parse()
             // If reached an Error output error message
             error_handler_report(compiler.lexer->line, Error_Syntax, "Unexpected token %s", token_to_str(compiler.parser->token));
 
-            // If reached EOF, return NULL to prevent further processing and infinite loop
-            if (compiler.parser->token->token_type == Token_Eof)
-                return NULL;
+            // Get the starting state of the current token
+            int token_starting_state = parser_get_token_starting_state(compiler.parser->token->token_type);
+
+            // Loop until found a token which is a start of a statement, or until reached EOF.
+            // Ignore all toknes until findes a token which is a start of a statement.
+            while (token_starting_state == 0 && compiler.parser->token->token_type != Token_Eof)
+            {
+                // Destroy previous token
+                token_destroy(compiler.parser->token);
+                // Get next token
+                compiler.parser->token = lexer_get_next_token();
+                // Get the starting state of the newly fetched token
+                token_starting_state = parser_get_token_starting_state(compiler.parser->token->token_type);
+            }
+
+            // Pop not needed, previously shifted tokens of the current part of the block off the parse stack.
+            // Stop if only one entry left in the parse stack (the init entry).
+            Parse_Stack_Entry* entry = parse_stack_pop();
+            while (compiler.parser->parse_stack->next_entry != NULL)
+            {
+                // Check type only for terminals
+                if (entry->tree->symbol_type == Terminal)
+                {
+                    // Current popped token type
+                    Token_Type type = entry->tree->token->token_type;
+
+                    // If reached the end of the previous statement or the start of the current block,
+                    // that means we've poped enough off the stack and can continue parsing.
+                    if (type == Token_Semi_Colon || type == Token_Done || type == Token_Colon)
+                        break;
+                }
+
+                // Destroy poped entry
+                parse_tree_destroy(entry->tree);
+                free(entry);
+
+                // Pop the next entry
+                entry = parse_stack_pop();
+            }
+
+            // Push back last poped entry (becasue we're popping one too many entries)
+            parse_stack_push(entry);
+
+            // Shift the founded token
+            parser_shift(token_starting_state);
 
             // Get next token from the source code
             compiler.parser->token = lexer_get_next_token();
+
+            // If reached EOF, return NULL to prevent further processing and infinite loop
+            if (compiler.parser->token->token_type == Token_Eof)
+                return NULL;
         }
     }
 }

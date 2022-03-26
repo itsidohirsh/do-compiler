@@ -273,8 +273,8 @@ void lexer_fsm_init()
     lexer_fsm_add_edge(s + 2, lexer_fsm_get_char_index('l'), s + 3);
     lexer_fsm_set_alnum_identifier(s + 2, 'l');
     lexer_fsm_add_edge(s + 3, lexer_fsm_get_char_index('e'), s + 4);
-    lexer_fsm_set_alnum_identifier(s + 4, 'e');
-    lexer_fsm_set_alnum_identifier(s + 5, 0);
+    lexer_fsm_set_alnum_identifier(s + 3, 'e');
+    lexer_fsm_set_alnum_identifier(s + 4, 0);
 
     // -- "set" -> 3 states
     s += 5;

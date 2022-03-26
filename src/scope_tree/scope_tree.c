@@ -90,7 +90,7 @@ Symbol_Table_Entry* scope_tree_fetch(char* identifier)
     Scope* current_scope = compiler.scope_tree->current_scope;
     Symbol_Table_Entry* entry = NULL;
 
-    // Loop up to the global scope, or untill identifier found
+    // Loop up to the global scope, or until identifier found
     while (current_scope != NULL && entry == NULL)
     {
         entry = symbol_table_fetch(current_scope->symbol_table, identifier);

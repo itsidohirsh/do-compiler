@@ -34,6 +34,12 @@ typedef struct Parser
     // Array of the production rules
     // This will be used when we reduce by a production rule in the parsing phase
     Production_Rule production_rules[NUM_OF_PRODUCTION_RULES];
+    // Array to store the starting state of the tokens at the start of a statment production rule in the language.
+    // This array is mainly used for better error reporting and error recovery.
+    // Every cell is filled with 0s, except for the tokens that are at the start of a statment production rule.
+    // Those token's cells are filled with the number of their produciton rule's starting state in the pushdown automaton
+    // according to the parsing table.
+    int tokens_starting_state[NUM_OF_TERMINALS];
 } Parser;
 
 
@@ -50,6 +56,12 @@ void parser_init();
 
 // Initializes the production rules array according to the grammar of the language
 void parser_init_production_rules();
+
+// Initializes the array of statement production rule's starting states according to the parsing table of the language
+void parser_init_tokens_starting_state();
+
+// Get the starting state of a terminal
+int parser_get_token_starting_state(Token_Type token_type);
 
 // Shifts the current parser's token and goto state onto the parse stack
 void parser_shift(int goto_state);

@@ -11,6 +11,7 @@
 
 void error_handler_report(int line, Error_Type error_type, char* format, ...)
 {
+    printf("\n");
     printf("[");
     printf_red(error_handler_error_to_str(error_type));
     printf(" on line");
@@ -21,8 +22,6 @@ void error_handler_report(int line, Error_Type error_type, char* format, ...)
     va_start(args, format); // Initialize the va_list with the ...
     vprintf(format, args);  // Forward ... to vprintf
     va_end(args);           // Clean up the va_list
-
-    printf("\n");
 
     compiler.errors++;
 }

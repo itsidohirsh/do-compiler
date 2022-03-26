@@ -57,7 +57,7 @@ void compiler_compile()
         // Destroy the compiler
         compiler_destroy();
 
-        printf_red("\nCompilation terminated!\n");
+        printf_red("\n\nCompilation terminated!\n\n");
         exit(1);
     }
 

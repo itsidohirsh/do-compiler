@@ -15,6 +15,7 @@ typedef struct Action
     int state_or_rule;
     // Pointer to a function to be called when we reach that cell. Will also be part of the semantic analysis
     void (*semantic_func) ();
+    // TODO: Add error function
 } Action;
 
 // Struct to hold the parsing table. Action & Goto tables all together
