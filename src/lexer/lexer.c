@@ -86,7 +86,7 @@ Token* lexer_get_next_token()
         // Check for Token's max length
         if (size == LEXER_MAX_TOKEN_SIZE - 1)
         {
-            error_handler_report(compiler.lexer->line, Error_Lexical, "Token can't be longer than %d characters", LEXER_MAX_TOKEN_SIZE - 1);
+            error_handler_report(compiler.lexer->line, Error_Lexical, "Token can't be longer than " BOLD_WHITE "%d" RESET " characters", LEXER_MAX_TOKEN_SIZE - 1);
             lexer_advance();
             state = lexer_fsm_get_starting_state_index(compiler.lexer->c);
             size = 0;
@@ -104,7 +104,7 @@ Token* lexer_get_next_token()
                 // Making sure there is a null terminator
                 value[size] = '\0';
                 // Reporting error
-                error_handler_report(compiler.lexer->line, Error_Lexical, "Unexpected character '%s'", value);
+                error_handler_report(compiler.lexer->line, Error_Lexical, "Unexpected character '" BOLD_WHITE "%s" RESET "'", value);
                 // Continue to next token
                 lexer_advance();
                 state = lexer_fsm_get_starting_state_index(compiler.lexer->c);

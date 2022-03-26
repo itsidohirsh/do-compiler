@@ -91,9 +91,9 @@ char* token_to_str(Token* token)
     }
 
     if (token->token_type == Token_Eof)
-        sprintf(str, "%s", type_str);
+        sprintf(str, BOLD_WHITE "%s" RESET, type_str);
     else
-        sprintf(str, "%s `%s`", type_str, token->value);
+        sprintf(str, "'" BOLD_WHITE "%s" RESET "'", token->value);
 
     return str;
 }

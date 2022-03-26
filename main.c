@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
 {
     if (argc <= 1)
     {
-        printf_red("Please specify source file.\n");
+        printf(RED "Please specify source file.\n" RESET);
         return 1;
     }
 

@@ -206,54 +206,12 @@ Parse_Tree_Node* parser_parse()
             // If reached an Error output error message
             error_handler_report(compiler.lexer->line, Error_Syntax, "Unexpected token %s", token_to_str(compiler.parser->token));
 
-            // Get the starting state of the current token
-            int token_starting_state = parser_get_token_starting_state(compiler.parser->token->token_type);
-
-            // Loop until found a token which is a start of a statement, or until reached EOF.
-            // Ignore all toknes until findes a token which is a start of a statement.
-            while (token_starting_state == 0 && compiler.parser->token->token_type != Token_Eof)
-            {
-                // Destroy previous token
-                token_destroy(compiler.parser->token);
-                // Get next token
-                compiler.parser->token = lexer_get_next_token();
-                // Get the starting state of the newly fetched token
-                token_starting_state = parser_get_token_starting_state(compiler.parser->token->token_type);
-            }
-
-            // Pop not needed, previously shifted tokens of the current part of the block off the parse stack.
-            // Stop if only one entry left in the parse stack (the init entry).
-            Parse_Stack_Entry* entry = parse_stack_pop();
-            while (compiler.parser->parse_stack->next_entry != NULL)
-            {
-                // Check type only for terminals
-                if (entry->tree->symbol_type == Terminal)
-                {
-                    // Current popped token type
-                    Token_Type type = entry->tree->token->token_type;
-
-                    // If reached the end of the previous statement or the start of the current block,
-                    // that means we've poped enough off the stack and can continue parsing.
-                    if (type == Token_Semi_Colon || type == Token_Done || type == Token_Colon)
-                        break;
-                }
-
-                // Destroy poped entry
-                parse_tree_destroy(entry->tree);
-                free(entry);
-
-                // Pop the next entry
-                entry = parse_stack_pop();
-            }
-
-            // Push back last poped entry (becasue we're popping one too many entries)
-            parse_stack_push(entry);
-
-            // Shift the founded token
-            parser_shift(token_starting_state);
-
-            // Get next token from the source code
-            compiler.parser->token = lexer_get_next_token();
+            // Perform a specific error report & recovery function if specified
+            if (action.error_func != NULL)
+                action.error_func();
+            // If no specific error function is specified, perform a general error recovery function
+            else
+                error_handler_error_recovery();
 
             // If reached EOF, return NULL to prevent further processing and infinite loop
             if (compiler.parser->token->token_type == Token_Eof)
