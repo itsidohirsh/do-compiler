@@ -7,7 +7,6 @@
 // Number of indices in the array.
 #define SYMBOL_TABLE_INITIAL_CAPACITY 32
 
-// TODO: Set λ limit value to the best value possible
 // The maximum value the load factor of the hash table can have before expanding the table
 #define SYMBOL_TABLE_MAX_LAMBDA 2.5
 

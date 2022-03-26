@@ -84,7 +84,6 @@ void symbol_table_insert(Symbol_Table* symbol_table, Symbol_Table_Entry* entry)
     // Increment the number of entries in the table
     symbol_table->num_of_entries++;
 
-    // TODO: Make the λ calculation the best possible
     // Calculate lambda - The load factor of the hash table
     // λ = num_of_entries / number_of_indices_occupied
     float lambda = (float) symbol_table->num_of_entries / (float) symbol_table->num_of_indices_occupied;
