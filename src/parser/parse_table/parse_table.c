@@ -121,6 +121,7 @@ void parse_table_init()
     // - Goto
     // -- PROG -> 1
     parse_table_insert_goto(s, Non_Terminal_PROG, 1);
+
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
         compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_prog;
@@ -134,6 +135,10 @@ void parse_table_init()
     action = (Action) { Action_Accept, 0, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Eof), action);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_eof;
+
 
     // State 2
     s = 2;
@@ -142,9 +147,10 @@ void parse_table_init()
     // --- id -> S3
     action = (Action) { Action_Shift, 3, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Identifier), action);
+
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
-        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_prog_id;
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_prog_name;
 
 
     // State 3
@@ -156,6 +162,7 @@ void parse_table_init()
     // ---- scope, which is already created when intializing the scope tree.
     action = (Action) { Action_Shift, 4, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Colon), action);
+
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
         compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_colon_state_3;
@@ -198,6 +205,10 @@ void parse_table_init()
     // -- WHILE -> 11
     parse_table_insert_goto(s, Non_Terminal_WHILE, 11);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
+
 
     // State 5
     s = 5;
@@ -206,6 +217,10 @@ void parse_table_init()
     // --- `:)` -> S16
     action = (Action) { Action_Shift, 16, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Smiley), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_smiley;
 
 
     // State 6
@@ -245,6 +260,10 @@ void parse_table_init()
     // -- WHILE -> 11
     parse_table_insert_goto(s, Non_Terminal_WHILE, 11);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
+
 
     // State 7
     s = 7;
@@ -263,6 +282,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Else), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_While), action);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_7_group;
+
 
     // State 8
     s = 8;
@@ -276,6 +299,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Set), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_If), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_While), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
 
 
     // State 9
@@ -291,6 +318,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_If), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_While), action);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
+
 
     // State 10
     s = 10;
@@ -304,6 +335,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Set), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_If), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_While), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
 
 
     // State 11
@@ -319,6 +354,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_If), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_While), action);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
+
 
     // State 12
     s = 12;
@@ -327,6 +366,7 @@ void parse_table_init()
     // --- id -> S18
     action = (Action) { Action_Shift, 18, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Identifier), action);
+
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
         compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_identifier;
@@ -339,6 +379,7 @@ void parse_table_init()
     // --- id -> S19
     action = (Action) { Action_Shift, 19, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Identifier), action);
+
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
         compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_identifier;
@@ -351,6 +392,7 @@ void parse_table_init()
     // --- `(` -> S20
     action = (Action) { Action_Shift, 20, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Open_Paren), action);
+
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
         compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_open_paren;
@@ -363,6 +405,7 @@ void parse_table_init()
     // --- `(` -> S21
     action = (Action) { Action_Shift, 21, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Open_Paren), action);
+
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
         compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_open_paren;
@@ -375,6 +418,11 @@ void parse_table_init()
     // --- EOF -> R0
     action = (Action) { Action_Reduce, 0, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Eof), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_eof;
+
 
     // State 17
     s = 17;
@@ -391,6 +439,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Else), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_While), action);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_7_group;
+
 
     // State 18
     s = 18;
@@ -399,6 +451,7 @@ void parse_table_init()
     // --- `;` -> S22
     action = (Action) { Action_Shift, 22, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
+
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
         compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_semi_colon;
@@ -411,6 +464,7 @@ void parse_table_init()
     // --- `=` -> S23
     action = (Action) { Action_Shift, 23, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Assignment), action);
+
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
         compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_assign;
@@ -453,6 +507,10 @@ void parse_table_init()
     // -- F -> 29
     parse_table_insert_goto(s, Non_Terminal_F, 29);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_20_group;
+
 
     // State 21
     s = 21;
@@ -491,6 +549,10 @@ void parse_table_init()
     // -- F -> 29
     parse_table_insert_goto(s, Non_Terminal_F, 29);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_20_group;
+
 
     // State 22
     s = 22;
@@ -506,6 +568,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Set), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_If), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_While), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
 
 
     // State 23
@@ -545,6 +611,10 @@ void parse_table_init()
     // -- F -> 29
     parse_table_insert_goto(s, Non_Terminal_F, 29);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_20_group;
+
 
     // State 24
     s = 24;
@@ -556,6 +626,10 @@ void parse_table_init()
     // --- `||` -> S38
     action = (Action) { Action_Shift, 38, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_24_group;
 
 
     // State 25
@@ -573,6 +647,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
 
 
     // State 26
@@ -596,6 +674,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_And), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
 
 
     // State 27
@@ -621,6 +703,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Bigger_Equal), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Smaller), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Smaller_Equal), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
 
 
     // State 28
@@ -650,6 +736,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Plus), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Minus), action);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
+
 
     // State 29
     s = 29;
@@ -674,6 +764,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Multiply), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Divide), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Modulu), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
 
 
     // State 30
@@ -700,6 +794,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Divide), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Modulu), action);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
+
 
     // State 31
     s = 31;
@@ -724,6 +822,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Multiply), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Divide), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Modulu), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
 
 
     // State 32
@@ -763,6 +865,10 @@ void parse_table_init()
     // -- F -> 29
     parse_table_insert_goto(s, Non_Terminal_F, 29);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_20_group;
+
 
     // State 33
     s = 33;
@@ -790,6 +896,10 @@ void parse_table_init()
     // - Goto
     // -- F -> 44
     parse_table_insert_goto(s, Non_Terminal_F, 44);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_20_group;
 
 
     // State 34
@@ -819,6 +929,10 @@ void parse_table_init()
     // -- F -> 44
     parse_table_insert_goto(s, Non_Terminal_F, 45);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_20_group;
+
 
     // State 35
     s = 35;
@@ -830,6 +944,10 @@ void parse_table_init()
     // --- `||` -> S38
     action = (Action) { Action_Shift, 38, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_24_group;
 
 
     // State 36
@@ -843,6 +961,10 @@ void parse_table_init()
     action = (Action) { Action_Shift, 38, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_36_group;
+
 
     // State 37
     s = 37;
@@ -852,6 +974,7 @@ void parse_table_init()
     // ---- Using semantic_enter_block() because every time we encounter : we know we've entered a new block.
     action = (Action) { Action_Shift, 48, semantic_enter_block, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Colon), action);
+
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
         compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_colon_state_37;
@@ -892,6 +1015,10 @@ void parse_table_init()
     // -- F -> 29
     parse_table_insert_goto(s, Non_Terminal_F, 29);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_20_group;
+
 
     // State 39
     s = 39;
@@ -926,6 +1053,10 @@ void parse_table_init()
     // -- F -> 29
     parse_table_insert_goto(s, Non_Terminal_F, 29);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_20_group;
+
 
     // State 40
     s = 40;
@@ -958,6 +1089,10 @@ void parse_table_init()
     // -- F -> 29
     parse_table_insert_goto(s, Non_Terminal_F, 29);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_20_group;
+
 
     // State 41
     s = 41;
@@ -988,6 +1123,10 @@ void parse_table_init()
     // -- F -> 29
     parse_table_insert_goto(s, Non_Terminal_F, 29);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_20_group;
+
 
     // State 42
     s = 42;
@@ -1016,6 +1155,10 @@ void parse_table_init()
     // -- F -> 53
     parse_table_insert_goto(s, Non_Terminal_F, 53);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_20_group;
+
 
     // State 43
     s = 43;
@@ -1027,6 +1170,10 @@ void parse_table_init()
     // --- `||` -> S38
     action = (Action) { Action_Shift, 38, NULL, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_24_group;
 
 
     // State 44
@@ -1053,6 +1200,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Divide), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Modulu), action);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
+
 
     // State 45
     s = 45;
@@ -1078,6 +1229,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Divide), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Modulu), action);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
+
 
     // State 46
     s = 46;
@@ -1087,6 +1242,7 @@ void parse_table_init()
     // ---- Using semantic_enter_block() because every time we encounter : we know we've entered a new block.
     action = (Action) { Action_Shift, 55, semantic_enter_block, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Colon), action);
+
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
         compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_colon_state_46;
@@ -1108,6 +1264,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Set), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_If), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_While), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
 
 
     // State 48
@@ -1147,6 +1307,10 @@ void parse_table_init()
     // -- WHILE -> 11
     parse_table_insert_goto(s, Non_Terminal_WHILE, 11);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
+
 
     // State 49
     s = 49;
@@ -1163,6 +1327,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Semi_Colon), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
 
 
     // State 50
@@ -1186,6 +1354,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Close_Paren), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Or), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_And), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
 
 
     // State 51
@@ -1211,6 +1383,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Bigger_Equal), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Smaller), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Smaller_Equal), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
 
 
     // State 52
@@ -1239,9 +1415,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Smaller_Equal), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Plus), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Minus), action);
+
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
-        compiler.parser->parse_table->action_table[s][i].error_func = NULL;
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
 
 
     // State 53
@@ -1268,6 +1445,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Divide), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Modulu), action);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
+
 
     // State 54
     s = 54;
@@ -1292,6 +1473,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Multiply), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Divide), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Modulu), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_25_group;
 
 
     // State 55
@@ -1331,6 +1516,10 @@ void parse_table_init()
     // -- WHILE -> 11
     parse_table_insert_goto(s, Non_Terminal_WHILE, 11);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
+
 
     // State 56
     s = 56;
@@ -1353,6 +1542,10 @@ void parse_table_init()
     // -- ELSE -> 58
     parse_table_insert_goto(s, Non_Terminal_ELSE, 58);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_56_group;
+
 
     // State 57
     s = 57;
@@ -1366,6 +1559,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Set), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_If), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_While), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
 
 
     // State 58
@@ -1381,6 +1578,10 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_If), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_While), action);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
+
 
     // State 59
     s = 59;
@@ -1390,6 +1591,7 @@ void parse_table_init()
     // ---- Using semantic_enter_block() because every time we encounter : we know we've entered a new block.
     action = (Action) { Action_Shift, 60, semantic_enter_block, NULL };
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Colon), action);
+
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
         compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_colon_state_59;
@@ -1432,6 +1634,10 @@ void parse_table_init()
     // -- WHILE -> 11
     parse_table_insert_goto(s, Non_Terminal_WHILE, 11);
 
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
+
 
     // State 61
     s = 61;
@@ -1445,4 +1651,8 @@ void parse_table_init()
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_Set), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_If), action);
     parse_table_insert_action(s, parse_table_get_terminal_index(Token_While), action);
+
+    // - Error function
+    for (int i = 0; i < NUM_OF_TERMINALS; i++)
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_state_4_group;
 }

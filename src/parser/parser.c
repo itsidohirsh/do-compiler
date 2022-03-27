@@ -99,6 +99,7 @@ void parser_init_tokens_starting_state()
     // The rest of the token's starting state is set to 0 because of the calloc used to create the parser.
     // Token - 2 because at the enum of the token types, there are 2 additional tokens at the start (error, whitespace).
     // In my language only `int`, `char`, `set`, `if`, `while` are at the start of a statement.
+    compiler.parser->tokens_starting_state[Token_Done - 2] = 7; // TODO: Maybe keep, maybe not
     compiler.parser->tokens_starting_state[Token_Int - 2] = 12;
     compiler.parser->tokens_starting_state[Token_Char - 2] = 12;
     compiler.parser->tokens_starting_state[Token_Set - 2] = 13;
@@ -206,12 +207,8 @@ Parse_Tree_Node* parser_parse()
             // If reached an Error output error message
             error_handler_report(compiler.lexer->line, Error_Syntax, "Unexpected token %s", token_to_str(compiler.parser->token));
 
-            // Perform a specific error report & recovery function if specified
-            if (action.error_func != NULL)
-                action.error_func();
-            // If no specific error function is specified, perform a general error recovery function
-            else
-                error_handler_error_recovery();
+            // Perform the specific error report & recovery function
+            action.error_func();
 
             // If reached EOF, return NULL to prevent further processing and infinite loop
             if (compiler.parser->token->token_type == Token_Eof)

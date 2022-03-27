@@ -74,7 +74,7 @@ void error_handler_report_expected_prog()
     parse_stack_push(parse_stack_init_entry(parse_tree_init_node(Terminal, type, token_init(NULL, 0, type), NULL, 0), goto_state));
 }
 
-void error_handler_report_expected_prog_id()
+void error_handler_report_expected_prog_name()
 {
     Token_Type type = Token_Identifier;
     int goto_state = 3;
@@ -124,10 +124,16 @@ void error_handler_report_expected_colon_state_59()
     parse_stack_push(parse_stack_init_entry(parse_tree_init_node(Terminal, type, token_init(NULL, 0, type), NULL, 0), goto_state));
 }
 
-
-void error_handler_report_expected_semi_colon()
+void error_handler_report_expected_eof()
 {
-    printf(", expected '" BOLD_WHITE ";" RESET "'");
+    printf(", expected " BOLD_WHITE "EOF" RESET);
+
+    error_handler_error_recovery();
+}
+
+void error_handler_report_expected_smiley()
+{
+    printf(", expected '" BOLD_WHITE ":)" RESET "'");
 
     error_handler_error_recovery();
 }
@@ -135,6 +141,13 @@ void error_handler_report_expected_semi_colon()
 void error_handler_report_expected_identifier()
 {
     printf(", expected " BOLD_WHITE "identifier" RESET);
+
+    error_handler_error_recovery();
+}
+
+void error_handler_report_expected_semi_colon()
+{
+    printf(", expected '" BOLD_WHITE ";" RESET "'");
 
     error_handler_error_recovery();
 }
@@ -153,6 +166,79 @@ void error_handler_report_expected_assign()
     error_handler_error_recovery();
 }
 
+void error_handler_report_expected_state_4_group()
+{
+    printf(", expected '" BOLD_WHITE "done" RESET "'");
+    printf(", '" BOLD_WHITE "int" RESET "'");
+    printf(", '" BOLD_WHITE "char" RESET "'");
+    printf(", '" BOLD_WHITE "set" RESET "'");
+    printf(", '" BOLD_WHITE "if" RESET "'");
+    printf(" or '" BOLD_WHITE "while" RESET "'");
+
+    error_handler_error_recovery();
+}
+
+void error_handler_report_expected_state_7_group()
+{
+    printf(", expected '" BOLD_WHITE ":)" RESET "'");
+    printf(", " BOLD_WHITE "done" RESET "'");
+    printf(", " BOLD_WHITE "int" RESET "'");
+    printf(", " BOLD_WHITE "char" RESET "'");
+    printf(", " BOLD_WHITE "set" RESET "'");
+    printf(", " BOLD_WHITE "if" RESET "'");
+    printf(", " BOLD_WHITE "else" RESET "'");
+    printf(" or '" BOLD_WHITE "while" RESET "'");
+
+    error_handler_error_recovery();
+}
+
+void error_handler_report_expected_state_20_group()
+{
+    printf(", expected '" BOLD_WHITE "(" RESET "'");
+    printf(", '" BOLD_WHITE "-" RESET "'");
+    printf(", " BOLD_WHITE "literal" RESET);
+    printf(" or '" BOLD_WHITE "!" RESET "'");
+
+    error_handler_error_recovery();
+}
+
+void error_handler_report_expected_state_24_group()
+{
+    printf(", expected '" BOLD_WHITE ")" RESET "'");
+    printf(" or '" BOLD_WHITE "||" RESET "'");
+
+    error_handler_error_recovery();
+}
+
+void error_handler_report_expected_state_25_group()
+{
+    printf(", expected '" BOLD_WHITE ";" RESET "'");
+    printf(", '" BOLD_WHITE ")" RESET "'");
+    printf(" or " BOLD_WHITE "binary operator" RESET);
+
+    error_handler_error_recovery();
+}
+
+void error_handler_report_expected_state_36_group()
+{
+    printf(", expected '" BOLD_WHITE ";" RESET "'");
+    printf(" or '" BOLD_WHITE "||" RESET "'");
+
+    error_handler_error_recovery();
+}
+
+void error_handler_report_expected_state_56_group()
+{
+    printf(", expected '" BOLD_WHITE "done" RESET "'");
+    printf(", '" BOLD_WHITE "int" RESET "'");
+    printf(", '" BOLD_WHITE "char" RESET "'");
+    printf(", '" BOLD_WHITE "set" RESET "'");
+    printf(", '" BOLD_WHITE "if" RESET "'");
+    printf(", '" BOLD_WHITE "else" RESET "'");
+    printf(" or '" BOLD_WHITE "while" RESET "'");
+
+    error_handler_error_recovery();
+}
 
 const char* error_handler_error_to_str(Error_Type error_type)
 {
