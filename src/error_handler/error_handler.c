@@ -124,6 +124,16 @@ void error_handler_report_expected_colon_state_59()
     parse_stack_push(parse_stack_init_entry(parse_tree_init_node(Terminal, type, token_init(NULL, 0, type), NULL, 0), goto_state));
 }
 
+void error_handler_report_expected_semi_colon_state_18()
+{
+    Token_Type type = Token_Semi_Colon;
+    int goto_state = 22;
+
+    printf(", expected '" BOLD_WHITE ";" RESET "'");
+
+    parse_stack_push(parse_stack_init_entry(parse_tree_init_node(Terminal, type, token_init(NULL, 0, type), NULL, 0), goto_state));
+}
+
 void error_handler_report_expected_eof()
 {
     printf(", expected " BOLD_WHITE "EOF" RESET);
@@ -141,13 +151,6 @@ void error_handler_report_expected_smiley()
 void error_handler_report_expected_identifier()
 {
     printf(", expected " BOLD_WHITE "identifier" RESET);
-
-    error_handler_error_recovery();
-}
-
-void error_handler_report_expected_semi_colon()
-{
-    printf(", expected '" BOLD_WHITE ";" RESET "'");
 
     error_handler_error_recovery();
 }

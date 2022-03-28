@@ -1,3 +1,4 @@
 prog my_prog:
-	int num
+	int num;
 done :)
+not_eof

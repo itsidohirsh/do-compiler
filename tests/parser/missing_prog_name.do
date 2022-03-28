@@ -1,0 +1,3 @@
+prog:
+	int num;
+done :)

@@ -205,7 +205,7 @@ Parse_Tree_Node* parser_parse()
         else
         {
             // If reached an Error output error message
-            error_handler_report(compiler.lexer->line, Error_Syntax, "Unexpected token %s", token_to_str(compiler.parser->token));
+            error_handler_report(compiler.line, Error_Syntax, "Unexpected token %s", token_to_str(compiler.parser->token));
 
             // Perform the specific error report & recovery function
             action.error_func();

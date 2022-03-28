@@ -1,3 +1,3 @@
 prog my_prog:
-	int num
+	not_start_of_stmt
 done :)

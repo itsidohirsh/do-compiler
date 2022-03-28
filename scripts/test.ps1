@@ -4,20 +4,31 @@
 & .\build.ps1
 
 # Test
+
+# Check if cli arguments exist and the path specified exists
+if (($args.length -gt 0) -and (Test-Path -Path $args[0])) {
+    # Set the test path to the path specified
+    $test_path = $args[0]
+}
+# If either is false, set ..\tests as the test path
+else {
+    $test_path = "..\tests"
+}
+
 $passed_tests = @()
 $failed_tests = @()
 
 # Run every test in the tests folder
-foreach ($file_path in $(Get-ChildItem ..\tests -Include '*.do' -Recurse | Resolve-Path -Relative)) {
+foreach ($file_path in $(Get-ChildItem $test_path -Include '*.do' -Recurse | Resolve-Path -Relative)) {
     # Run test
 
     # - Without output
-    .\run.ps1 $file_path | Out-Null
+    # .\run.ps1 $file_path | Out-Null
 
     # - With output
-    # Write-Host
-    # $file_path
-    # .\run.ps1 $file_path
+    Write-Host
+    $file_path
+    .\run.ps1 $file_path
 
     # If passed test, add to $passed_tests array
     # -ne 0 because the test is checking for error catching, and the error code will not be 0 in that casetests

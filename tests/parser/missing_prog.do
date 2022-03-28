@@ -1,3 +1,3 @@
-prog my_prog:
+my_prog:
 	int num
 done :)

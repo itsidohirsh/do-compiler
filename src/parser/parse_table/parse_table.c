@@ -454,7 +454,7 @@ void parse_table_init()
 
     // - Error function
     for (int i = 0; i < NUM_OF_TERMINALS; i++)
-        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_semi_colon;
+        compiler.parser->parse_table->action_table[s][i].error_func = error_handler_report_expected_semi_colon_state_18;
 
 
     // State 19

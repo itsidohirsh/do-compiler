@@ -73,9 +73,9 @@ void semantic_decl()
 
     // If the entry is NOT NULL, that means this identifier is already declared, so report semantic error.
     else
-        // compiler.lexer->line - 1 because after reduction the lexer's line was probably already advanced.
+        // compiler.line - 1 because after reduction the lexer's line was probably already advanced.
         // So for better error reporting I subtructed 1.
-        error_handler_report(compiler.lexer->line - 1, Error_Semantic, "'" BOLD_WHITE "%s" RESET "' already declared", identifier);
+        error_handler_report(compiler.line - 1, Error_Semantic, "'" BOLD_WHITE "%s" RESET "' already declared", identifier);
 }
 
 void semantic_assign()
@@ -93,11 +93,11 @@ void semantic_assign()
     // If the entry is NULL that means the identifier was not found in the scope tree,
     // which means the programmer tries to assign value to an undeclared variable.
     if (entry == NULL)
-        error_handler_report(compiler.lexer->line - 1, Error_Semantic, "'" BOLD_WHITE "%s" RESET "' undeclared", identifier);
+        error_handler_report(compiler.line - 1, Error_Semantic, "'" BOLD_WHITE "%s" RESET "' undeclared", identifier);
 
     // Check for matching types
     else if (semantic_check_assign_compatibility(entry->data_type, L_LOG_E->data_type) == false)
-        error_handler_report(compiler.lexer->line - 1, Error_Semantic, "Assignment of type '" BOLD_WHITE "%s" RESET "' to identifier '" BOLD_WHITE "%s" RESET "' of type '" BOLD_WHITE "%s" RESET "'", semantic_data_type_to_str(L_LOG_E->data_type), identifier, semantic_data_type_to_str(entry->data_type));
+        error_handler_report(compiler.line - 1, Error_Semantic, "Assignment of type '" BOLD_WHITE "%s" RESET "' to identifier '" BOLD_WHITE "%s" RESET "' of type '" BOLD_WHITE "%s" RESET "'", semantic_data_type_to_str(L_LOG_E->data_type), identifier, semantic_data_type_to_str(entry->data_type));
 }
 
 void semantic_set_type()
@@ -123,7 +123,7 @@ void semantic_type_check()
         compiler.parser->parse_stack->tree->data_type = result_type;
 
     else
-        error_handler_report(compiler.lexer->line, Error_Semantic, "Invalid operands to operator " BOLD_WHITE "%s" RESET ", have '" BOLD_WHITE "%s" RESET "' and '" BOLD_WHITE "%s" RESET "'", operator->token->value, semantic_data_type_to_str(left_op->data_type), semantic_data_type_to_str(right_op->data_type));
+        error_handler_report(compiler.line, Error_Semantic, "Invalid operands to operator " BOLD_WHITE "%s" RESET ", have '" BOLD_WHITE "%s" RESET "' and '" BOLD_WHITE "%s" RESET "'", operator->token->value, semantic_data_type_to_str(left_op->data_type), semantic_data_type_to_str(right_op->data_type));
 }
 
 void semantic_F_to_id()
@@ -139,7 +139,7 @@ void semantic_F_to_id()
         compiler.parser->parse_stack->tree->data_type = entry->data_type;
 
     else
-        error_handler_report(compiler.lexer->line, Error_Semantic, "'" BOLD_WHITE "%s" RESET "' undeclared", identifier);
+        error_handler_report(compiler.line, Error_Semantic, "'" BOLD_WHITE "%s" RESET "' undeclared", identifier);
 }
 
 void semantic_F_to_literal()

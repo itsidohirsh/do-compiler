@@ -8,9 +8,6 @@
 
 void compiler_init(char* src)
 {
-    // Initialize with 0 errors
-    compiler.errors = 0;
-
     // Source code
     compiler.src = src;
 
@@ -24,6 +21,12 @@ void compiler_init(char* src)
     // Parser
     parser_create();
     parser_init();
+
+    // Initialize with 0 errors
+    compiler.errors = 0;
+
+    // Initialize with line number 1
+    compiler.line = 1;
 }
 
 void compiler_destroy()

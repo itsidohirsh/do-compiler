@@ -37,7 +37,6 @@ void lexer_init()
     // Initialize lexer's components
     compiler.lexer->i = 0;
     compiler.lexer->c = compiler.src[compiler.lexer->i];
-    compiler.lexer->line = 1;
 
     // Initialize lexer's Finite State Machine
     lexer_fsm_init(compiler.lexer->fsm);
@@ -51,7 +50,7 @@ void lexer_advance()
 
     // Advance line number if current character is Line Feed / a new line character, '\n'
     if (compiler.lexer->c == '\n')
-        compiler.lexer->line++;
+        compiler.line++;
 }
 
 Token* lexer_EOT(char* value, int size, int state)
@@ -86,7 +85,7 @@ Token* lexer_get_next_token()
         // Check for Token's max length
         if (size == LEXER_MAX_TOKEN_SIZE - 1)
         {
-            error_handler_report(compiler.lexer->line, Error_Lexical, "Token can't be longer than " BOLD_WHITE "%d" RESET " characters", LEXER_MAX_TOKEN_SIZE - 1);
+            error_handler_report(compiler.line, Error_Lexical, "Token can't be longer than " BOLD_WHITE "%d" RESET " characters", LEXER_MAX_TOKEN_SIZE - 1);
             lexer_advance();
             state = lexer_fsm_get_starting_state_index(compiler.lexer->c);
             size = 0;
@@ -104,7 +103,7 @@ Token* lexer_get_next_token()
                 // Making sure there is a null terminator
                 value[size] = '\0';
                 // Reporting error
-                error_handler_report(compiler.lexer->line, Error_Lexical, "Unexpected character '" BOLD_WHITE "%s" RESET "'", value);
+                error_handler_report(compiler.line, Error_Lexical, "Unexpected character '" BOLD_WHITE "%s" RESET "'", value);
                 // Continue to next token
                 lexer_advance();
                 state = lexer_fsm_get_starting_state_index(compiler.lexer->c);

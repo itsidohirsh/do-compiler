@@ -41,6 +41,10 @@ void error_handler_report_expected_colon_state_37();
 void error_handler_report_expected_colon_state_46();
 void error_handler_report_expected_colon_state_59();
 
+// Prints an expected `;` error message to the user, and pushes a `;` entry onto the parse stack
+// with the right goto state according to the state in the action table
+void error_handler_report_expected_semi_colon_state_18();
+
 // Prints an expected EOF error message to the user
 void error_handler_report_expected_eof();
 
@@ -49,9 +53,6 @@ void error_handler_report_expected_smiley();
 
 // Prints an expected identifier error message to the user
 void error_handler_report_expected_identifier();
-
-// Prints an expected `;` error message to the user
-void error_handler_report_expected_semi_colon();
 
 // Prints an expected `(` error message to the user
 void error_handler_report_expected_open_paren();

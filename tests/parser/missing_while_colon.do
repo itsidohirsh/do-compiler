@@ -1,3 +1,4 @@
 prog my_prog:
-	int num
+	while (0)
+	done
 done :)

@@ -1,3 +1,4 @@
 prog my_prog:
-	int num
+	if 0):
+	done
 done :)

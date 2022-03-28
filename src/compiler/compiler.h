@@ -10,8 +10,6 @@
 // Struct of the entire compile
 typedef struct Compiler
 {
-    // Number of errors found during compilation
-    int errors;
     // The source code to be compiled
     char* src;
     // The symbol table of the compiler
@@ -20,6 +18,10 @@ typedef struct Compiler
     Lexer* lexer;
     // The parser of the compiler
     Parser* parser;
+    // Number of errors found during compilation
+    int errors;
+    // Current line number in source file for error reporting
+    int line;
 } Compiler;
 
 
