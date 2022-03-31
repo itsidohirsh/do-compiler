@@ -4,6 +4,7 @@
 
 #include "../general/general.h"
 #include "compiler.h"
+#include "../code_generator/code_generator.h"
 
 
 void compiler_init(char* src)
@@ -64,9 +65,9 @@ void compiler_compile()
         exit(1);
     }
 
-    // Print the parse tree and symbol table
+    // Generate the assembly code for the created parse tree
     parse_tree_print(parse_tree);
-    scope_tree_print(compiler.scope_tree->global_scope);
+    code_generator_generate(parse_tree);
 
     // Destroy parse tree
     parse_tree_destroy(parse_tree);

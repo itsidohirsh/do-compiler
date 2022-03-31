@@ -8,6 +8,7 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
+                "src/code_generator/*.c",
                 "src/compiler/*.c",
                 "src/error_handler/*.c",
                 "src/general/*.c",
