@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "../../../global.h"
+
 #include "symbol_table_entry.h"
 #include "../../../general/general.h"
 #include "../../../semantic/semantic.h"
@@ -17,10 +19,19 @@ Symbol_Table_Entry* symbol_table_entry_init(Entry_Type entry_type, char* identif
     }
 
     // Update entry's properties
+    entry->scope = compiler.scope_tree->current_scope;
     entry->entry_type = entry_type;
     entry->identifier = identifier;
     entry->data_type = data_type;
     entry->next_entry = NULL;
+
+    // The number in the scope is the number of entries in the current scope's symbol table + 1
+    // because the number of entries in the current scope start from 0
+    entry->num_in_scope = compiler.scope_tree->current_scope->symbol_table->num_of_entries + 1;
+
+    // If the current scope is the global scope then is_global will be true.
+    // Else, is_global will be false.
+    entry->is_global = compiler.scope_tree->current_scope == compiler.scope_tree->global_scope;
 
     return entry;
 }
@@ -42,10 +53,10 @@ void symbol_table_entry_print(Symbol_Table_Entry* entry)
         return;
 
     if (entry->data_type == Data_Type_Int)
-        printf("int %s", entry->identifier);
+        printf("%d. int %s", entry->num_in_scope, entry->identifier);
 
     else if (entry->data_type == Data_Type_Char)
-        printf("char %s", entry->identifier);
+        printf("%d. char %s", entry->num_in_scope, entry->identifier);
 
     else
         printf("Don't know that data type... ;|");

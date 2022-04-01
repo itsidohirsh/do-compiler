@@ -7,8 +7,15 @@
 
 // The maximum length of register's name
 #define REGISTER_NAME_LENGTH 16
+// The maximum length of lables's name
+#define LABEL_NAME_LENGTH 16
+// The maximum length of symbol address
+#define SYMBOL_ADDRESS_LENGTH 16
 // The number of registers the code generator uses
-#define NUM_OF_REGISTERS 8
+#define NUM_OF_REGISTERS 7
+// The size of an entry in the stack of the program.
+// For x64 the size of a stack entry is 8 bytes
+#define STACK_ENTRY_BYTES 8
 
 
 /* ---------- Structs ---------- */
@@ -37,6 +44,27 @@ void code_generator_destroy();
 
 // Initializes the registers array of the compilers code generator
 void code_generator_init();
+
+// Searches for a free register in the code generator registers array.
+// If found, marks it as inuse and returns the index of that register.
+// If not found, terminates the compiler.
+// TODO: Find better solution for not finding a free register
+int code_generator_register_alloc();
+
+// Marks the register in index r in the code generator registers array as unused
+void code_generator_register_free(int r);
+
+// Returns the register name of register r in the code generator registers array
+char* code_generator_register_name(int r);
+
+// Allocates a new lable name and returns a pointer to it
+char* code_generator_label_create();
+
+// Performs the right address computation for the given symbol according to its
+// place in the program (globla / local),
+// and returns an allocated string which represents that address.
+// If the entry is NULL, returns NULL.
+char* code_generator_symbol_address(Symbol_Table_Entry* entry);
 
 // Generates the assembly code for the given parse tree
 void code_generator_generate(Parse_Tree_Node* parse_tree);

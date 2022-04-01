@@ -73,7 +73,6 @@ void compiler_compile()
     }
 
     // Generate the assembly code for the created parse tree
-    parse_tree_print(parse_tree);
     code_generator_generate(parse_tree);
 
     // Destroy parse tree

@@ -41,5 +41,9 @@ void scope_tree_goto_child();
 // identifier. If managed to find it, returns a pointer to it. Otherwise return NULL.
 Symbol_Table_Entry* scope_tree_fetch(char* identifier);
 
+// Resets the current_child_index field to be STARTING_CHILD_INDEX for every scope in the scope tree.
+// Used before code generation so I could traverse the scope tree the same as in the parsing stage.
+void scope_tree_reset_child_index(Scope* global_scope);
+
 // Prints the scope tree in a nice format
 void scope_tree_print();

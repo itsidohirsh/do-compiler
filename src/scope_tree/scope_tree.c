@@ -100,6 +100,19 @@ Symbol_Table_Entry* scope_tree_fetch(char* identifier)
     return entry;
 }
 
+void scope_tree_reset_child_index(Scope* global_scope)
+{
+    if (global_scope == NULL)
+        return;
+
+    // Reset current scope's child index
+    global_scope->current_child_index = STARTING_CHILD_INDEX;
+
+    // Reset all of the current node's children
+    for (int i = 0; i < global_scope->num_of_children; i++)
+        scope_tree_reset_child_index(global_scope->children[i]);
+}
+
 void scope_tree_print_tree(Scope* global_scope, char* indent, bool is_last);
 
 void scope_tree_print()

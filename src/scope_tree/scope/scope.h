@@ -3,6 +3,9 @@
 #include "../symbol_table/symbol_table.h"
 
 
+// The starting value of the current_child_index field
+#define STARTING_CHILD_INDEX -1
+
 /* ---------- Structs ---------- */
 
 // Struct of a single node in the tree, scope, in the tree of symbol tables scopes
@@ -17,6 +20,10 @@ typedef struct Scope
     int current_child_index;    // Index of the current child in children array
     // Pointer to the current scope's parent in the symbol tables scopes tree
     struct Scope* parent;
+    // Number of entries seen up to this point.
+    // In this scopeand in all the scope on the path up to the root scope.
+    // Used in the code generation process in the address computation for variables.
+    int available_entries;
 } Scope;
 
 
