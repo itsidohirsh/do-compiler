@@ -1,12 +1,42 @@
 #pragma once
 
+#include <stdbool.h>
+
 #include "../parser/parse_tree/parse_tree.h"
+
+
+// The maximum length of register's name
+#define REGISTER_NAME_LENGTH 16
+// The number of registers the code generator uses
+#define NUM_OF_REGISTERS 8
 
 
 /* ---------- Structs ---------- */
 
+// Struct of a register in the code generator's register array
+typedef struct Register
+{
+    char name[REGISTER_NAME_LENGTH];        // The name of the register for target code output
+    bool inuse;                             // Whether the register is currently in use or not
+} Register;
+
+// Struct of the code generator
+typedef struct Code_Generator
+{
+    Register registers[NUM_OF_REGISTERS];   // Array of registers to be used in the code generation process
+} Code_Generator;
+
 
 /* ---------- Functions ---------- */
+
+// Create a new code generator and points the compiler's code generator to it
+void code_generator_create();
+
+// Frees the memory allocated for the code generator of the compiler
+void code_generator_destroy();
+
+// Initializes the registers array of the compilers code generator
+void code_generator_init();
 
 // Generates the assembly code for the given parse tree
 void code_generator_generate(Parse_Tree_Node* parse_tree);

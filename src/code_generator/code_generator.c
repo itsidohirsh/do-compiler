@@ -1,7 +1,31 @@
+#include <stdlib.h>
 #include <stdio.h>
 
-#include "code_generator.h"
+#include "../global.h"
 
+#include "code_generator.h"
+#include "../general/general.h"
+
+
+void code_generator_create()
+{
+    compiler.code_generator = (Code_Generator*) calloc(1, sizeof(Code_Generator));
+    if (compiler.code_generator == NULL) exit_memory_error(__FILE__, __LINE__);
+}
+
+void code_generator_destroy()
+{
+    if (compiler.code_generator != NULL)
+    {
+        free(compiler.code_generator);
+        compiler.code_generator = NULL;
+    }
+}
+
+void code_generator_init()
+{
+    // TODO: Add initialization for registers array
+}
 
 void code_generator_generate(Parse_Tree_Node* parse_tree)
 {

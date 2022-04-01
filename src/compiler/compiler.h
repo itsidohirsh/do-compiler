@@ -1,8 +1,9 @@
 #pragma once
 
-#include "../scope_tree/scope_tree.h"
 #include "../lexer/lexer.h"
 #include "../parser/parser.h"
+#include "../scope_tree/scope_tree.h"
+#include "../code_generator/code_generator.h"
 
 
 /* ---------- Structs ---------- */
@@ -12,12 +13,14 @@ typedef struct Compiler
 {
     // The source code to be compiled
     char* src;
-    // The symbol table of the compiler
-    Scope_Tree* scope_tree;
     // The lexer of the compiler
     Lexer* lexer;
     // The parser of the compiler
     Parser* parser;
+    // The symbol table of the compiler
+    Scope_Tree* scope_tree;
+    // The code generator ofthe compiler
+    Code_Generator* code_generator;
     // Number of errors found during compilation
     int errors;
     // Current line number in source file for error reporting

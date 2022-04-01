@@ -12,9 +12,6 @@ void compiler_init(char* src)
     // Source code
     compiler.src = src;
 
-    // Symbol table
-    scope_tree_create();
-
     // Lexer
     lexer_create();
     lexer_init();
@@ -22,6 +19,13 @@ void compiler_init(char* src)
     // Parser
     parser_create();
     parser_init();
+
+    // Symbol table
+    scope_tree_create();
+
+    // Code generator
+    code_generator_create();
+    code_generator_init();
 
     // Initialize with 0 errors
     compiler.errors = 0;
@@ -36,14 +40,17 @@ void compiler_destroy()
     free(compiler.src);
     compiler.src = NULL;
 
-    // Symbol table
-    scope_tree_destroy();
-
     // Lexer
     lexer_destroy();
 
     // Parser
     parser_destroy();
+
+    // Symbol table
+    scope_tree_destroy();
+
+    // Code generator
+    code_generator_destroy();
 }
 
 void compiler_compile()
