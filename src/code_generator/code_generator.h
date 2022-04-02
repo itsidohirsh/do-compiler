@@ -53,6 +53,9 @@ char* code_generator_label_create();
 // If the entry is NULL, returns NULL.
 char* code_generator_symbol_address(Symbol_Table_Entry* entry);
 
+// Outputs the given formated string to the target file
+void code_generator_output(char* format, ...);
+
 // Generates the assembly code for the given parse tree
 void code_generator_generate(Parse_Tree_Node* parse_tree);
 
@@ -93,4 +96,28 @@ void code_generator_expr(Parse_Tree_Node* expr);
 void code_generator_term(Parse_Tree_Node* term);
 
 //
+void code_generator_T_mul_F(Parse_Tree_Node* term);
+
+//
+void code_generator_T_div_F(Parse_Tree_Node* term);
+
+//
+void code_generator_T_modulu_F(Parse_Tree_Node* term);
+
+//
 void code_generator_factor(Parse_Tree_Node* factor);
+
+//
+void code_generator_F_id(Parse_Tree_Node* factor);
+
+//
+void code_generator_F_literal(Parse_Tree_Node* factor);
+
+//
+void code_generator_F_l_log_expr(Parse_Tree_Node* factor);
+
+//
+void code_generator_F_not_F(Parse_Tree_Node* factor);
+
+//
+void code_generator_F_minus_F(Parse_Tree_Node* factor);

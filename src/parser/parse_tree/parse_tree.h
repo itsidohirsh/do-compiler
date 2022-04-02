@@ -16,8 +16,11 @@ typedef struct Parse_Tree_Node
     struct Parse_Tree_Node** children;  // Array of a node pointers which represents a node's children
     int num_of_children;                // The length of the childrens array
     // Attribute of a node in the tree.
-    //If the node is part of expression it has a data type.
+    // If the node is part of expression it will have a data type.
     Data_Type data_type;
+    // The register index in the register array of the code generator that holds this node's result.
+    // If the node is part of expression it will have a register holding it's result.
+    int register_number;
 } Parse_Tree_Node;
 
 

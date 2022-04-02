@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "../global.h"
 
@@ -28,6 +29,9 @@ void code_generator_init()
     // - Init registers array
     int r = 0;
 
+    strncpy(compiler.code_generator->registers[r].name, R0, REGISTER_NAME_LENGTH);
+    compiler.code_generator->registers[r++].inuse = false;
+
     strncpy(compiler.code_generator->registers[r].name, R1, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
 
@@ -44,9 +48,6 @@ void code_generator_init()
     compiler.code_generator->registers[r++].inuse = false;
 
     strncpy(compiler.code_generator->registers[r].name, R6, REGISTER_NAME_LENGTH);
-    compiler.code_generator->registers[r++].inuse = false;
-
-    strncpy(compiler.code_generator->registers[r].name, R7, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
 }
 
@@ -127,34 +128,44 @@ char* code_generator_symbol_address(Symbol_Table_Entry* entry)
     return address;
 }
 
+void code_generator_output(char* format, ...)
+{
+    printf(GREEN);
+
+    va_list args;                   // Declare a va_list type variable
+    va_start(args, format);         // Initialize the va_list with the ...
+    vfprintf(stdout, format, args); // Forward ... to vprintf
+    va_end(args);                   // Clean up the va_list
+
+    printf(RESET);
+}
+
 void code_generator_generate(Parse_Tree_Node* parse_tree)
 {
     // PROG -> prog id : BLOCK :)
-    printf("PROG -> prog id : BLOCK :)\n");
 
     // Reset scope tree's scopes current_child_index to be STARTING_CHILD_INDEX before starting
+    // the code generation process, so that the usage of the scope tree will be the same as the parsing phase.
     scope_tree_reset_child_index(compiler.scope_tree->global_scope);
+
+    // TODO: Output starting template to target file
 
     // Generate code for the main program block
     code_generator_block(parse_tree->children[3]);
+
+    // TODO: Output ending template and data segment to target file
 }
 
 void code_generator_block(Parse_Tree_Node* block)
 {
     // BLOCK -> done
     if (block->num_of_children == 1)
-    {
-        printf("BLOCK -> done\n");
-
         // Go to the parent scope when exiting a block
         scope_tree_goto_parent();
-    }
 
     // BLOCK -> STMT BLOCK
     else
     {
-        printf("BLOCK -> STMT BLOCK\n");
-
         code_generator_stmt(block->children[0]);
         code_generator_block(block->children[1]);
     }
@@ -165,22 +176,22 @@ void code_generator_stmt(Parse_Tree_Node* stmt)
     switch (stmt->children[0]->symbol)
     {
         case Non_Terminal_DECL:
-            printf("STMT -> DECL\n");
+            // STMT -> DECL
             code_generator_decl(stmt->children[0]);
             break;
 
         case Non_Terminal_ASSIGN:
-            printf("STMT -> ASSIGN\n");
+            // STMT -> ASSIGN
             code_generator_assign(stmt->children[0]);
             break;
 
         case Non_Terminal_IF_ELSE:
-            printf("STMT -> IF_ELSE\n");
+            // STMT -> IF_ELSE
             code_generator_if_else(stmt->children[0]);
             break;
 
         case Non_Terminal_WHILE:
-            printf("STMT -> WHILE\n");
+            // STMT -> WHILE
             code_generator_while(stmt->children[0]);
             break;
     }
@@ -189,11 +200,11 @@ void code_generator_stmt(Parse_Tree_Node* stmt)
 void code_generator_decl(Parse_Tree_Node* decl)
 {
     // DECL -> data_type id ;
-    printf("DECL -> data_type id ;\n");
 
-    // If the current scope is not the global scope, add 1 to the scope's available entries.
-    // I don't want to cound the global variables because they will be on the data segment
-    // and not on the stack
+    // If the current scope is not the global scope, add 1 to the scope's available entries
+    // to help later calculate the address of the currently declared variable.
+    // I don't want to count the global variables because they will be on the data segment
+    // of the program and not the stack segment.
     if (compiler.scope_tree->current_scope != compiler.scope_tree->global_scope)
         compiler.scope_tree->current_scope->available_entries++;
 }
@@ -203,7 +214,13 @@ void code_generator_assign(Parse_Tree_Node* assign)
     // ASSIGN -> set id = L_LOG_E ;
     printf("ASSIGN -> set id = L_LOG_E ;\n");
 
+    // Calculate the expression
     code_generator_l_log_expr(assign->children[3]);
+
+    // Assign the expression value to the variable
+
+    // Free result register because we don't need it anymore
+
 }
 
 void code_generator_if_else(Parse_Tree_Node* if_else)
@@ -342,48 +359,160 @@ void code_generator_term(Parse_Tree_Node* term)
     // T -> F
     if (term->num_of_children == 1)
     {
-        printf("T -> F\n");
-
+        // Generate the factor
         code_generator_factor(term->children[0]);
+
+        // Preserve the same register
+        term->register_number = term->children[0]->register_number;
     }
 
     // T -> T term_op F
     else
     {
-        printf("T -> T term_op F\n");
-
+        // Generate the term
         code_generator_term(term->children[0]);
+
+        // Generate the factor
         code_generator_factor(term->children[2]);
+
+        // Perform the right operation between the term and the factor
+        switch (term->children[1]->token->token_type)
+        {
+            case Token_Multiply:
+                code_generator_T_mul_F(term);
+                break;
+
+            case Token_Divide:
+                code_generator_T_div_F(term);
+                break;
+
+            case Token_Modulu:
+                code_generator_T_modulu_F(term);
+                break;
+        }
+
+        // The left operand gets the result. Preserve its register for the term
+        term->register_number = term->children[0]->register_number;
+
+        // Free the right register because we don't need it anymore
+        code_generator_register_free(term->children[2]->register_number);
     }
+}
+
+void code_generator_T_mul_F(Parse_Tree_Node* term)
+{
+    code_generator_output("IMUL %s, %s\n", code_generator_register_name(term->children[0]->register_number), code_generator_register_name(term->children[2]->register_number));
+}
+
+void code_generator_T_div_F(Parse_Tree_Node* term)
+{
+    code_generator_output("XOR rdx, rdx\n");
+    code_generator_output("MOV rax, %s\n", code_generator_register_name(term->children[0]->register_number));
+    code_generator_output("IDIV %s\n", code_generator_register_name(term->children[2]->register_number));
+    code_generator_output("MOV %s, rax\n", code_generator_register_name(term->children[0]->register_number));
+}
+
+void code_generator_T_modulu_F(Parse_Tree_Node* term)
+{
+    code_generator_output("XOR rdx, rdx\n");
+    code_generator_output("MOV rax, %s\n", code_generator_register_name(term->children[0]->register_number));
+    code_generator_output("IDIV %s\n", code_generator_register_name(term->children[2]->register_number));
+    code_generator_output("MOV %s, rdx\n", code_generator_register_name(term->children[0]->register_number));
 }
 
 void code_generator_factor(Parse_Tree_Node* factor)
 {
-    char* address;
     switch (factor->children[0]->symbol)
     {
         case Token_Identifier:
-            printf("F -> id\n");
+            // F -> id
+            code_generator_F_id(factor);
             break;
 
         case Token_Number:
-            printf("F -> number literal\n");
-            break;
-
         case Token_Character:
-            printf("F -> character literal\n");
+            // F -> literal
+            code_generator_F_literal(factor);
             break;
 
         case Token_Open_Paren:
-            printf("F -> ( L_LOG_E )\n");
+            // F -> ( L_LOG_E )
+            code_generator_F_l_log_expr(factor);
             break;
 
         case Token_Not:
-            printf("F -> ! F\n");
+            // F -> ! F
+            code_generator_F_not_F(factor);
             break;
 
         case Token_Minus:
-            printf("F -> - F\n");
+            // F -> - F
+            code_generator_F_minus_F(factor);
             break;
     }
+}
+
+void code_generator_F_id(Parse_Tree_Node* factor)
+{
+    // Allocate register
+    factor->register_number = code_generator_register_alloc();
+
+    // Calculate address for the given id
+    char* address = code_generator_symbol_address(scope_tree_fetch(factor->children[0]->token->value));
+
+    // Generate the code
+    code_generator_output("MOV %s, %s\n", code_generator_register_name(factor->register_number), address);
+
+    // Free unneeded address
+    free(address);
+}
+
+void code_generator_F_literal(Parse_Tree_Node* factor)
+{
+    // Allocate register
+    factor->register_number = code_generator_register_alloc();
+
+    // Generate the code
+    code_generator_output("MOV %s, %s\n", code_generator_register_name(factor->register_number), factor->children[0]->token->value);
+}
+
+void code_generator_F_l_log_expr(Parse_Tree_Node* factor)
+{
+    // Generate the expression
+    code_generator_l_log_expr(factor->children[1]);
+
+    // Preserve the expression's register
+    factor->register_number = factor->children[1]->register_number;
+}
+
+void code_generator_F_not_F(Parse_Tree_Node* factor)
+{
+    // Generate the factor
+    code_generator_factor(factor->children[1]);
+
+    // Preserve the same register
+    factor->register_number = factor->children[1]->register_number;
+
+    // Generate the code
+    char* false_label = code_generator_label_create();
+    char* done_label = code_generator_label_create();
+    code_generator_output("CMP %s, 0\n", code_generator_register_name(factor->register_number));
+    code_generator_output("JE %s\n", false_label);
+    code_generator_output("MOV %s, 0\n", code_generator_register_name(factor->register_number));
+    code_generator_output("JMP %s\n", done_label);
+    code_generator_output("%s:\n", false_label);
+    code_generator_output("MOV %s, 1\n", code_generator_register_name(factor->register_number));
+    code_generator_output("%s:\n", done_label);
+}
+
+void code_generator_F_minus_F(Parse_Tree_Node* factor)
+{
+    // Generate the factor
+    code_generator_factor(factor->children[1]);
+
+    // Preserve the same register
+    factor->register_number = factor->children[1]->register_number;
+
+    // Generate the code
+    code_generator_output("NEG %s\n", code_generator_register_name(factor->register_number));
 }
