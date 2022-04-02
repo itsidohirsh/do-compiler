@@ -25,37 +25,36 @@ void code_generator_destroy()
 
 void code_generator_init()
 {
-    // TODO: Add initialization for registers array
+    // - Init registers array
     int r = 0;
-    // rbx
-    strncpy(compiler.code_generator->registers[r].name, "rbx", REGISTER_NAME_LENGTH);
+
+    strncpy(compiler.code_generator->registers[r].name, R1, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
-    // r10
-    strncpy(compiler.code_generator->registers[r].name, "r10", REGISTER_NAME_LENGTH);
+
+    strncpy(compiler.code_generator->registers[r].name, R2, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
-    // r11
-    strncpy(compiler.code_generator->registers[r].name, "r11", REGISTER_NAME_LENGTH);
+
+    strncpy(compiler.code_generator->registers[r].name, R3, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
-    // r12
-    strncpy(compiler.code_generator->registers[r].name, "r12", REGISTER_NAME_LENGTH);
+
+    strncpy(compiler.code_generator->registers[r].name, R4, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
-    // r13
-    strncpy(compiler.code_generator->registers[r].name, "r13", REGISTER_NAME_LENGTH);
+
+    strncpy(compiler.code_generator->registers[r].name, R5, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
-    // r14
-    strncpy(compiler.code_generator->registers[r].name, "r14", REGISTER_NAME_LENGTH);
+
+    strncpy(compiler.code_generator->registers[r].name, R6, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
-    // r15
-    strncpy(compiler.code_generator->registers[r].name, "r15", REGISTER_NAME_LENGTH);
+
+    strncpy(compiler.code_generator->registers[r].name, R7, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
 }
 
 int code_generator_register_alloc()
 {
-    int r;
-    for (r = 0; r < NUM_OF_REGISTERS; r++)
+    for (int r = 0; r < NUM_OF_REGISTERS; r++)
     {
-        // If registers is no inuse, return its index
+        // If registes is not inuse, return its index
         if (!compiler.code_generator->registers[r].inuse)
         {
             compiler.code_generator->registers[r].inuse = true;
@@ -63,7 +62,7 @@ int code_generator_register_alloc()
         }
     }
 
-    // TODO: Find better solution than that
+    // TODO: Find better solution for not finding a free register
     // If couldn't find a free register, output error and exit
     printf(RED "Couldn't find a free register" RESET);
     compiler_destroy();
@@ -90,7 +89,7 @@ char* code_generator_label_create()
     if (label == NULL) exit_memory_error(__FILE__, __LINE__);
 
     // Create label
-    sprintf(label, ".L%d", label_num);
+    sprintf(label, LABEL_FORMAT, label_num);
 
     // Increment static int for next label
     label_num++;
@@ -116,13 +115,13 @@ char* code_generator_symbol_address(Symbol_Table_Entry* entry)
     // The offsest of the symbol is: 
     // ((number of entries seen until the parent scope) + (entry's order in it's symbol table)) * (the size of an entry in the stack)
     // For example:
-    //      first symbol will be: 8 * (0 + 1) = 8 bytes -> [bp - 8]
-    //      second symbol will be: 8 * (0 + 2) = 16 bytes -> [bp - 16]
+    //      first symbol will be: 8 * (0 + 1) = 8 bytes -> [rbp - 8]
+    //      second symbol will be: 8 * (0 + 2) = 16 bytes -> [rbp - 16]
     //      ...
     int bp_offset = STACK_ENTRY_BYTES * (entry->scope->parent->available_entries + entry->num_in_scope);
 
     // Create the computed stack address for the symbol
-    sprintf(address, "[bp - %d]", bp_offset);
+    sprintf(address, STACK_ADDRESS_FORMAT, bp_offset);
 
     // Return the computed address
     return address;
@@ -360,6 +359,7 @@ void code_generator_term(Parse_Tree_Node* term)
 
 void code_generator_factor(Parse_Tree_Node* factor)
 {
+    char* address;
     switch (factor->children[0]->symbol)
     {
         case Token_Identifier:
