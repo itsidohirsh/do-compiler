@@ -11,6 +11,7 @@
 // The maximum length of register's name
 #define REGISTER_NAME_LENGTH 4
 
+// The registers used for code generation
 #define RBX "RBX"
 #define R10 "R10"
 #define R11 "R11"
@@ -18,6 +19,10 @@
 #define R13 "R13"
 #define R14 "R14"
 #define R15 "R15"
+
+// The registers used for some arithmetic operations (because they're the default result registers)
+#define RAX "RAX"
+#define RDX "RDX"
 
 
 /* ---------- Labels ---------- */
@@ -49,3 +54,16 @@
 // The size of an entry in the stack of the program.
 // For x64 the size of a stack entry is 8 bytes
 #define STACK_ENTRY_BYTES 8
+
+
+/* ---------- Instructions ---------- */
+
+#define LABEL   "%s:\n"
+#define MOV     "\tMOV  %s, %s\n"
+#define CMP     "\tCMP  %s, %s\n"
+#define JMP     "\tJMP  %s\n"
+#define JE      "\tJE   %s\n"
+#define IMUL    "\tIMUL %s, %s\n"
+#define IDIV    "\tIDIV %s\n"
+#define NEG     "\tNEG  %s\n"
+#define XOR     "\tXOR  %s, %s\n"

@@ -58,7 +58,7 @@ char* code_generator_symbol_address(Symbol_Table_Entry* entry);
 // Outputs the given formated string to the target file
 void code_generator_output(char* format, ...);
 
-// Outputs all the global variables of the program to the target file
+// Outputs the data segment of the program to the target file
 void code_generator_output_data_segment();
 
 // Generates the assembly code for the given parse tree

@@ -151,17 +151,20 @@ void code_generator_output_data_segment()
 {
     Symbol_Table* global_table = compiler.scope_tree->global_scope->symbol_table;
 
+    code_generator_output("\n.DATA\n");
+
     for (int i = 0; i < global_table->capacity; i++)
     {
         Symbol_Table_Entry* entry = global_table->entries[i];
         while (entry != NULL)
         {
-            code_generator_output("\t");
-            code_generator_output(GLOBAL_ADDRESS_FORMAT, entry->identifier);
+            code_generator_output("\t" GLOBAL_ADDRESS_FORMAT, entry->identifier);
             code_generator_output("\tDQ ?\n"); // TODO: Add different data types
             entry = entry->next_entry;
         }
     }
+
+    code_generator_output("\n");
 }
 
 void code_generator_generate(Parse_Tree_Node* parse_tree)
@@ -174,16 +177,13 @@ void code_generator_generate(Parse_Tree_Node* parse_tree)
 
     // - Output includes for needed libraries
     code_generator_output("includelib C:\\Ido_Hirsh\\Assembly\\masm64\\kernel32.lib\n");
-    code_generator_output("includelib C:\\Ido_Hirsh\\Assembly\\masm64\\User32.lib\n");
-    code_generator_output("\n");
+    code_generator_output("includelib C:\\Ido_Hirsh\\Assembly\\masm64\\User32.lib\n\n");
 
     // - Extern the ExitProcess proc from kernel32.lib
     code_generator_output("EXTERN ExitProcess: PROC\n");
 
     // - Generate the data segment of the program
-    code_generator_output("\n.DATA\n");
     code_generator_output_data_segment();
-    code_generator_output("\n");
 
     // - Generate the code segment of the program
     code_generator_output(".CODE\n");
@@ -421,23 +421,23 @@ void code_generator_term(Parse_Tree_Node* term)
 
 void code_generator_T_mul_F(Parse_Tree_Node* term)
 {
-    code_generator_output("\tIMUL\t%s, %s\n", code_generator_register_name(term->children[0]->register_number), code_generator_register_name(term->children[2]->register_number));
+    code_generator_output(IMUL, code_generator_register_name(term->children[0]->register_number), code_generator_register_name(term->children[2]->register_number));
 }
 
 void code_generator_T_div_F(Parse_Tree_Node* term)
 {
-    code_generator_output("\tXOR\trdx, rdx\n");
-    code_generator_output("\tMOV\trax, %s\n", code_generator_register_name(term->children[0]->register_number));
-    code_generator_output("\tIDIV\t%s\n", code_generator_register_name(term->children[2]->register_number));
-    code_generator_output("\tMOV\t%s, rax\n", code_generator_register_name(term->children[0]->register_number));
+    code_generator_output(XOR, RDX, RDX);
+    code_generator_output(MOV, RAX, code_generator_register_name(term->children[0]->register_number));
+    code_generator_output(IDIV, code_generator_register_name(term->children[2]->register_number));
+    code_generator_output(MOV, code_generator_register_name(term->children[0]->register_number), RAX);
 }
 
 void code_generator_T_modulu_F(Parse_Tree_Node* term)
 {
-    code_generator_output("\tXOR\trdx, rdx\n");
-    code_generator_output("\tMOV\trax, %s\n", code_generator_register_name(term->children[0]->register_number));
-    code_generator_output("\tIDIV\t%s\n", code_generator_register_name(term->children[2]->register_number));
-    code_generator_output("\tMOV\t%s, rdx\n", code_generator_register_name(term->children[0]->register_number));
+    code_generator_output(XOR, RDX, RDX);
+    code_generator_output(MOV, RAX, code_generator_register_name(term->children[0]->register_number));
+    code_generator_output(IDIV, code_generator_register_name(term->children[2]->register_number));
+    code_generator_output(MOV, code_generator_register_name(term->children[0]->register_number), RDX);
 }
 
 void code_generator_factor(Parse_Tree_Node* factor)
@@ -481,7 +481,7 @@ void code_generator_F_id(Parse_Tree_Node* factor)
     char* address = code_generator_symbol_address(scope_tree_fetch(factor->children[0]->token->value));
 
     // Generate the code
-    code_generator_output("\tMOV\t%s, %s\n", code_generator_register_name(factor->register_number), address);
+    code_generator_output(MOV, code_generator_register_name(factor->register_number), address);
 
     // Free unneeded address
     free(address);
@@ -493,7 +493,7 @@ void code_generator_F_literal(Parse_Tree_Node* factor)
     factor->register_number = code_generator_register_alloc();
 
     // Generate the code
-    code_generator_output("\tMOV\t%s, %s\n", code_generator_register_name(factor->register_number), factor->children[0]->token->value);
+    code_generator_output(MOV, code_generator_register_name(factor->register_number), factor->children[0]->token->value);
 }
 
 void code_generator_F_l_log_expr(Parse_Tree_Node* factor)
@@ -516,13 +516,13 @@ void code_generator_F_not_F(Parse_Tree_Node* factor)
     // Generate the code
     char* false_label = code_generator_label_create();
     char* done_label = code_generator_label_create();
-    code_generator_output("\tCMP\t%s, 0\n", code_generator_register_name(factor->register_number));
-    code_generator_output("\tJE\t%s\n", false_label);
-    code_generator_output("\tMOV\t%s, 0\n", code_generator_register_name(factor->register_number));
-    code_generator_output("\tJMP\t%s\n", done_label);
-    code_generator_output("%s:\n", false_label);
-    code_generator_output("\tMOV\t%s, 1\n", code_generator_register_name(factor->register_number));
-    code_generator_output("%s:\n", done_label);
+    code_generator_output(CMP, code_generator_register_name(factor->register_number), "0");
+    code_generator_output(JE, false_label);
+    code_generator_output(MOV, code_generator_register_name(factor->register_number), "0");
+    code_generator_output(JMP, done_label);
+    code_generator_output(LABEL, false_label);
+    code_generator_output(MOV, code_generator_register_name(factor->register_number), "1");
+    code_generator_output(LABEL, done_label);
 }
 
 void code_generator_F_minus_F(Parse_Tree_Node* factor)
@@ -534,5 +534,5 @@ void code_generator_F_minus_F(Parse_Tree_Node* factor)
     factor->register_number = factor->children[1]->register_number;
 
     // Generate the code
-    code_generator_output("\tNEG\t%s\n", code_generator_register_name(factor->register_number));
+    code_generator_output(NEG, code_generator_register_name(factor->register_number));
 }
