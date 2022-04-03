@@ -1,21 +1,24 @@
 #include "src/general/general.h"
 #include "src/compiler/compiler.h"
-#include "src/io/io.h"
 
 
 int main(int argc, char* argv[])
 {
-    if (argc <= 1)
+    // If no command line arguments were specified
+    if (argc < 2)
     {
-        printf(RED "Please specify source file.\n" RESET);
+        printf("Do: " RED "fatal error:" RESET " no input files\n");
+        printf("\tsyntax: " BOLD_WHITE "do <source> [<destination>]\n" RESET);
         return 1;
     }
 
-    // Read the source code file contents into a buffer
-    char* src = io_read_file(argv[1]);
+    // If there are 2 or more arguments, intialize the compiler with the first two
+    if (argc >= 3)
+        compiler_init(argv[1], argv[2]);
 
-    // Initialize the compiler
-    compiler_init(src);
+    // If there is 1 argument, intialize the compiler with it as the source and with ./a.asm as the destination
+    else
+        compiler_init(argv[1], "./a.asm");
 
     // Compile the source code
     compiler_compile();

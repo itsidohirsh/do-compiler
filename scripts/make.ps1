@@ -4,4 +4,4 @@
 & .\build.ps1
 
 # Run
-& .\run.ps1 ..\example.do
+& .\run.ps1 ..\example.do ..\example.asm

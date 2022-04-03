@@ -4,13 +4,14 @@
 
 #include "../general/general.h"
 #include "compiler.h"
+#include "../io/io.h"
 #include "../code_generator/code_generator.h"
 
 
-void compiler_init(char* src)
+void compiler_init(char* src_file_name, char* dest_file_name)
 {
     // Source code
-    compiler.src = src;
+    compiler.src = io_read_file(src_file_name);
 
     // Lexer
     lexer_create();
@@ -25,7 +26,7 @@ void compiler_init(char* src)
 
     // Code generator
     code_generator_create();
-    code_generator_init();
+    code_generator_init(dest_file_name);
 
     // Initialize with 0 errors
     compiler.errors = 0;
@@ -68,7 +69,7 @@ void compiler_compile()
         // Destroy the compiler
         compiler_destroy();
 
-        printf(RED "\n\nCompilation terminated!\n\n" RESET);
+        printf(RED "\n\nCompilation terminated.\n\n" RESET);
         exit(1);
     }
 

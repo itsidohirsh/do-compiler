@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdio.h>
 #include <stdbool.h>
 
 #include "code_generator_base.h"
@@ -19,6 +20,7 @@ typedef struct Register
 typedef struct Code_Generator
 {
     Register registers[NUM_OF_REGISTERS];   // Array of registers to be used in the code generation process
+    FILE* dest_file;                      // A pointer to the output file for the generated code
 } Code_Generator;
 
 
@@ -30,8 +32,8 @@ void code_generator_create();
 // Frees the memory allocated for the code generator of the compiler
 void code_generator_destroy();
 
-// Initializes the registers array of the compilers code generator
-void code_generator_init();
+// Gets the name of the destination file, and initializes the compiler's code generator
+void code_generator_init(char* dest_file_name);
 
 // Searches for a free register in the code generator registers array.
 // If found, marks it as inuse and returns the index of that register.
@@ -55,6 +57,9 @@ char* code_generator_symbol_address(Symbol_Table_Entry* entry);
 
 // Outputs the given formated string to the target file
 void code_generator_output(char* format, ...);
+
+// Outputs all the global variables of the program to the target file
+void code_generator_output_data_segment();
 
 // Generates the assembly code for the given parse tree
 void code_generator_generate(Parse_Tree_Node* parse_tree);

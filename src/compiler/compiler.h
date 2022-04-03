@@ -30,8 +30,8 @@ typedef struct Compiler
 
 /* ---------- Functions ---------- */
 
-// Gets the source code, and initializes the global compiler with all it's necessary components
-void compiler_init(char* src);
+// Gets the source code file name, and initializes the global compiler with all it's necessary components
+void compiler_init(char* src_file_name, char* dest_file_name);
 
 // Destroys all the components of the global compiler
 void compiler_destroy();

@@ -7,6 +7,7 @@
 #include "code_generator.h"
 #include "../general/general.h"
 #include "../compiler/compiler.h"
+#include "../io/io.h"
 
 
 void code_generator_create()
@@ -19,35 +20,42 @@ void code_generator_destroy()
 {
     if (compiler.code_generator != NULL)
     {
+        // Close the destination file
+        fclose(compiler.code_generator->dest_file);
+
         free(compiler.code_generator);
         compiler.code_generator = NULL;
     }
 }
 
-void code_generator_init()
+void code_generator_init(char* dest_file_name)
 {
+    // - Open destination file
+    compiler.code_generator->dest_file = fopen(dest_file_name, "w");
+    if (compiler.code_generator->dest_file == NULL) exit_file_io_error(dest_file_name);
+
     // - Init registers array
     int r = 0;
 
-    strncpy(compiler.code_generator->registers[r].name, R0, REGISTER_NAME_LENGTH);
+    strncpy(compiler.code_generator->registers[r].name, RBX, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
 
-    strncpy(compiler.code_generator->registers[r].name, R1, REGISTER_NAME_LENGTH);
+    strncpy(compiler.code_generator->registers[r].name, R10, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
 
-    strncpy(compiler.code_generator->registers[r].name, R2, REGISTER_NAME_LENGTH);
+    strncpy(compiler.code_generator->registers[r].name, R11, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
 
-    strncpy(compiler.code_generator->registers[r].name, R3, REGISTER_NAME_LENGTH);
+    strncpy(compiler.code_generator->registers[r].name, R12, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
 
-    strncpy(compiler.code_generator->registers[r].name, R4, REGISTER_NAME_LENGTH);
+    strncpy(compiler.code_generator->registers[r].name, R13, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
 
-    strncpy(compiler.code_generator->registers[r].name, R5, REGISTER_NAME_LENGTH);
+    strncpy(compiler.code_generator->registers[r].name, R14, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
 
-    strncpy(compiler.code_generator->registers[r].name, R6, REGISTER_NAME_LENGTH);
+    strncpy(compiler.code_generator->registers[r].name, R15, REGISTER_NAME_LENGTH);
     compiler.code_generator->registers[r++].inuse = false;
 }
 
@@ -104,14 +112,17 @@ char* code_generator_symbol_address(Symbol_Table_Entry* entry)
     if (entry == NULL)
         return NULL;
 
-    // - If the entry is global, just return a copy of the identifier
-    if (entry->is_global)
-        return strdup(entry->identifier);
-
-    // - If the entry is local, compute the appropriate address of that symbol
-
     // Allocate memory for the address
     char* address = (char*) calloc(SYMBOL_ADDRESS_LENGTH, sizeof(char));
+
+    // - If the entry is global, just return a copy of the identifier
+    if (entry->is_global)
+    {
+        sprintf(address, GLOBAL_ADDRESS_FORMAT, entry->identifier);
+        return address;
+    }
+
+    // - If the entry is local, compute the appropriate address of that symbol
 
     // The offsest of the symbol is: 
     // ((number of entries seen until the parent scope) + (entry's order in it's symbol table)) * (the size of an entry in the stack)
@@ -130,14 +141,27 @@ char* code_generator_symbol_address(Symbol_Table_Entry* entry)
 
 void code_generator_output(char* format, ...)
 {
-    printf(GREEN);
+    va_list args;                                               // Declare a va_list type variable
+    va_start(args, format);                                     // Initialize the va_list with the ...
+    vfprintf(compiler.code_generator->dest_file, format, args); // Forward ... to vprintf
+    va_end(args);                                               // Clean up the va_list
+}
 
-    va_list args;                   // Declare a va_list type variable
-    va_start(args, format);         // Initialize the va_list with the ...
-    vfprintf(stdout, format, args); // Forward ... to vprintf
-    va_end(args);                   // Clean up the va_list
+void code_generator_output_data_segment()
+{
+    Symbol_Table* global_table = compiler.scope_tree->global_scope->symbol_table;
 
-    printf(RESET);
+    for (int i = 0; i < global_table->capacity; i++)
+    {
+        Symbol_Table_Entry* entry = global_table->entries[i];
+        while (entry != NULL)
+        {
+            code_generator_output("\t");
+            code_generator_output(GLOBAL_ADDRESS_FORMAT, entry->identifier);
+            code_generator_output("\tDQ ?\n"); // TODO: Add different data types
+            entry = entry->next_entry;
+        }
+    }
 }
 
 void code_generator_generate(Parse_Tree_Node* parse_tree)
@@ -148,12 +172,29 @@ void code_generator_generate(Parse_Tree_Node* parse_tree)
     // the code generation process, so that the usage of the scope tree will be the same as the parsing phase.
     scope_tree_reset_child_index(compiler.scope_tree->global_scope);
 
-    // TODO: Output starting template to target file
+    // - Output includes for needed libraries
+    code_generator_output("includelib C:\\Ido_Hirsh\\Assembly\\masm64\\kernel32.lib\n");
+    code_generator_output("includelib C:\\Ido_Hirsh\\Assembly\\masm64\\User32.lib\n");
+    code_generator_output("\n");
+
+    // - Extern the ExitProcess proc from kernel32.lib
+    code_generator_output("EXTERN ExitProcess: PROC\n");
+
+    // - Generate the data segment of the program
+    code_generator_output("\n.DATA\n");
+    code_generator_output_data_segment();
+    code_generator_output("\n");
+
+    // - Generate the code segment of the program
+    code_generator_output(".CODE\n");
+    code_generator_output("MAIN PROC\n");
 
     // Generate code for the main program block
     code_generator_block(parse_tree->children[3]);
 
-    // TODO: Output ending template and data segment to target file
+    code_generator_output("CALL ExitProcess\n");
+    code_generator_output("MAIN ENDP\n");
+    code_generator_output("END\n");
 }
 
 void code_generator_block(Parse_Tree_Node* block)
@@ -212,7 +253,6 @@ void code_generator_decl(Parse_Tree_Node* decl)
 void code_generator_assign(Parse_Tree_Node* assign)
 {
     // ASSIGN -> set id = L_LOG_E ;
-    printf("ASSIGN -> set id = L_LOG_E ;\n");
 
     // Calculate the expression
     code_generator_l_log_expr(assign->children[3]);
@@ -226,7 +266,6 @@ void code_generator_assign(Parse_Tree_Node* assign)
 void code_generator_if_else(Parse_Tree_Node* if_else)
 {
     // IF_ELSE -> if ( L_LOG_E ) : BLOCK ELSE
-    printf("IF_ELSE -> if ( L_LOG_E ) : BLOCK ELSE\n");
 
     code_generator_l_log_expr(if_else->children[2]);
 
@@ -243,13 +282,11 @@ void code_generator_else(Parse_Tree_Node* _else)
 {
     // ELSE -> epsilon
     if (_else->num_of_children == 0)
-        printf("ELSE -> epsilon\n");
+        return;
 
     // ELSE -> else : BLOCK
     else
     {
-        printf("ELSE -> else : BLOCK\n");
-
         // Go to next children when entering a new scope
         scope_tree_goto_child();
         // Update the child to have the same number of available entries as the current scope
@@ -262,7 +299,6 @@ void code_generator_else(Parse_Tree_Node* _else)
 void code_generator_while(Parse_Tree_Node* _while)
 {
     // WHILE -> while ( L_LOG_E ) : BLOCK
-    printf("WHILE -> while ( L_LOG_E ) : BLOCK\n");
 
     code_generator_l_log_expr(_while->children[2]);
 
@@ -279,16 +315,12 @@ void code_generator_l_log_expr(Parse_Tree_Node* l_log_expr)
     // L_LOG_E -> H_LOG_E
     if (l_log_expr->num_of_children == 1)
     {
-        printf("L_LOG_E -> H_LOG_E\n");
-
         code_generator_h_log_expr(l_log_expr->children[0]);
     }
 
     // L_LOG_E -> L_LOG_E l_log_op H_LOG_E
     else
     {
-        printf("L_LOG_E -> L_LOG_E l_log_op H_LOG_E\n");
-
         code_generator_l_log_expr(l_log_expr->children[0]);
         code_generator_h_log_expr(l_log_expr->children[2]);
     }
@@ -299,16 +331,12 @@ void code_generator_h_log_expr(Parse_Tree_Node* h_log_expr)
     // H_LOG_E -> BOOL_E
     if (h_log_expr->num_of_children == 1)
     {
-        printf("H_LOG_E -> BOOL_E\n");
-
         code_generator_bool_expr(h_log_expr->children[0]);
     }
 
     // H_LOG_E -> H_LOG_E h_log_op BOOL_E
     else
     {
-        printf("H_LOG_E -> H_LOG_E h_log_op BOOL_E\n");
-
         code_generator_h_log_expr(h_log_expr->children[0]);
         code_generator_bool_expr(h_log_expr->children[2]);
     }
@@ -319,16 +347,12 @@ void code_generator_bool_expr(Parse_Tree_Node* bool_expr)
     // BOOL_E -> E
     if (bool_expr->num_of_children == 1)
     {
-        printf("BOOL_E -> E\n");
-
         code_generator_expr(bool_expr->children[0]);
     }
 
     // BOOL_E -> BOOL_E bool_op E
     else
     {
-        printf("BOOL_E -> BOOL_E bool_op E\n");
-
         code_generator_bool_expr(bool_expr->children[0]);
         code_generator_expr(bool_expr->children[2]);
     }
@@ -339,16 +363,12 @@ void code_generator_expr(Parse_Tree_Node* expr)
     // E -> T
     if (expr->num_of_children == 1)
     {
-        printf("E -> T\n");
-
         code_generator_term(expr->children[0]);
     }
 
     // E -> E expr_op T
     else
     {
-        printf("E -> E expr_op T\n");
-
         code_generator_expr(expr->children[0]);
         code_generator_term(expr->children[2]);
     }
@@ -401,23 +421,23 @@ void code_generator_term(Parse_Tree_Node* term)
 
 void code_generator_T_mul_F(Parse_Tree_Node* term)
 {
-    code_generator_output("IMUL %s, %s\n", code_generator_register_name(term->children[0]->register_number), code_generator_register_name(term->children[2]->register_number));
+    code_generator_output("\tIMUL\t%s, %s\n", code_generator_register_name(term->children[0]->register_number), code_generator_register_name(term->children[2]->register_number));
 }
 
 void code_generator_T_div_F(Parse_Tree_Node* term)
 {
-    code_generator_output("XOR rdx, rdx\n");
-    code_generator_output("MOV rax, %s\n", code_generator_register_name(term->children[0]->register_number));
-    code_generator_output("IDIV %s\n", code_generator_register_name(term->children[2]->register_number));
-    code_generator_output("MOV %s, rax\n", code_generator_register_name(term->children[0]->register_number));
+    code_generator_output("\tXOR\trdx, rdx\n");
+    code_generator_output("\tMOV\trax, %s\n", code_generator_register_name(term->children[0]->register_number));
+    code_generator_output("\tIDIV\t%s\n", code_generator_register_name(term->children[2]->register_number));
+    code_generator_output("\tMOV\t%s, rax\n", code_generator_register_name(term->children[0]->register_number));
 }
 
 void code_generator_T_modulu_F(Parse_Tree_Node* term)
 {
-    code_generator_output("XOR rdx, rdx\n");
-    code_generator_output("MOV rax, %s\n", code_generator_register_name(term->children[0]->register_number));
-    code_generator_output("IDIV %s\n", code_generator_register_name(term->children[2]->register_number));
-    code_generator_output("MOV %s, rdx\n", code_generator_register_name(term->children[0]->register_number));
+    code_generator_output("\tXOR\trdx, rdx\n");
+    code_generator_output("\tMOV\trax, %s\n", code_generator_register_name(term->children[0]->register_number));
+    code_generator_output("\tIDIV\t%s\n", code_generator_register_name(term->children[2]->register_number));
+    code_generator_output("\tMOV\t%s, rdx\n", code_generator_register_name(term->children[0]->register_number));
 }
 
 void code_generator_factor(Parse_Tree_Node* factor)
@@ -461,7 +481,7 @@ void code_generator_F_id(Parse_Tree_Node* factor)
     char* address = code_generator_symbol_address(scope_tree_fetch(factor->children[0]->token->value));
 
     // Generate the code
-    code_generator_output("MOV %s, %s\n", code_generator_register_name(factor->register_number), address);
+    code_generator_output("\tMOV\t%s, %s\n", code_generator_register_name(factor->register_number), address);
 
     // Free unneeded address
     free(address);
@@ -473,7 +493,7 @@ void code_generator_F_literal(Parse_Tree_Node* factor)
     factor->register_number = code_generator_register_alloc();
 
     // Generate the code
-    code_generator_output("MOV %s, %s\n", code_generator_register_name(factor->register_number), factor->children[0]->token->value);
+    code_generator_output("\tMOV\t%s, %s\n", code_generator_register_name(factor->register_number), factor->children[0]->token->value);
 }
 
 void code_generator_F_l_log_expr(Parse_Tree_Node* factor)
@@ -496,12 +516,12 @@ void code_generator_F_not_F(Parse_Tree_Node* factor)
     // Generate the code
     char* false_label = code_generator_label_create();
     char* done_label = code_generator_label_create();
-    code_generator_output("CMP %s, 0\n", code_generator_register_name(factor->register_number));
-    code_generator_output("JE %s\n", false_label);
-    code_generator_output("MOV %s, 0\n", code_generator_register_name(factor->register_number));
-    code_generator_output("JMP %s\n", done_label);
+    code_generator_output("\tCMP\t%s, 0\n", code_generator_register_name(factor->register_number));
+    code_generator_output("\tJE\t%s\n", false_label);
+    code_generator_output("\tMOV\t%s, 0\n", code_generator_register_name(factor->register_number));
+    code_generator_output("\tJMP\t%s\n", done_label);
     code_generator_output("%s:\n", false_label);
-    code_generator_output("MOV %s, 1\n", code_generator_register_name(factor->register_number));
+    code_generator_output("\tMOV\t%s, 1\n", code_generator_register_name(factor->register_number));
     code_generator_output("%s:\n", done_label);
 }
 
@@ -514,5 +534,5 @@ void code_generator_F_minus_F(Parse_Tree_Node* factor)
     factor->register_number = factor->children[1]->register_number;
 
     // Generate the code
-    code_generator_output("NEG %s\n", code_generator_register_name(factor->register_number));
+    code_generator_output("\tNEG\t%s\n", code_generator_register_name(factor->register_number));
 }
