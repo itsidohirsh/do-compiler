@@ -12,9 +12,9 @@ else {
 }
 
 # Check if file exists, if so runs
-if ((Test-Path -Path ..\main.exe) -and (Test-Path -Path $source_file)) {
+if ((Test-Path -Path ..\do.exe) -and (Test-Path -Path $source_file)) {
     # Return the return value from the executable
-    ..\main.exe $source_file $dest_file
+    ..\do.exe $source_file $dest_file
 }
 # If does not exist, print error message
 else {

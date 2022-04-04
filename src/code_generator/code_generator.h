@@ -20,7 +20,7 @@ typedef struct Register
 typedef struct Code_Generator
 {
     Register registers[NUM_OF_REGISTERS];   // Array of registers to be used in the code generation process
-    FILE* dest_file;                      // A pointer to the output file for the generated code
+    FILE* dest_file;                        // A pointer to the output file for the generated code
 } Code_Generator;
 
 
@@ -64,65 +64,62 @@ void code_generator_output_data_segment();
 // Generates the assembly code for the given parse tree
 void code_generator_generate(Parse_Tree_Node* parse_tree);
 
-//
+// Generates a block (BLOCK)
 void code_generator_block(Parse_Tree_Node* block);
 
-//
+// Generates a statement (STMT)
 void code_generator_stmt(Parse_Tree_Node* stmt);
 
-//
+// Generates a variable declaration statement (DECL)
 void code_generator_decl(Parse_Tree_Node* decl);
 
-//
+// Generates an assignment statement (ASSIGN)
 void code_generator_assign(Parse_Tree_Node* assign);
 
-//
+// Generates an if else statement (IF_ELSE)
 void code_generator_if_else(Parse_Tree_Node* if_else);
 
-//
+// Generates an else statement (ELSE)
 void code_generator_else(Parse_Tree_Node* _else);
 
-//
+// Generates a while statement (WHILE)
 void code_generator_while(Parse_Tree_Node* _while);
 
-//
+// Generating a low logical expression (L_LOG_E)
 void code_generator_l_log_expr(Parse_Tree_Node* l_log_expr);
 
-//
+// Generating a high logical expression (H_LOG_E)
 void code_generator_h_log_expr(Parse_Tree_Node* h_log_expr);
 
-//
+// Generating a boolean expression (BOOL_E)
 void code_generator_bool_expr(Parse_Tree_Node* bool_expr);
 
-//
+// Generating an expression (E)
 void code_generator_expr(Parse_Tree_Node* expr);
 
-//
+// Generating a term (T)
 void code_generator_term(Parse_Tree_Node* term);
 
-//
-void code_generator_T_mul_F(Parse_Tree_Node* term);
-
-//
+// Generating T -> T / F
 void code_generator_T_div_F(Parse_Tree_Node* term);
 
-//
+// Generating T -> T % F
 void code_generator_T_modulu_F(Parse_Tree_Node* term);
 
-//
+// Generating a factor (F)
 void code_generator_factor(Parse_Tree_Node* factor);
 
-//
+// Generating F -> id
 void code_generator_F_id(Parse_Tree_Node* factor);
 
-//
+// Generating F -> literal
 void code_generator_F_literal(Parse_Tree_Node* factor);
 
-//
+// Generating F -> ( L_LOG_E )
 void code_generator_F_l_log_expr(Parse_Tree_Node* factor);
 
-//
+// Generating F -> ! F
 void code_generator_F_not_F(Parse_Tree_Node* factor);
 
-//
+// Generating F -> - F
 void code_generator_F_minus_F(Parse_Tree_Node* factor);

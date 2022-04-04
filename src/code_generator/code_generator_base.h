@@ -6,13 +6,12 @@
 /* ---------- Registers ---------- */
 
 // The number of registers the code generator uses
-#define NUM_OF_REGISTERS 7
+#define NUM_OF_REGISTERS 6
 
 // The maximum length of register's name
 #define REGISTER_NAME_LENGTH 4
 
 // The registers used for code generation
-#define RBX "RBX"
 #define R10 "R10"
 #define R11 "R11"
 #define R12 "R12"
@@ -58,12 +57,31 @@
 
 /* ---------- Instructions ---------- */
 
-#define LABEL   "%s:\n"
 #define MOV     "\tMOV  %s, %s\n"
+
+// Control flow
 #define CMP     "\tCMP  %s, %s\n"
+#define LABEL   "%s:\n"
 #define JMP     "\tJMP  %s\n"
 #define JE      "\tJE   %s\n"
+#define JNE     "\tJNE  %s\n"
+#define JG      "\tJG   %s\n"
+#define JGE     "\tJGE  %s\n"
+#define JL      "\tJL   %s\n"
+#define JLE     "\tJLE  %s\n"
+#define JC      "\tJC   %s\n"
+#define JNC     "\tJNC  %s\n"
+
+// Arithmetic
+#define ADD     "\tADD  %s, %s\n"
+#define SUB     "\tSUB  %s, %s\n"
+#define SBB     "\tSBB  %s, %s\n"
 #define IMUL    "\tIMUL %s, %s\n"
 #define IDIV    "\tIDIV %s\n"
 #define NEG     "\tNEG  %s\n"
-#define XOR     "\tXOR  %s, %s\n"
+
+
+/* ---------- Data types ---------- */
+
+#define DB "\tDB ?\n"
+#define DQ "\tDQ ?\n"

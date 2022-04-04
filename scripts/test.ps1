@@ -28,7 +28,7 @@ foreach ($file_path in $(Get-ChildItem $test_path -Include '*.do' -Recurse | Res
     # - With output
     Write-Host
     $file_path
-    .\run.ps1 $file_path
+    .\run.ps1 $file_path ..\example.asm
 
     # If passed test, add to $passed_tests array
     # -ne 0 because the test is checking for error catching, and the error code will not be 0 in that casetests

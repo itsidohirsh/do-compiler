@@ -1,6 +1,5 @@
 prog my_prog:
-	int y;
- 	char ch;
-	int x;
-	set y = !'A' * 7 / y % ch;
+	int i;
+	char ch;
+	set ch = i;
 done :)

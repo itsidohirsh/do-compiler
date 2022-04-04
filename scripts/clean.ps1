@@ -3,7 +3,7 @@
 Clear-Host
 
 # Delete the executable and .asm files
-if (Test-Path -Path ..\main.exe) {
-    Remove-Item ..\main.exe
+if (Test-Path -Path ..\do.exe) {
+    Remove-Item ..\do.exe
     Remove-Item ..\*.asm
 }
