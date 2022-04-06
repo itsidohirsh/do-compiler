@@ -1,14 +1,18 @@
 #include "src/general/general.h"
 #include "src/compiler/compiler.h"
+#include "src/ansi/ansi.h"
 
 
 int main(int argc, char* argv[])
 {
+    // Make the program support the ANSI escape codes
+    ansi_setup_console();
+
     // If no command line arguments were specified
     if (argc < 2)
     {
-        printf(BOLD_WHITE "Do: " RED "fatal error:" RESET " no input files\n");
-        printf("\tsyntax: " BOLD_WHITE "do <source> [<destination>]\n" RESET);
+        printf(BOLD_WHITE "do: " RED "fatal error:" RESET " no input files\n");
+        printf("\tusage: " BOLD_WHITE "do <source> [<destination>]\n" RESET);
         return 1;
     }
 
