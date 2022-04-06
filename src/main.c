@@ -1,6 +1,6 @@
-#include "src/general/general.h"
-#include "src/compiler/compiler.h"
-#include "src/ansi/ansi.h"
+#include "general/general.h"
+#include "compiler/compiler.h"
+#include "ansi/ansi.h"
 
 
 int main(int argc, char* argv[])
