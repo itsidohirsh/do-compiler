@@ -9,19 +9,19 @@
 #define NUM_OF_REGISTERS 6
 
 // The maximum length of register's name
-#define REGISTER_NAME_LENGTH 4
+#define REGISTER_NAME_LENGTH 8
 
 // The registers used for code generation
-#define R10 "R10"
-#define R11 "R11"
-#define R12 "R12"
-#define R13 "R13"
-#define R14 "R14"
-#define R15 "R15"
+#define R10 "r10"
+#define R11 "r11"
+#define R12 "r12"
+#define R13 "r13"
+#define R14 "r14"
+#define R15 "r15"
 
 // The registers used for some arithmetic operations (because they're the default result registers)
-#define RAX "RAX"
-#define RDX "RDX"
+#define RAX "rax"
+#define RDX "rdx"
 
 
 /* ---------- Labels ---------- */
@@ -43,7 +43,7 @@
 
 // The format of an address on the stack (relative to rbp).
 // Expecting the relative address off of rbp for the %d.
-#define STACK_ADDRESS_FORMAT "[RBP - %d]"
+#define STACK_ADDRESS_FORMAT "[rbp - %d]"
 
 // The maximum length of symbol address. It is equal to the maximum length of
 // a token because the longest address that will be produced will be the length of
@@ -57,31 +57,31 @@
 
 /* ---------- Instructions ---------- */
 
-#define MOV     "\tMOV  %s, %s\n"
+#define MOV     "\tmov  %s, %s\n"
 
 // Control flow
-#define CMP     "\tCMP  %s, %s\n"
+#define CMP     "\tcmp  %s, %s\n"
 #define LABEL   "%s:\n"
-#define JMP     "\tJMP  %s\n"
-#define JE      "\tJE   %s\n"
-#define JNE     "\tJNE  %s\n"
-#define JG      "\tJG   %s\n"
-#define JGE     "\tJGE  %s\n"
-#define JL      "\tJL   %s\n"
-#define JLE     "\tJLE  %s\n"
-#define JC      "\tJC   %s\n"
-#define JNC     "\tJNC  %s\n"
+#define JMP     "\tjmp  %s\n"
+#define JE      "\tje   %s\n"
+#define JNE     "\tjne  %s\n"
+#define JG      "\tjg   %s\n"
+#define JGE     "\tjge  %s\n"
+#define JL      "\tjl   %s\n"
+#define JLE     "\tjle  %s\n"
+#define JC      "\tjc   %s\n"
+#define JNC     "\tjnc  %s\n"
 
 // Arithmetic
-#define ADD     "\tADD  %s, %s\n"
-#define SUB     "\tSUB  %s, %s\n"
-#define SBB     "\tSBB  %s, %s\n"
-#define IMUL    "\tIMUL %s, %s\n"
-#define IDIV    "\tIDIV %s\n"
-#define NEG     "\tNEG  %s\n"
+#define ADD     "\tadd  %s, %s\n"
+#define SUB     "\tsub  %s, %s\n"
+#define SBB     "\tsbb  %s, %s\n"
+#define IMUL    "\timul %s, %s\n"
+#define IDIV    "\tidiv %s\n"
+#define NEG     "\tneg  %s\n"
 
 
 /* ---------- Data types ---------- */
 
-#define DB "\tDB ?\n"
-#define DQ "\tDQ ?\n"
+#define DB " db ?\n"
+#define DQ " dq ?\n"

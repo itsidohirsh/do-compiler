@@ -109,8 +109,8 @@ char* code_generator_symbol_address(Symbol_Table_Entry* entry)
     if (entry == NULL)
         return NULL;
 
-    // Allocate memory for the address
-    char* address = (char*) calloc(SYMBOL_ADDRESS_LENGTH, sizeof(char));
+    // Static string for the address (to prevent allocation each time we need a symbol)
+    static char address[SYMBOL_ADDRESS_LENGTH] = { 0 };
 
     // - If the entry is global, just return the identifier
     if (entry->is_global)
@@ -130,7 +130,10 @@ char* code_generator_symbol_address(Symbol_Table_Entry* entry)
     int bp_offset = STACK_ENTRY_BYTES * (entry->scope->parent->available_entries + entry->num_in_scope);
 
     // Create the computed stack address for the symbol
-    sprintf(address, STACK_ADDRESS_FORMAT, bp_offset);
+    if (entry->data_type == Data_Type_Char)
+        sprintf(address, "byte ptr " STACK_ADDRESS_FORMAT, bp_offset);
+    else
+        sprintf(address, "qword ptr " STACK_ADDRESS_FORMAT, bp_offset);
 
     // Return the computed address
     return address;
@@ -148,7 +151,7 @@ void code_generator_output_data_segment()
 {
     Symbol_Table* global_table = compiler.scope_tree->global_scope->symbol_table;
 
-    code_generator_output("\n.DATA\n");
+    code_generator_output(".data\n");
 
     for (int i = 0; i < global_table->capacity; i++)
     {
@@ -172,26 +175,25 @@ void code_generator_generate(Parse_Tree_Node* parse_tree)
     // the code generation process, so that the usage of the scope tree will be the same as the parsing phase.
     scope_tree_reset_child_index(compiler.scope_tree->global_scope);
 
-    // - Output includes for needed libraries
-    code_generator_output("includelib C:\\Ido_Hirsh\\Assembly\\masm64\\kernel32.lib\n");
-    code_generator_output("includelib C:\\Ido_Hirsh\\Assembly\\masm64\\User32.lib\n");
-
-    // - Extern the ExitProcess proc from kernel32.lib
-    code_generator_output("\nEXTERN ExitProcess: PROC\n");
-
     // - Generate the data segment of the program
     code_generator_output_data_segment();
 
     // - Generate the code segment of the program
-    code_generator_output(".CODE\n");
-    code_generator_output("MAIN PROC\n");
+    code_generator_output(".code\n");
+    code_generator_output("main proc\n");
+    code_generator_output("\tpush rbp\n");
+    code_generator_output("\tmov  rbp, rsp\n");
+    code_generator_output("\tsub  rsp, 1000h\n\n");
 
     // Generate code for the main program block
     code_generator_block(parse_tree->children[3]);
 
-    code_generator_output("CALL ExitProcess\n");
-    code_generator_output("MAIN ENDP\n");
-    code_generator_output("END\n");
+    code_generator_output("\n\tmov  rsp, rbp\n");
+    code_generator_output("\tpop  rbp\n");
+    code_generator_output("\tmov  rax, 0\n");
+    code_generator_output("\tret\n");
+    code_generator_output("main endp\n");
+    code_generator_output("end\n");
 }
 
 void code_generator_block(Parse_Tree_Node* block)
@@ -258,7 +260,12 @@ void code_generator_assign(Parse_Tree_Node* assign)
     code_generator_l_log_expr(assign->children[3]);
 
     // Assign the expression value to the variable
-    code_generator_output(MOV, code_generator_symbol_address(scope_tree_fetch(assign->children[1]->token->value)), code_generator_register_name(assign->children[3]->register_number));
+    Symbol_Table_Entry* entry = scope_tree_fetch(assign->children[1]->token->value);
+
+    if (entry->data_type == Data_Type_Char)
+        code_generator_output("\tmov  %s, %sb\n", code_generator_symbol_address(entry), code_generator_register_name(assign->children[3]->register_number));
+    else
+        code_generator_output(MOV, code_generator_symbol_address(entry), code_generator_register_name(assign->children[3]->register_number));
 
     // Free result register because we don't need it anymore
     code_generator_register_free(assign->children[3]->register_number);
@@ -697,13 +704,18 @@ void code_generator_F_id(Parse_Tree_Node* factor)
     factor->register_number = code_generator_register_alloc();
 
     // Calculate address for the given id
-    char* address = code_generator_symbol_address(scope_tree_fetch(factor->children[0]->token->value));
+    Symbol_Table_Entry* entry = scope_tree_fetch(factor->children[0]->token->value);
 
-    // Generate the code
-    code_generator_output(MOV, code_generator_register_name(factor->register_number), address);
+    if (entry->data_type == Data_Type_Char)
+    {
+        // Zero out the register before moving a value to its lower bytes so the value will be correct
+        code_generator_output(MOV, code_generator_register_name(factor->register_number), "0");
 
-    // Free unneeded address
-    free(address);
+        // Mov the value to the lower byte of the register
+        code_generator_output("\tmov  %sb, %s\n", code_generator_register_name(factor->register_number), code_generator_symbol_address(entry));
+    }
+    else
+        code_generator_output(MOV, code_generator_register_name(factor->register_number), code_generator_symbol_address(entry));
 }
 
 void code_generator_F_literal(Parse_Tree_Node* factor)

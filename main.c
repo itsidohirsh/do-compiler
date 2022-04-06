@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
     // If no command line arguments were specified
     if (argc < 2)
     {
-        printf("Do: " RED "fatal error:" RESET " no input files\n");
+        printf(BOLD_WHITE "Do: " RED "fatal error:" RESET " no input files\n");
         printf("\tsyntax: " BOLD_WHITE "do <source> [<destination>]\n" RESET);
         return 1;
     }

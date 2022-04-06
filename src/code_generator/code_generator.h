@@ -51,7 +51,7 @@ char* code_generator_label_create();
 
 // Performs the right address computation for the given symbol according to its
 // place in the program (global / local),
-// and returns an allocated string which represents that address.
+// and returns a string that represents that address.
 // If the entry is NULL, returns NULL.
 char* code_generator_symbol_address(Symbol_Table_Entry* entry);
 
