@@ -1,5 +1,5 @@
 # Do Compiler
-The Do Language Compiler 💡🧐
+The Do Programming Language Compiler 💡🧐
 
 In the project's directory you can find the `do.exe` executable, the Do Language Compiler for Windows!
 
