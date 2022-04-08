@@ -5,6 +5,9 @@
 
 /* ---------- Registers ---------- */
 
+// The initial value of the register number for the different tree nodes
+#define NO_REGISTER -1
+
 // The number of registers the code generator uses
 #define NUM_OF_REGISTERS 6
 

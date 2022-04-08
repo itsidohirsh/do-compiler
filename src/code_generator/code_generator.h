@@ -85,41 +85,37 @@ void code_generator_else(Parse_Tree_Node* _else);
 // Generates a while statement (WHILE)
 void code_generator_while(Parse_Tree_Node* _while);
 
-// Generating a low logical expression (L_LOG_E)
-void code_generator_l_log_expr(Parse_Tree_Node* l_log_expr);
+// Generates an expression
+void code_generator_expression(Parse_Tree_Node* expr);
 
-// Generating a high logical expression (H_LOG_E)
-void code_generator_h_log_expr(Parse_Tree_Node* h_log_expr);
+// Generates a binary expression of the form: Expr -> Expr binary_operator Expr
+void code_generator_binary_expression(int left_register, int right_register, Token_Type operator);
 
-// Generating a boolean expression (BOOL_E)
-void code_generator_bool_expr(Parse_Tree_Node* bool_expr);
+// Generates an unary expression of the form: Expr -> unary_operator Expr
+void code_generator_unary_expression(int register_number, Token_Type operator);
 
-// Generating an expression (E)
-void code_generator_expr(Parse_Tree_Node* expr);
+// Generates a boolean expression of the form: Expr -> bool_operator Expr
+// according to the given operator
+void code_generator_bool_e(int left_register, int right_register, Token_Type operator);
 
-// Generating a term (T)
-void code_generator_term(Parse_Tree_Node* term);
+// Generates target code that moves the given token to the given register.
+// Moves the token according to its type (identifier / literal)
+void code_generator_mov_token(int register_number, Token* token);
 
-// Generating T -> T / F
-void code_generator_T_div_F(Parse_Tree_Node* term);
+// Generates target code that moves the given identifier token to the given register.
+void code_generator_mov_identifier(int register_number, Token* token);
 
-// Generating T -> T % F
-void code_generator_T_modulu_F(Parse_Tree_Node* term);
+// Generates logical OR and puts the result (0 | 1) in the left register
+void code_generator_or(int left_register, int right_register);
 
-// Generating a factor (F)
-void code_generator_factor(Parse_Tree_Node* factor);
+// Generates logical AND and puts the result (0 | 1) in the left register
+void code_generator_and(int left_register, int right_register);
 
-// Generating F -> id
-void code_generator_F_id(Parse_Tree_Node* factor);
+// Generates division operation between left and right registers. left_register = left_register / right_register,
+void code_generator_divide(int left_register, int right_register);
 
-// Generating F -> literal
-void code_generator_F_literal(Parse_Tree_Node* factor);
+// Generates modulu operation between left and right registers. left_register = left_register % right_register,
+void code_generator_modulu(int left_register, int right_register);
 
-// Generating F -> ( L_LOG_E )
-void code_generator_F_l_log_expr(Parse_Tree_Node* factor);
-
-// Generating F -> ! F
-void code_generator_F_not_F(Parse_Tree_Node* factor);
-
-// Generating F -> - F
-void code_generator_F_minus_F(Parse_Tree_Node* factor);
+// Generate logical NOT and puts the result (0 | 1) back in the register
+void code_generator_not(int register_number);

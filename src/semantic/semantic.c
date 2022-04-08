@@ -102,7 +102,10 @@ void semantic_assign()
 
 void semantic_set_type()
 {
-    compiler.parser->parse_stack->tree->data_type = compiler.parser->parse_stack->tree->children[0]->data_type;
+    // Make the the child of the current tree that is on top of the stack
+    // to be the tree at the top of the stack.
+    // To make the tree simpler.
+    compiler.parser->parse_stack->tree = compiler.parser->parse_stack->tree->children[0];
 }
 
 void semantic_type_check()
@@ -135,8 +138,14 @@ void semantic_F_to_id()
 
     // If Identifier exists
     if (entry != NULL)
+    {
+        // Make the identifier to be the tree at the top of the stack instead of F.
+        // To make the tree simpler.
+        compiler.parser->parse_stack->tree = compiler.parser->parse_stack->tree->children[0];
+
         // F.type = id.type
         compiler.parser->parse_stack->tree->data_type = entry->data_type;
+    }
 
     else
         error_handler_report(compiler.line, Error_Semantic, "'" BOLD_WHITE "%s" RESET "' undeclared", identifier);
@@ -144,10 +153,14 @@ void semantic_F_to_id()
 
 void semantic_F_to_literal()
 {
+    // Make the literal to be the tree at the top of the stack instead of F.
+    // To make the tree simpler.
+    compiler.parser->parse_stack->tree = compiler.parser->parse_stack->tree->children[0];
+
     // Right now I only have int an char literals in my programming language.
     // My compiler interprets both of them as int literals.
     // So for now I just set every literal to int literal.
-    // If I'll add more literal to my language then I'll add a translation function from literal to data type.
+    // If I'll add more literals to my language then I'll add a translation function from literal to data type.
     compiler.parser->parse_stack->tree->data_type = Data_Type_Int;
 }
 
@@ -155,7 +168,10 @@ void semantic_F_to_L_LOG_E()
 {
     //      0    1    2
     // F -> ( L_LOG_E )
-    compiler.parser->parse_stack->tree->data_type = compiler.parser->parse_stack->tree->children[1]->data_type;
+
+    // Make the expression to be the tree at the top of the stack instead of F.
+    // To make the tree simpler.
+    compiler.parser->parse_stack->tree = compiler.parser->parse_stack->tree->children[1];
 }
 
 void semantic_F_to_unary_op_F()

@@ -51,8 +51,9 @@ void semantic_decl();
 // If either of the above is false, reports a semantic error for the matching error.
 void semantic_assign();
 
-// After reduction by a production rule of the form: Non_Terminal_1 -> Non_terminal_2
+// After reduction by an expression production rule of the form: Non_Terminal_1 -> Non_terminal_2
 // sets Non_Terminal_1.type = Non_Terminal_2.type
+// Also makes Non_Terminal_1 to be Non_Terminal_2 to make the tree simpler
 void semantic_set_type();
 
 // After reduction by any prodution rule with the form: Operand Operator Operand
@@ -64,14 +65,20 @@ void semantic_type_check();
 
 // Checks after reduction by the production rule: F -> id (R23)
 // Need to validate that the identifier exists, and if so need to set F.type = id.type
+// If the identifier exists, also sets it to be the tree at the top of the parse stack
+// instead of F, to make the tree simpler.
 void semantic_F_to_id();
 
 // After reduction by the production rule: F -> literal (R24)
 // Need to set F.type = literal.type
+// Also sets the literal to be the tree at the top of the parse stack
+// instead of F, to make the tree simpler.
 void semantic_F_to_literal();
 
 // After reduction by the production rule: F -> ( L_LOG_E ) (R25)
 // Need to set F.type = L_LOG_E.type
+// Also sets the expression to be the tree at the top of the parse stack
+// instead of F, to make the tree simpler.
 void semantic_F_to_L_LOG_E();
 
 // After reduction by the production rule: F -> ! F (R26)

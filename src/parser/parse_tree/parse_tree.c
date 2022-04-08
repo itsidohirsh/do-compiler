@@ -5,6 +5,7 @@
 
 #include "parse_tree.h"
 #include "../../general/general.h"
+#include "../../code_generator/code_generator_base.h"
 
 
 Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token* token, Parse_Tree_Node** children, int num_of_children)
@@ -37,7 +38,7 @@ Parse_Tree_Node* parse_tree_init_node(Symbol_Type symbol_type, int symbol, Token
     node->data_type = Data_Type_NULL;
 
     // Initialize node with no register
-    node->register_number = -1;
+    node->register_number = NO_REGISTER;
 
     return node;
 }
