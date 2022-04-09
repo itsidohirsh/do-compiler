@@ -19,7 +19,7 @@ void exit_memory_error(char* file, int line)
 
 void exit_file_io_error(char* file_name)
 {
-    printf("[" RED "File I/O Error" RESET "] Could not read file " BOLD_WHITE "%s\n" RESET, file_name);
+    printf("[" RED "File I/O Error" RESET "] Could not open file " BOLD_WHITE "%s\n" RESET, file_name);
 
     compiler_destroy();
     remove(compiler.dest_file_name);
