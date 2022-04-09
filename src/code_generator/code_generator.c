@@ -367,21 +367,51 @@ void code_generator_while(Parse_Tree_Node* _while)
 
 void code_generator_expression(Parse_Tree_Node* expr)
 {
-    // Unary expressions
-    // In the format: Expr -> operator Expr
-    if (expr->num_of_children == 2)
+    // Terminal
+    if (expr->num_of_children == 0)
     {
-        // Generate the expression
-        code_generator_expression(expr->children[1]);
+        // Allocate register for the terminal
+        expr->register_number = code_generator_register_alloc();
 
-        // Generate code according to the unary operator
-        code_generator_unary_expression(expr->children[1]->register_number, expr->children[0]->token->token_type);
-
-        // Preserve the register
-        expr->register_number = expr->children[1]->register_number;
+        // Move the terminal to the allocated register
+        code_generator_mov_token(expr->register_number, expr->token);
     }
 
-    // Binary expressions
+    // Unary expression
+    // In the format: Expr -> operator Expr
+    else if (expr->num_of_children == 2)
+    {
+        // Expr -> unary_operator Terminal
+        if (expr->children[1]->symbol_type == Terminal)
+        {
+            // Allocate register for the terminal operand
+            int register_number = code_generator_register_alloc();
+
+            // Move the terminal to the allocated register
+            code_generator_mov_token(register_number, expr->children[1]->token);
+
+            // Generate code according to the unary operator
+            code_generator_unary_expression(register_number, expr->children[0]->token->token_type);
+
+            // Preserve the register
+            expr->register_number = register_number;
+        }
+
+        // Expr -> unary_operator Non-Terminal
+        else
+        {
+            // Generate the expression
+            code_generator_expression(expr->children[1]);
+
+            // Generate code according to the unary operator
+            code_generator_unary_expression(expr->children[1]->register_number, expr->children[0]->token->token_type);
+
+            // Preserve the register
+            expr->register_number = expr->children[1]->register_number;
+        }
+    }
+
+    // Binary expression
     // In the format: Expr -> Expr operator Expr
     else if (expr->num_of_children == 3)
     {
@@ -469,15 +499,6 @@ void code_generator_expression(Parse_Tree_Node* expr)
             // Free the right register because we don't need it anymore
             code_generator_register_free(expr->children[2]->register_number);
         }
-    }
-
-    // Terminal
-    // We'll enter this if only if the expression is only a terminal (identifier / literal).
-    else if (expr->symbol_type == Terminal)
-    {
-        expr->register_number = code_generator_register_alloc();
-
-        code_generator_mov_token(expr->register_number, expr->token);
     }
 }
 
