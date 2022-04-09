@@ -13,6 +13,8 @@ typedef struct Compiler
 {
     // The source code to be compiled
     char* src;
+    // The name of the destination file
+    char* dest_file_name;
     // The lexer of the compiler
     Lexer* lexer;
     // The parser of the compiler

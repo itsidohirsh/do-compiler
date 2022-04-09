@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 
     // If there is 1 argument, intialize the compiler with it as the source and with ./a.asm as the destination
     else
-        compiler_init(argv[1], "./a.asm");
+        compiler_init(argv[1], "a.asm");
 
     // Compile the source code
     compiler_compile();

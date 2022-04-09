@@ -28,11 +28,11 @@ void code_generator_destroy()
     }
 }
 
-void code_generator_init(char* dest_file_name)
+void code_generator_init()
 {
     // - Open destination file
-    compiler.code_generator->dest_file = fopen(dest_file_name, "w");
-    if (compiler.code_generator->dest_file == NULL) exit_file_io_error(dest_file_name);
+    compiler.code_generator->dest_file = fopen(compiler.dest_file_name, "w");
+    if (compiler.code_generator->dest_file == NULL) exit_file_io_error(compiler.dest_file_name);
 
     // - Init registers array
     int r = 0;
@@ -68,10 +68,10 @@ int code_generator_register_alloc()
         }
     }
 
-    // TODO: Find better solution for not finding a free register
-    // If couldn't find a free register, output error and exit
+    // If couldn't find a free register
     printf(RED "Couldn't find a free register" RESET);
     compiler_destroy();
+    remove(compiler.dest_file_name);
     exit(1);
 }
 

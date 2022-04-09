@@ -32,8 +32,8 @@ void code_generator_create();
 // Frees the memory allocated for the code generator of the compiler
 void code_generator_destroy();
 
-// Gets the name of the destination file, and initializes the compiler's code generator
-void code_generator_init(char* dest_file_name);
+// Initializes the compiler's code generator
+void code_generator_init();
 
 // Searches for a free register in the code generator registers array.
 // If found, marks it as inuse and returns the index of that register.

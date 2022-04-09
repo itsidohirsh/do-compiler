@@ -13,6 +13,9 @@ void compiler_init(char* src_file_name, char* dest_file_name)
     // Source code
     compiler.src = io_read_file(src_file_name);
 
+    // Destination file
+    compiler.dest_file_name = dest_file_name;
+
     // Lexer
     lexer_create();
     lexer_init();
@@ -26,7 +29,7 @@ void compiler_init(char* src_file_name, char* dest_file_name)
 
     // Code generator
     code_generator_create();
-    code_generator_init(dest_file_name);
+    code_generator_init();
 
     // Initialize with 0 errors
     compiler.errors = 0;
@@ -68,6 +71,9 @@ void compiler_compile()
 
         // Destroy the compiler
         compiler_destroy();
+
+        // Delete destination file
+        remove(compiler.dest_file_name);
 
         printf(RED "\n\nCompilation terminated.\n\n" RESET);
         exit(1);
