@@ -32,8 +32,8 @@ foreach ($file_path in $(Get-ChildItem $test_path -Include '*.do' -Recurse | Res
 
     # If passed test, add to $passed_tests array
     # -ne 0 because the test is checking for error catching, and the error code will not be 0 in that casetests
-    # -or the path starts with X because a test that starts with X should return exit code 0
-    if (($LASTEXITCODE -ne 0) -or $(Split-Path $file_path -Leaf).StartsWith('X')) {
+    # -or the path starts with V because a test that starts with V should return exit code 0
+    if (($LASTEXITCODE -ne 0) -or $(Split-Path $file_path -Leaf).StartsWith('V')) {
         $passed_tests += Split-Path $file_path -Leaf
     }
     # If passed test, add to $failed_tests array

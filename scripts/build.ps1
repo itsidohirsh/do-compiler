@@ -2,9 +2,9 @@
 
 Clear-Host
 
-# Check if files exist, if so compiles
+# Check if files exist, if so compile
 if (Test-Path -Path $(Get-ChildItem ..\src -Recurse -Include *.c)) {
-    gcc $(Get-ChildItem ..\src -Recurse -Include *.c) -o ..\do.exe
+    gcc $(Get-ChildItem ..\src -Recurse -Include *.c) -o ..\bin\do.exe
 }
 # If does not exist, print error message
 else {

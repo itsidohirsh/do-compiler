@@ -7,14 +7,14 @@ if ($args.length -gt 1) {
 }
 # If not, print out error, return to the scripts directory and exit
 else {
-    Write-Host "Please specify source file." -ForegroundColor red
+    Write-Host "Please specify source and destination files." -ForegroundColor red
     exit
 }
 
 # Check if file exists, if so runs
-if ((Test-Path -Path ..\do.exe) -and (Test-Path -Path $source_file)) {
+if ((Test-Path -Path ..\bin\do.exe) -and (Test-Path -Path $source_file)) {
     # Return the return value from the executable
-    ..\do.exe $source_file $dest_file
+    ..\bin\do.exe $source_file $dest_file
 }
 # If does not exist, print error message
 else {

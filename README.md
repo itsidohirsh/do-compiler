@@ -5,15 +5,15 @@ My programming language that helped me learn about compilers and language design
 
 
 ## Setup
-In the project's directory you can find the `do.exe` executable, this is the Do Programming Language Compiler for Windows!
+Follow this steps to setup the `Do Programming Language Compiler for Windows` correctly on your machine.
 
 ### Use it anywhere
-To make the do compiler globally available, add the path to the folder it is located in to the `PATH` environment variable.
+Add the path to the `bin` directory to the `PATH` environment variable. It contains the `Do Programming Language Compiler for Windows` as well as all the files needed to compile the `x64 MASM assembly`.
 
 ### Compile the compiler
-1. Make sure you have a C compiler installed.
+1. Make sure you have `C` compiler installed.
     - I used `gcc (x86_64-win32-seh-rev0, Built by MinGW-W64 project) 8.1.0` while building the compiler.
-3. To build the do compiler simply run the `build.bat` script that is located in the project's directory, this should give you the `do.exe` executable.
+2. To build the do compiler simply run the `build.bat` script that is located in the project's directory. The `do.exe` executable will appear in the `bin` directory.
 
 
 ## Use
@@ -24,8 +24,7 @@ Run `do /path/to/source.do [/path/to/destination.asm]` in the `cmd` to compile y
 - Run `do` without any arguments to see how to use the command.
 
 ### Compile x64 MASM assembly code
-1. Add the path to the `masm64` directory to the `PATH` environment variable, it contains all the files needed to compile the `x64 MASM assembly` code.
-2. Run `ml64 filename.asm /link /subsystem:windows /entry:main` in the `cmd` to compile the `.asm` file to a `.exe` executable.
+Run `ml64 filename.asm /link /subsystem:windows /entry:main` in the `cmd` to compile the `.asm` file to a `.exe` executable.
 
 ### Example
 The following is an example do code that you can use to try out the do compiler.

@@ -3,5 +3,5 @@
 Clear-Host
 
 # Delete the executable and .asm files
-Remove-Item ..\*.exe
+Remove-Item ..\bin\do.exe
 Remove-Item ..\*.asm
