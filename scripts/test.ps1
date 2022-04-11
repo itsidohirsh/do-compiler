@@ -21,14 +21,9 @@ $failed_tests = @()
 # Run every test in the tests folder
 foreach ($file_path in $(Get-ChildItem $test_path -Include '*.do' -Recurse | Resolve-Path -Relative)) {
     # Run test
-
-    # - Without output
-    # .\run.ps1 $file_path | Out-Null
-
-    # - With output
     Write-Host
     $file_path
-    .\run.ps1 $file_path ..\example.asm
+    ..\bin\do.exe $file_path ..\example.asm
 
     # If passed test, add to $passed_tests array
     # -ne 0 because the test is checking for error catching, and the error code will not be 0 in that casetests
