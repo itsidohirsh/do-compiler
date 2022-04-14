@@ -1,14 +1,16 @@
 @echo off
 
-@REM Go into the scripts directory
+:: Go into the scripts directory
 cd scripts
 
-@REM Build the do compiler using the powershell's build script
+:: Compile the compiler
 powershell .\build.ps1
 
-@REM Returns to the previous directory
+:: Add the bin directory path to the user's PATH environment variable
+powershell .\prepend_user_path.ps1
+
+:: Return to the project directory
 cd ..
 
-@REM Add the path to the bin directory to the PATH environment variable
-setx PATH "%~dp0bin;%PATH%"
-set PATH=%~dp0bin;%PATH%
+:: Clear the screen
+cls

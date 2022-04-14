@@ -1,4 +1,4 @@
-# A script to count how many lines of code there are in the project #
+# Script to count how many lines of code there are in the project #
 
 Clear-Host
 

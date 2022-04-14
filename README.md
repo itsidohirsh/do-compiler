@@ -8,12 +8,12 @@ The language I've created in order to learn about compilers and language design.
 Follow this steps to setup the **Do Programming Language Compiler for Windows** correctly on your machine.
 1. Clone this repository to your machine.
 2. Move the project's directory to the desired location on your machine.
-	- `install.bat` will add that path to your system's `PATH` environment variable.
+	- `install.bat` will add that path to the user's `PATH` environment variable.
 4. Make sure you have a C compiler installed.
     - I used `gcc (x86_64-win32-seh-rev0, Built by MinGW-W64 project) 8.1.0` while building the compiler.
 5. Run `install.bat` in the `cmd`.
-	1. Will build the project and generate the `do.exe` executable in the `bin` direcotry.
-	2. Will add the path to the `bin` directory to your system's `PATH` environment variable.
+	- Builds the project and generate the `do.exe` executable in the `bin` direcotry.
+	- Adds the `bin` directory path to the user's `PATH` environment variable.
 
 And thats it 😀
 
@@ -75,6 +75,7 @@ Contains the binary files required for using the do compiler.
 Contains scrips for building and managing the project.
 - `build.ps1` - compiles all the source files `.c .h` of the project, and generates the `do.exe` in the `bin` directory.
 - `test.ps1` - builds the compiler, and runs all the tests that are in the `tests` directory. At the end outputs a summary for the passed an failed tests.
+- `prepend_user_path.ps1` - adds the `bin` directory path to the user's `PATH` environment variable.
 - `clean.ps1` - deletes the `do.exe`, and all the `.asm` files if exist.
 - `code_lines.ps1` - prints how many lines of code there are in the project.
 
