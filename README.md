@@ -31,7 +31,7 @@ Run `ml64 filename.asm /link /subsystem:windows /entry:main` in the `cmd` to com
 ## What can it do?
 The following is an example do code that demonstrates some of the language features. You can use it to try out the do compiler.
 
-```py
+```nim
 prog main:
 	# Variable declaration
 	int result;
@@ -53,7 +53,7 @@ prog main:
 			char ch;
 			set ch = 'A';
 			
-			# Compilcated expressions: ||, &&, !, ==, !=, >, >=, <, <=, +, -, *, /, %
+			# Complicated expressions: ||, &&, !, ==, !=, >, >=, <, <=, +, -, *, /, %
 			set result = result + ch * i;
 		done
 		
