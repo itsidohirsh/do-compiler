@@ -7,19 +7,21 @@ The language I've created in order to learn about compilers and language design.
 ## Setup
 Follow this steps to setup the **Do Programming Language Compiler for Windows** correctly on your machine.
 1. Clone this repository to your machine.
-2. Move the project's directory to the desired location on your machine.
-	- `install.bat` will add that path to the user's `PATH` environment variable.
+2. Move the cloned project to the desired location on your machine.
+	- `install.bat` will add the project's path to the user's `PATH` environment variable.
+3. Make sure you have Powershell installed.
+	- I used `PowerShell 7.2.2` while building the compiler.
 4. Make sure you have a C compiler installed.
     - I used `gcc (x86_64-win32-seh-rev0, Built by MinGW-W64 project) 8.1.0` while building the compiler.
 5. Run `install.bat` in the `cmd`.
-	- Builds the project and generate the `do.exe` executable in the `bin` direcotry.
+	- Builds the project and generates the `do.exe` executable in the `bin` direcotry.
 	- Adds the `bin` directory path to the user's `PATH` environment variable.
 
 And thats it 😀
 
 
 ## Use
-Now I'll explain how to use the do compiler to compile do code into x64 MASM assembly code into an executable.
+Now I'll explain how to use the do compiler in order to compile do code into x64 MASM assembly code into an executable.
 
 ### Compile Do code
 Run `do /path/to/source.do [/path/to/destination.asm]` in the `cmd` to compile `.do` file into a `.asm` file.
