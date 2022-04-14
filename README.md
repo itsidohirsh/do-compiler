@@ -11,7 +11,7 @@ Follow this steps to setup the **Do Programming Language Compiler for Windows** 
 	- `install.bat` will add the project's path to the user's `PATH` environment variable.
 3. Make sure you have Powershell installed.
 	- I used `PowerShell 7.2.2` while building the compiler.
-4. Make sure you have a GCC installed.
+4. Make sure you have GCC installed.
     - I used `gcc (x86_64-win32-seh-rev0, Built by MinGW-W64 project) 8.1.0` while building the compiler.
 5. Run `install.bat` in the `cmd`.
 	- Builds the project and generates the `do.exe` executable in the `bin` direcotry.
