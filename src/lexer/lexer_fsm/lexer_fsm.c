@@ -103,6 +103,8 @@ void lexer_fsm_init()
 {
     // Variable to create current state index for each state in the FSM of the lexer.
     int s = 1;
+    // Iterator
+    int i;
 
     // - Whitespace -> 1 state
     lexer_fsm_add_starting_state_index(lexer_fsm_get_char_index(' '), s);
@@ -121,10 +123,20 @@ void lexer_fsm_init()
     lexer_fsm_add_edge(s, lexer_fsm_get_char_index('\v'), s);
     lexer_fsm_add_edge(s, lexer_fsm_get_char_index('\f'), s);
 
-    // - Identifier -> 1 state
+    // - Comment -> 1 state
     s += 1; // To calculate s add to it the numer of states in the previous part
+    lexer_fsm_add_starting_state_index(lexer_fsm_get_char_index('#'), s);
+    // -- states
+    lexer_fsm_add_state(s, Token_Comment);
+    // -- edges
+    // Starting from 0x20 because this is the space character and the first character we care about in a comment 
+    for (i = 0x20; i < NUM_OF_CHARACTERS; i++)
+        lexer_fsm_add_edge(s, lexer_fsm_get_char_index(i), s);
+
+
+    // - Identifier -> 1 state
+    s += 1;
     lexer_fsm_add_starting_state_index(lexer_fsm_get_char_index('_'), s);
-    int i;
     for (i = 0; i < NUM_OF_CHARACTERS; i++)
         if (isalpha(i))
             lexer_fsm_add_starting_state_index(i, s);

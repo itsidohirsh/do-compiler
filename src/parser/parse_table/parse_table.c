@@ -28,9 +28,9 @@ void parse_table_destroy()
 
 int parse_table_get_terminal_index(Terminal_Type terminal_type)
 {
-    // Returning the terminal_type - 2 because the tokens enum has 2 extra tokens at the start of it,
-    // Token_Error & Token_Whitespace, which we don't care about here. We want to start the indexing from 0 and not from 2.
-    return terminal_type - 2;
+    // Returning the terminal_type - 3 because the tokens enum has 3 extra tokens at the start of it,
+    // Token_Error, Token_Whitespace, Token_Comment, which we don't care about here. We want to start the indexing from 0 and not from 3.
+    return terminal_type - 3;
 }
 
 void parse_table_insert_action(int state, int terminal_index, Action action)

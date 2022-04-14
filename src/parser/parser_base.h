@@ -5,7 +5,7 @@
 
 // Number of terminals in the parasing table
 // The terminals are the tokens. So the number of terminals is the same as the number of tokens
-#define NUM_OF_TERMINALS 32
+#define NUM_OF_TERMINALS NUM_OF_TOKENS
 // Number of non-terminals in the parasing table
 #define NUM_OF_NON_TERMINALS 14
 // Number of states in the parser's table

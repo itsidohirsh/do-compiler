@@ -97,23 +97,23 @@ void parser_init_tokens_starting_state()
 {
     // Those numbers (12, 13, 14, 15) are chosen based on the parsing table. More precisely, on the shift actions in the action table.
     // The rest of the token's starting state is set to 0 because of the calloc used to create the parser.
-    // Token - 2 because at the enum of the token types, there are 2 additional tokens at the start (error, whitespace).
+    // Token - 3 because at the enum of the token types, there are 3 additional tokens at the start (error, whitespace, comment).
     // In my language only `int`, `char`, `set`, `if`, `while` are at the start of a statement.
     // I've added `done` as well because if we are inside an inner block, then we don't
     // want to go pass that block (that will make errors later for missmatching start and end of block). This
     // creates better error reporting & handling.
-    compiler.parser->tokens_starting_state[Token_Done - 2] = 7;
-    compiler.parser->tokens_starting_state[Token_Int - 2] = 12;
-    compiler.parser->tokens_starting_state[Token_Char - 2] = 12;
-    compiler.parser->tokens_starting_state[Token_Set - 2] = 13;
-    compiler.parser->tokens_starting_state[Token_If - 2] = 14;
-    compiler.parser->tokens_starting_state[Token_While - 2] = 15;
+    compiler.parser->tokens_starting_state[Token_Done - 3] = 7;
+    compiler.parser->tokens_starting_state[Token_Int - 3] = 12;
+    compiler.parser->tokens_starting_state[Token_Char - 3] = 12;
+    compiler.parser->tokens_starting_state[Token_Set - 3] = 13;
+    compiler.parser->tokens_starting_state[Token_If - 3] = 14;
+    compiler.parser->tokens_starting_state[Token_While - 3] = 15;
 }
 
 int parser_get_token_starting_state(Token_Type token_type)
 {
-    // terminal_type - 2 because at the enum of the token types, there are 2 additional tokens at the start (error, whitespace).
-    return compiler.parser->tokens_starting_state[token_type - 2];
+    // terminal_type - 3 because at the enum of the token types, there are 3 additional tokens at the start (error, whitespace, comment).
+    return compiler.parser->tokens_starting_state[token_type - 3];
 }
 
 void parser_shift(int goto_state)

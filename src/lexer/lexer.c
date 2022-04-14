@@ -67,6 +67,14 @@ Token* lexer_EOT(char* value, int size, int state)
     return token_init(value, size, compiler.lexer->fsm->states[state].token_type);
 }
 
+bool lexer_is_skip_token(Token_Type type)
+{
+    if (type == Token_Whitespace || type == Token_Comment)
+        return true;
+
+    return false;
+}
+
 Token* lexer_get_next_token()
 {
     // Get the starting state according to the current character from the source code
@@ -85,9 +93,19 @@ Token* lexer_get_next_token()
         // Check for Token's max length
         if (size == LEXER_MAX_TOKEN_SIZE - 1)
         {
-            error_handler_report(compiler.line, Error_Lexical, "Token can't be longer than " BOLD_WHITE "%d" RESET " characters", LEXER_MAX_TOKEN_SIZE - 1);
-            lexer_advance();
-            state = lexer_fsm_get_starting_state_index(compiler.lexer->c);
+            // If this is NOT a skip token output error and advance to the next token.
+            // If this is a skip token, just ignore the token and continue.
+            if (!lexer_is_skip_token(compiler.lexer->fsm->states[state].token_type))
+            {
+                // Report error
+                error_handler_report(compiler.line, Error_Lexical, "Token can't be longer than " BOLD_WHITE "%d" RESET " characters", LEXER_MAX_TOKEN_SIZE - 1);
+
+                // Continue to the next token
+                lexer_advance();
+                state = lexer_fsm_get_starting_state_index(compiler.lexer->c);
+            }
+
+            // Reset the size to not exceed value's size
             size = 0;
         }
 
@@ -102,20 +120,24 @@ Token* lexer_get_next_token()
             {
                 // Making sure there is a null terminator
                 value[size] = '\0';
-                // Reporting error
+
+                // Report error
                 error_handler_report(compiler.line, Error_Lexical, "Unexpected character '" BOLD_WHITE "%s" RESET "'", value);
-                // Continue to next token
+
+                // Continue to the next token
                 lexer_advance();
                 state = lexer_fsm_get_starting_state_index(compiler.lexer->c);
                 size = 0;
             }
-            // If reached a whitespace token, continue to the next token
-            else if (compiler.lexer->fsm->states[state].token_type == Token_Whitespace)
+
+            // If reached a skip token, continue to the next token
+            else if (lexer_is_skip_token(compiler.lexer->fsm->states[state].token_type))
             {
                 lexer_advance();
                 state = lexer_fsm_get_starting_state_index(compiler.lexer->c);
                 size = 0;
             }
+
             // If reached to other valid token, return it
             else
                 return lexer_EOT(value, size, state);
@@ -128,8 +150,8 @@ Token* lexer_get_next_token()
         }
     }
 
-    // If we've reached the end of the src code but the value is not empty, and the token is not Whitespace token, then return a new token with that value
-    if (size > 0 && compiler.lexer->fsm->states[state].token_type != Token_Whitespace)
+    // If we've reached the end of the src code but the value is not empty, and the token is not a skip token, then return a new token with that value
+    if (size > 0 && !lexer_is_skip_token(compiler.lexer->fsm->states[state].token_type))
         return lexer_EOT(value, size, state);
 
     // When we've reached to the end of the src code, return End Of File token

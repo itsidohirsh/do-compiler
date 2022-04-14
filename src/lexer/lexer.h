@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdbool.h>
+
 #include "lexer_fsm/lexer_fsm.h"
 #include "../token/token.h"
 
@@ -36,6 +38,10 @@ void lexer_advance();
 // Creates and returns a new token when reached to the end of a token
 // If that token is a Whitespace token, returns NULL to indicate that
 Token* lexer_EOT(char* value, int size, int state);
+
+// Checks whether a token is a skip token according to the given token type.
+// The skip toknes are: Whitespace, Comment
+bool lexer_is_skip_token(Token_Type type);
 
 // Returns the next token from the source code
 Token* lexer_get_next_token();

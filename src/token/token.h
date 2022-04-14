@@ -3,11 +3,14 @@
 
 /* ---------- Structs ---------- */
 
+#define NUM_OF_TOKENS (Token_Eof - 1)
+
 // Enum of all the token types
 typedef enum Token_Type
 {
     Token_Error,            // Error token, must be 0        
     Token_Whitespace,       // Whitespace characters: ` `, `\n`, `\t`, `\r`, `\v`, `\f`
+    Token_Comment,          // Comment. # This is a comment
     Token_Prog,             // `prog`
     Token_Identifier,       // Identifier
     Token_Colon,            // `:`
