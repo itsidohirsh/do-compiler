@@ -11,13 +11,17 @@ Follow this steps to setup the **Do Programming Language Compiler for Windows** 
 	- `install.bat` will add the project's path to the user's `PATH` environment variable.
 3. Make sure you have Powershell installed.
 	- I used `PowerShell 7.2.2` while building the compiler.
-4. Make sure you have GCC installed.
-    - I used `gcc (x86_64-win32-seh-rev0, Built by MinGW-W64 project) 8.1.0` while building the compiler.
-5. Run `install.bat` in the `cmd`.
-	- Builds the project and generates the `do.exe` executable in the `bin` direcotry.
+4. Run `install.bat` in the `cmd`.
 	- Adds the `bin` directory path to the user's `PATH` environment variable.
 
 And thats it 😀
+
+### Compile the compiler
+Steps to rebuild the `do.exe` executable in the `bin` directory:
+1. Make sure you have GCC installed.
+    - I used `gcc (x86_64-win32-seh-rev0, Built by MinGW-W64 project) 8.1.0` while building the compiler.
+2. `cd scripts`
+3. Run `build.ps1`.
 
 
 ## Use
@@ -25,7 +29,7 @@ Now I'll explain how to use the do compiler in order to compile do code into x64
 
 ### Compile Do code
 Run `do /path/to/source.do [/path/to/destination.asm]` in the `cmd` to compile `.do` file into a `.asm` file.
-- Run `do` without any arguments to see how to use the command.
+- Run `do` with no arguments to see how to use the command.
 
 ### Compile x64 MASM assembly code
 Run `ml64 filename.asm /link /subsystem:windows /entry:main` in the `cmd` to compile `.asm` file into a `.exe` executable.
@@ -78,13 +82,15 @@ Contains scrips for building and managing the project.
 - `build.ps1` - compiles all the source files `.c .h` of the project, and generates the `do.exe` in the `bin` directory.
 - `test.ps1` - builds the compiler, and runs all the tests that are in the `tests` directory. At the end outputs a summary for the passed an failed tests.
 - `prepend_user_path.ps1` - adds the `bin` directory path to the user's `PATH` environment variable.
-- `clean.ps1` - deletes the `do.exe`, and all the `.asm` files if exist.
+- `clean.ps1` - deletes the `do.exe`, and all the `.asm` files in the project's directory.
 - `code_lines.ps1` - prints how many lines of code there are in the project.
 
 ### src
 Contains all the source file of the project, all the `.c .h` files.
 
 ### tests
-Contains `.do` files for testing the compiler.
+Contains `.do` files for testing the compiler. All of those `.do` files should fail compilation with all of the possible compilation errors.
 
-All of those `.do` files should fail compilation with all of the possible compilation errors.
+To run all of those tests against the do compiler:
+1. `cd scripts`
+2. Run `test.ps1`

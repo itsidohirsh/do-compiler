@@ -1,7 +1,11 @@
 # Script to test the code. All the tests are from the ../tests folder. A test is passed if the exit code of it is NOT 0 #
 
 # Build
-& .\build.ps1
+
+# Build only if doesn't exist already
+if (!(Test-Path -Path ../bin/do.exe)) {
+    & .\build.ps1
+}
 
 # Test
 
