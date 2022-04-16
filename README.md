@@ -5,7 +5,9 @@ The language I've created in order to learn about compilers and language design.
 
 
 ## Setup
-Follow this steps to setup the **Do Programming Language Compiler for Windows** correctly on your machine.
+Follow these steps to setup the **Do Programming Language Compiler for Windows** correctly on your machine.
+
+### Install
 1. Clone this repository to your machine.
 2. Move the cloned project to the desired location on your machine.
 	- `install.bat` will add the project's path to the user's `PATH` environment variable.
@@ -15,6 +17,11 @@ Follow this steps to setup the **Do Programming Language Compiler for Windows** 
 	- Adds the `bin` directory path to the user's `PATH` environment variable.
 
 And thats it 😀
+
+### Uninstall
+1. Run `uninstall.bat` in the `cmd`.
+	- Removes the `bin` directory from the user's `PATH` environment variable.
+	- Deletes the project from your machine.
 
 ### Compile the compiler
 Steps to rebuild the `do.exe` executable in the `bin` directory:
@@ -82,6 +89,7 @@ Contains scrips for building and managing the project.
 - `build.ps1` - compiles all the source files `.c .h` of the project, and generates the `do.exe` in the `bin` directory.
 - `test.ps1` - builds the compiler, and runs all the tests that are in the `tests` directory. At the end outputs a summary for the passed an failed tests.
 - `prepend_user_path.ps1` - adds the `bin` directory path to the user's `PATH` environment variable.
+- `remove_user_path.ps1` - removes the `bin` directory path from the user's `PATH` environment variable.
 - `clean.ps1` - deletes the `do.exe`, and all the `.asm` files in the project's directory.
 - `code_lines.ps1` - prints how many lines of code there are in the project.
 
