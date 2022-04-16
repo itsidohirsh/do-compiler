@@ -7,7 +7,5 @@ cd ..
 
 :: Delete the project
 cd ..
-rmdir /s /q %~dp0
-
-:: Clear the screen
 cls
+rmdir /s /q %~dp0
