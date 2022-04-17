@@ -8,4 +8,4 @@ cd ..
 :: Delete the project
 cd ..
 cls
-rmdir /s /q %~dp0
+goto 2>nul & rmdir /s /q %~dp0
