@@ -12,7 +12,7 @@ Follow these steps to setup the **Do Programming Language Compiler for Windows**
 2. Move the cloned project to the desired location on your machine.
 	- `install.bat` will add the project's path to the user's `PATH` environment variable.
 3. Make sure you have Powershell installed.
-	- I used `PowerShell 7.2.2` while building the compiler.
+	- I used `PowerShell 5.1.19041.1645` while building the compiler.
 4. Run `install.bat` in the `cmd`.
 	- Adds the `bin` directory path to the user's `PATH` environment variable.
 
