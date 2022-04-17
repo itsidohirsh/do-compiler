@@ -69,19 +69,23 @@ void compiler_compile()
         // Destroy parse tree
         parse_tree_destroy(parse_tree);
 
-        // Destroy the compiler
-        compiler_destroy();
-
         // Delete destination file
         remove(compiler.dest_file_name);
 
-        printf(RED "\n\nCompilation terminated.\n\n" RESET);
+        // Destroy the compiler
+        compiler_destroy();
+
+        printf(RED "\n\nCompilation terminated.\n" RESET);
         exit(1);
     }
 
     // Generate the assembly code for the created parse tree
-    parse_tree_print(parse_tree);
     code_generator_generate(parse_tree);
+
+    // If reached this point, that means the compilation process was successfull!
+    printf(BOLD_WHITE "\nParsing...\n");
+    printf("Generating code...\n");
+    printf(BOLD_GREEN "\nCompilation successful!\n" RESET);
 
     // Destroy parse tree
     parse_tree_destroy(parse_tree);

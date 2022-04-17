@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
     // If no command line arguments were specified
     if (argc < 2)
     {
-        printf(BOLD_WHITE "do: " RED "fatal error:" RESET " no input files\n");
+        printf(BOLD_WHITE "do: " RESET RED "fatal error:" RESET " no input files\n");
         printf("\tusage: " BOLD_WHITE "do <source.do> [<destination.asm>]\n" RESET);
         return 1;
     }
