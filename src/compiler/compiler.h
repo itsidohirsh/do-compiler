@@ -19,9 +19,9 @@ typedef struct Compiler
     Lexer* lexer;
     // The parser of the compiler
     Parser* parser;
-    // The symbol table of the compiler
+    // The scope tree of the compiler
     Scope_Tree* scope_tree;
-    // The code generator ofthe compiler
+    // The code generator of the compiler
     Code_Generator* code_generator;
     // Number of errors found during compilation
     int errors;
@@ -32,7 +32,7 @@ typedef struct Compiler
 
 /* ---------- Functions ---------- */
 
-// Gets the source code file name, and initializes the global compiler with all it's necessary components
+// Gets the source code file name and destination file name, and initializes the global compiler with all it's necessary components
 void compiler_init(char* src_file_name, char* dest_file_name);
 
 // Destroys all the components of the global compiler

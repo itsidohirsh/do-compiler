@@ -70,5 +70,5 @@ void parser_shift(int goto_state);
 void parser_reduce(int production_rule_num);
 
 // Parses the source code and returns an Abstract Syntax Tree / Parse Tree that represents the source code.
-// Also updates the symbol tables scopes tree that is given to it.
+// Also updates the scope tree.
 Parse_Tree_Node* parser_parse();

@@ -3,7 +3,7 @@
 
 /* ---------- Structs ---------- */
 
-// Enum for possible error types, also used for exit codes
+// Enum for possible error types
 typedef enum Error_Type
 {
     Error_General = 1,

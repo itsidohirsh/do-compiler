@@ -36,7 +36,6 @@ void lexer_init();
 void lexer_advance();
 
 // Creates and returns a new token when reached to the end of a token
-// If that token is a Whitespace token, returns NULL to indicate that
 Token* lexer_EOT(char* value, int size, int state);
 
 // Checks whether a token is a skip token according to the given token type.

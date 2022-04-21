@@ -31,7 +31,7 @@ Data_Type semantic_check_binary_op_compatibility(Data_Type left_op, Token* opera
 Data_Type semantic_check_unary_op_compatibility(Data_Type operand, Token* operator);
 
 // Called after encountering :
-// After : we know we are know in a new block, which means a new scope.
+// After : we know we are now in a new block, which means a new scope.
 // Adds a scope child to the current scope, and moves the current scope to that child.
 void semantic_enter_block();
 

@@ -5,7 +5,7 @@
 
 /* ---------- Structs ---------- */
 
-// Struct of and entry in the Action table
+// Struct of an entry in the Action table
 typedef struct Action
 {
     // Error, Shift, Reduce, Accept
@@ -31,7 +31,7 @@ typedef struct Parse_Table
 
 /* ---------- Functions ---------- */
 
-// Creates a new Parse_Table on the heap and returns a pointer to it
+// Creates a new Parse_Table on the heap and sets the Parser's parse table to point to it
 void parse_table_create();
 
 // Frees everything we've allocated the parse_table_create() function
