@@ -105,4 +105,4 @@ To run all of those tests against the do compiler:
 
 
 ## Project documentation
-You can find the project documentation and the project book [here](https://github.com/ido-hi/do-compiler-project.git)
+You can find the project documentation and the project book [here](https://github.com/itsidohirsh/do-compiler-project.git)
